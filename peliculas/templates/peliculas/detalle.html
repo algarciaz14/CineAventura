@@ -1,0 +1,171 @@
+{% extends 'peliculas/base.html' %}
+
+{% block title %}{{ pelicula.titulo }} - AKA Films{% endblock %}
+
+{% block content %}
+<div class="movie-detail">
+    <!-- Hero de la película -->
+    <div class="movie-hero" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('{{ pelicula.poster }}') center/cover;">
+        <div class="container">
+            <div class="movie-hero-content">
+                <div class="movie-poster-large">
+                    {% if pelicula.poster %}
+                    <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
+                    {% else %}
+                    <div class="poster-placeholder-large">🎬</div>
+                    {% endif %}
+                </div>
+                <div class="movie-hero-info">
+                    <h1 class="movie-title-large">{{ pelicula.titulo }}</h1>
+                    {% if pelicula.titulo_original and pelicula.titulo_original != pelicula.titulo %}
+                    <p class="movie-original-title">{{ pelicula.titulo_original }}</p>
+                    {% endif %}
+                    
+                    <div class="movie-meta">
+                        <span class="meta-item">{{ pelicula.año }}</span>
+                        <span class="meta-separator">•</span>
+                        <span class="meta-item">{{ pelicula.duracion }} min</span>
+                        <span class="meta-separator">•</span>
+                        <span class="meta-item">{{ pelicula.clasificacion }}</span>
+                    </div>
+                    
+                    <div class="movie-genres-large">
+                        {% for genero in pelicula.generos.all %}
+                        <span class="genre-tag-large">{{ genero.nombre }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="movie-rating-large">
+                        <div class="rating-score">
+                            <span class="rating-number">{{ pelicula.calificacion_promedio|floatformat:1 }}</span>
+                            <span class="rating-max">/10</span>
+                        </div>
+                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        <p class="rating-count">{{ pelicula.calificaciones.count }} calificaciones</p>
+                    </div>
+                    
+                    {% if pelicula.trailer %}
+                    <a href="{{ pelicula.trailer }}" target="_blank" class="btn-trailer">
+                        ▶️ Ver Trailer
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contenido principal -->
+    <div class="container">
+        <div class="movie-content">
+            <!-- Sinopsis -->
+            <section class="content-section">
+                <h2 class="content-title">Sinopsis</h2>
+                <p class="movie-synopsis">{{ pelicula.sinopsis }}</p>
+            </section>
+            
+            <!-- Información adicional -->
+            <section class="content-section">
+                <h2 class="content-title">Información</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Director:</span>
+                        <span class="info-value">{{ pelicula.director.nombre }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">País:</span>
+                        <span class="info-value">{{ pelicula.pais }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Idioma:</span>
+                        <span class="info-value">{{ pelicula.idioma }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Fecha de Estreno:</span>
+                        <span class="info-value">{{ pelicula.fecha_estreno|date:"d/m/Y" }}</span>
+                    </div>
+                    {% if pelicula.presupuesto %}
+                    <div class="info-item">
+                        <span class="info-label">Presupuesto:</span>
+                        <span class="info-value">${{ pelicula.presupuesto|floatformat:0 }}</span>
+                    </div>
+                    {% endif %}
+                    {% if pelicula.recaudacion %}
+                    <div class="info-item">
+                        <span class="info-label">Recaudación:</span>
+                        <span class="info-value">${{ pelicula.recaudacion|floatformat:0 }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+            
+            <!-- Reparto -->
+            {% if pelicula.actores.all %}
+            <section class="content-section">
+                <h2 class="content-title">Reparto</h2>
+                <div class="cast-list">
+                    {% for actor in pelicula.actores.all|slice:":6" %}
+                    <span class="cast-member">{{ actor.nombre }}</span>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+            
+            <!-- Calificar película -->
+            {% if user.is_authenticated %}
+            <section class="content-section">
+                <h2 class="content-title">Tu Calificación</h2>
+                <form method="post" action="{% url 'peliculas:agregar_calificacion' pelicula.id %}" class="rating-form">
+                    {% csrf_token %}
+                    <div class="rating-input">
+                        {% for i in "12345678910" %}
+                        <input type="radio" name="puntuacion" value="{{ forloop.counter }}" id="rating-{{ forloop.counter }}"
+                               {% if calificacion_usuario and calificacion_usuario.puntuacion == forloop.counter %}checked{% endif %}>
+                        <label for="rating-{{ forloop.counter }}">{{ forloop.counter }}</label>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn-primary">Guardar Calificación</button>
+                </form>
+            </section>
+            {% endif %}
+            
+            <!-- Reseñas -->
+            <section class="content-section">
+                <h2 class="content-title">Reseñas ({{ pelicula.total_resenas }})</h2>
+                
+                {% if user.is_authenticated %}
+                <div class="review-form-container">
+                    <h3>Escribe tu reseña</h3>
+                    <form method="post" action="{% url 'peliculas:agregar_resena' pelicula.id %}" class="review-form">
+                        {% csrf_token %}
+                        <input type="text" name="titulo" placeholder="Título de tu reseña" class="form-input" required>
+                        <textarea name="contenido" placeholder="Escribe tu opinión sobre la película..." class="form-textarea" rows="5" required></textarea>
+                        <button type="submit" class="btn-primary">Publicar Reseña</button>
+                    </form>
+                </div>
+                {% endif %}
+                
+                <div class="reviews-list">
+                    {% for resena in resenas %}
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="review-author">
+                                <span class="author-avatar">👤</span>
+                                <span class="author-name">{{ resena.usuario.username }}</span>
+                            </div>
+                            <span class="review-date">{{ resena.fecha|date:"d/m/Y" }}</span>
+                        </div>
+                        <h4 class="review-title">{{ resena.titulo }}</h4>
+                        <p class="review-content">{{ resena.contenido }}</p>
+                        <div class="review-footer">
+                            <span class="review-helpful">👍 {{ resena.util_count }} personas encontraron esto útil</span>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="no-reviews">Aún no hay reseñas. ¡Sé el primero en escribir una!</p>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

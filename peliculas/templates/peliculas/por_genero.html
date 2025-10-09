@@ -1,0 +1,63 @@
+{% extends 'peliculas/base.html' %}
+
+{% block title %}{{ genero.nombre }} - AKA Films{% endblock %}
+
+{% block content %}
+<div class="genre-page">
+    <div class="genre-header">
+        <div class="container">
+            <h1 class="genre-title">{{ genero.nombre }}</h1>
+            {% if genero.descripcion %}
+            <p class="genre-description">{{ genero.descripcion }}</p>
+            {% endif %}
+            <p class="genre-count">{{ peliculas.paginator.count }} películas encontradas</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="movies-grid">
+            {% for pelicula in peliculas %}
+            <div class="movie-card">
+                <a href="{% url 'peliculas:detalle' pelicula.id %}" class="movie-link">
+                    <div class="movie-poster">
+                        {% if pelicula.poster %}
+                        <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
+                        {% else %}
+                        <div class="movie-poster-placeholder">
+                            <span>🎬</span>
+                        </div>
+                        {% endif %}
+                        <div class="movie-rating">
+                            ⭐ {{ pelicula.calificacion_promedio|floatformat:1 }}
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">{{ pelicula.titulo }}</h3>
+                        <p class="movie-year">{{ pelicula.año }}</p>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <p class="no-results">No se encontraron películas en este género.</p>
+            {% endfor %}
+        </div>
+        
+        <!-- Paginación -->
+        {% if peliculas.has_other_pages %}
+        <div class="pagination">
+            {% if peliculas.has_previous %}
+            <a href="?page={{ peliculas.previous_page_number }}" class="pagination-link">← Anterior</a>
+            {% endif %}
+            
+            <span class="pagination-info">
+                Página {{ peliculas.number }} de {{ peliculas.paginator.num_pages }}
+            </span>
+            
+            {% if peliculas.has_next %}
+            <a href="?page={{ peliculas.next_page_number }}" class="pagination-link">Siguiente →</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

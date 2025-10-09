@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AKA Films - Tu Portal de Cine{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'peliculas/css/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <a href="{% url 'peliculas:index' %}" class="logo">
+                        <span class="logo-aka">AKA</span>
+                        <span class="logo-films">FILMS</span>
+                    </a>
+                    
+                    <div class="nav-links">
+                        <a href="{% url 'peliculas:index' %}" class="nav-link">Inicio</a>
+                        <div class="dropdown">
+                            <button class="nav-link dropdown-toggle">Géneros</button>
+                            <div class="dropdown-menu">
+                                {% for genero in generos %}
+                                <a href="{% url 'peliculas:por_genero' genero.id %}" class="dropdown-item">
+                                    {{ genero.nombre }}
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form action="{% url 'peliculas:buscar' %}" method="get" class="search-form">
+                        <input type="text" name="q" placeholder="Buscar películas..." class="search-input">
+                        <button type="submit" class="search-btn">🔍</button>
+                    </form>
+                    
+                    <div class="auth-links">
+                        {% if user.is_authenticated %}
+                            <span class="user-name">Hola, {{ user.username }}</span>
+                            <a href="{% url 'admin:index' %}" class="btn-secondary">Admin</a>
+                        {% else %}
+                            <a href="{% url 'admin:index' %}" class="btn-primary">Iniciar Sesión</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>AKA FILMS</h3>
+                    <p>Tu portal definitivo para descubrir, explorar y compartir tu pasión por el cine.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Géneros</h4>
+                    <ul>
+                        <li><a href="#">Acción</a></li>
+                        <li><a href="#">Drama</a></li>
+                        <li><a href="#">Comedia</a></li>
+                        <li><a href="#">Terror</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Acerca de</h4>
+                    <ul>
+                        <li><a href="{% url 'peliculas:sobre_nosotros' %}">Sobre Nosotros</a></li>
+                        <li><a href="#">Contacto</a></li>
+                        <li><a href="#">Términos de Uso</a></li>
+                        <li><a href="#">Privacidad</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AKA Films. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dropdown functionality
+        document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                this.parentElement.classList.toggle('active');
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.matches('.dropdown-toggle')) {
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

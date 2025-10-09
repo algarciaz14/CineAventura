@@ -1,0 +1,103 @@
+{% extends 'peliculas/base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">Descubre el Mundo del Cine</h1>
+        <p class="hero-subtitle">Miles de películas, reseñas y recomendaciones personalizadas</p>
+        <form action="{% url 'peliculas:buscar' %}" method="get" class="hero-search">
+            <input type="text" name="q" placeholder="¿Qué película quieres ver hoy?" class="hero-search-input">
+            <button type="submit" class="hero-search-btn">Buscar</button>
+        </form>
+    </div>
+</section>
+
+<!-- Películas Destacadas -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">🌟 Películas Destacadas</h2>
+        <div class="movies-grid">
+            {% for pelicula in peliculas_destacadas %}
+            <div class="movie-card">
+                <a href="{% url 'peliculas:detalle' pelicula.id %}" class="movie-link">
+                    <div class="movie-poster">
+                        {% if pelicula.poster %}
+                        <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
+                        {% else %}
+                        <div class="movie-poster-placeholder">
+                            <span>🎬</span>
+                        </div>
+                        {% endif %}
+                        <div class="movie-rating">
+                            ⭐ {{ pelicula.calificacion_promedio|floatformat:1 }}
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">{{ pelicula.titulo }}</h3>
+                        <p class="movie-year">{{ pelicula.año }}</p>
+                        <div class="movie-genres">
+                            {% for genero in pelicula.generos.all|slice:":2" %}
+                            <span class="genre-tag">{{ genero.nombre }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Películas Recientes -->
+<section class="section section-alt">
+    <div class="container">
+        <h2 class="section-title">🆕 Agregadas Recientemente</h2>
+        <div class="movies-grid">
+            {% for pelicula in peliculas_recientes %}
+            <div class="movie-card">
+                <a href="{% url 'peliculas:detalle' pelicula.id %}" class="movie-link">
+                    <div class="movie-poster">
+                        {% if pelicula.poster %}
+                        <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
+                        {% else %}
+                        <div class="movie-poster-placeholder">
+                            <span>🎬</span>
+                        </div>
+                        {% endif %}
+                        <div class="movie-rating">
+                            ⭐ {{ pelicula.calificacion_promedio|floatformat:1 }}
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">{{ pelicula.titulo }}</h3>
+                        <p class="movie-year">{{ pelicula.año }}</p>
+                        <div class="movie-genres">
+                            {% for genero in pelicula.generos.all|slice:":2" %}
+                            <span class="genre-tag">{{ genero.nombre }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Géneros -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">🎭 Explora por Género</h2>
+        <div class="genres-grid">
+            {% for genero in generos %}
+            <a href="{% url 'peliculas:por_genero' genero.id %}" class="genre-card">
+                <h3>{{ genero.nombre }}</h3>
+                <p>{{ genero.peliculas.count }} películas</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

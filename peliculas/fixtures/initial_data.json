@@ -1,0 +1,276 @@
+[
+  {
+    "model": "peliculas.genero",
+    "pk": 1,
+    "fields": {
+      "nombre": "Acción",
+      "descripcion": "Películas llenas de adrenalina, persecuciones y escenas de combate"
+    }
+  },
+  {
+    "model": "peliculas.genero",
+    "pk": 2,
+    "fields": {
+      "nombre": "Aventura",
+      "descripcion": "Historias épicas de exploración y descubrimiento"
+    }
+  },
+  {
+    "model": "peliculas.genero",
+    "pk": 3,
+    "fields": {
+      "nombre": "Comedia",
+      "descripcion": "Películas diseñadas para hacer reír y entretener"
+    }
+  },
+  {
+    "model": "peliculas.genero",
+    "pk": 4,
+    "fields": {
+      "nombre": "Drama",
+      "descripcion": "Historias profundas sobre la condición humana"
+    }
+  },
+  {
+    "model": "peliculas.genero",
+    "pk": 5,
+    "fields": {
+      "nombre": "Terror",
+      "descripcion": "Películas diseñadas para asustar y crear tensión"
+    }
+  },
+  {
+    "model": "peliculas.genero",
+    "pk": 6,
+    "fields": {
+      "nombre": "Ciencia Ficción",
+      "descripcion": "Exploración de futuros posibles y tecnología avanzada"
+    }
+  },
+  {
+    "model": "peliculas.genero",
+    "pk": 7,
+    "fields": {
+      "nombre": "Fantasía",
+      "descripcion": "Mundos mágicos y criaturas fantásticas"
+    }
+  },
+  {
+    "model": "peliculas.genero",
+    "pk": 8,
+    "fields": {
+      "nombre": "Romance",
+      "descripcion": "Historias de amor y relaciones"
+    }
+  },
+  {
+    "model": "peliculas.director",
+    "pk": 1,
+    "fields": {
+      "nombre": "Christopher Nolan",
+      "biografia": "Director británico-estadounidense conocido por sus películas complejas y visualmente impresionantes",
+      "fecha_nacimiento": "1970-07-30",
+      "nacionalidad": "Reino Unido"
+    }
+  },
+  {
+    "model": "peliculas.director",
+    "pk": 2,
+    "fields": {
+      "nombre": "Quentin Tarantino",
+      "biografia": "Director estadounidense famoso por sus diálogos ingeniosos y violencia estilizada",
+      "fecha_nacimiento": "1963-03-27",
+      "nacionalidad": "Estados Unidos"
+    }
+  },
+  {
+    "model": "peliculas.director",
+    "pk": 3,
+    "fields": {
+      "nombre": "Greta Gerwig",
+      "biografia": "Directora y actriz estadounidense conocida por sus películas sensibles y bien escritas",
+      "fecha_nacimiento": "1983-08-04",
+      "nacionalidad": "Estados Unidos"
+    }
+  },
+  {
+    "model": "peliculas.director",
+    "pk": 4,
+    "fields": {
+      "nombre": "Denis Villeneuve",
+      "biografia": "Director canadiense conocido por sus películas de ciencia ficción visualmente impresionantes",
+      "fecha_nacimiento": "1967-10-03",
+      "nacionalidad": "Canadá"
+    }
+  },
+  {
+    "model": "peliculas.director",
+    "pk": 5,
+    "fields": {
+      "nombre": "Jordan Peele",
+      "biografia": "Director estadounidense que revolucionó el terror con sus películas socialmente conscientes",
+      "fecha_nacimiento": "1979-02-21",
+      "nacionalidad": "Estados Unidos"
+    }
+  },
+  {
+    "model": "peliculas.actor",
+    "pk": 1,
+    "fields": {
+      "nombre": "Leonardo DiCaprio",
+      "biografia": "Actor estadounidense ganador del Oscar",
+      "fecha_nacimiento": "1974-11-11",
+      "nacionalidad": "Estados Unidos"
+    }
+  },
+  {
+    "model": "peliculas.actor",
+    "pk": 2,
+    "fields": {
+      "nombre": "Margot Robbie",
+      "biografia": "Actriz australiana conocida por su versatilidad",
+      "fecha_nacimiento": "1990-07-02",
+      "nacionalidad": "Australia"
+    }
+  },
+  {
+    "model": "peliculas.actor",
+    "pk": 3,
+    "fields": {
+      "nombre": "Timothée Chalamet",
+      "biografia": "Actor estadounidense-francés de gran talento",
+      "fecha_nacimiento": "1995-12-27",
+      "nacionalidad": "Estados Unidos"
+    }
+  },
+  {
+    "model": "peliculas.actor",
+    "pk": 4,
+    "fields": {
+      "nombre": "Zendaya",
+      "biografia": "Actriz y cantante estadounidense",
+      "fecha_nacimiento": "1996-09-01",
+      "nacionalidad": "Estados Unidos"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 1,
+    "fields": {
+      "titulo": "Inception",
+      "titulo_original": "Inception",
+      "sinopsis": "Un ladrón que roba secretos corporativos a través del uso de la tecnología de compartir sueños recibe la tarea inversa de plantar una idea en la mente de un CEO. Dom Cobb es un experto en el arte de la extracción, robando secretos valiosos del subconsciente durante el estado de sueño. Esta habilidad lo ha convertido en un jugador codiciado en el traicionero nuevo mundo del espionaje corporativo, pero también lo ha convertido en un fugitivo internacional.",
+      "año": 2010,
+      "duracion": 148,
+      "director": 1,
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
+      "trailer": "https://www.youtube.com/watch?v=YoHD9XEInc0",
+      "fecha_estreno": "2010-07-16",
+      "presupuesto": "160000000.00",
+      "recaudacion": "836800000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 2,
+    "fields": {
+      "titulo": "Barbie",
+      "titulo_original": "Barbie",
+      "sinopsis": "Barbie y Ken están pasando el mejor momento de sus vidas en el colorido y aparentemente perfecto mundo de Barbie Land. Sin embargo, cuando tienen la oportunidad de ir al mundo real, pronto descubren las alegrías y los peligros de vivir entre los humanos. Una comedia brillante y visualmente deslumbrante que explora temas de identidad, feminismo y autoaceptación.",
+      "año": 2023,
+      "duracion": 114,
+      "director": 3,
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg",
+      "trailer": "https://www.youtube.com/watch?v=pBk4NYhWNMM",
+      "fecha_estreno": "2023-07-21",
+      "presupuesto": "145000000.00",
+      "recaudacion": "1445000000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 3,
+    "fields": {
+      "titulo": "Dune",
+      "titulo_original": "Dune",
+      "sinopsis": "Paul Atreides, un joven brillante y talentoso nacido con un gran destino más allá de su comprensión, debe viajar al planeta más peligroso del universo para asegurar el futuro de su familia y su pueblo. Mientras fuerzas malévolas explotan por el control del suministro exclusivo del planeta del recurso más preciado de la existencia, solo aquellos que puedan conquistar sus miedos sobrevivirán.",
+      "año": 2021,
+      "duracion": 155,
+      "director": 4,
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
+      "trailer": "https://www.youtube.com/watch?v=8g18jFHCLXk",
+      "fecha_estreno": "2021-10-22",
+      "presupuesto": "165000000.00",
+      "recaudacion": "402000000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 4,
+    "fields": {
+      "titulo": "Get Out",
+      "titulo_original": "Get Out",
+      "sinopsis": "Chris y su novia Rose van a pasar un fin de semana a la casa de los padres de ella en el campo. Al principio, Chris lee el comportamiento excesivamente complaciente de los padres como nerviosismo por la relación interracial de su hija, pero a medida que pasan las horas, una serie de descubrimientos cada vez más inquietantes lo llevan a una verdad que nunca podría haber imaginado.",
+      "año": 2017,
+      "duracion": 104,
+      "director": 5,
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/tFXcEccSQMf3lfhfXKSU9iRBpa3.jpg",
+      "trailer": "https://www.youtube.com/watch?v=DzfpyUB60YY",
+      "fecha_estreno": "2017-02-24",
+      "presupuesto": "4500000.00",
+      "recaudacion": "255000000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 5,
+    "fields": {
+      "titulo": "Pulp Fiction",
+      "titulo_original": "Pulp Fiction",
+      "sinopsis": "Las vidas de dos asesinos de la mafia, un boxeador, la esposa de un gánster y un par de bandidos de restaurantes se entrelazan en cuatro historias de violencia y redención. Una obra maestra del cine independiente que revolucionó la narrativa cinematográfica con su estructura no lineal y diálogos memorables.",
+      "año": 1994,
+      "duracion": 154,
+      "director": 2,
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
+      "trailer": "https://www.youtube.com/watch?v=s7EdQ4FqbhY",
+      "fecha_estreno": "1994-10-14",
+      "presupuesto": "8000000.00",
+      "recaudacion": "213900000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 6,
+    "fields": {
+      "titulo": "Interstellar",
+      "titulo_original": "Interstellar",
+      "sinopsis": "Un equipo de exploradores viaja a través de un agujero de gusano en el espacio en un intento de asegurar la supervivencia de la humanidad. En un futuro cercano, la Tierra se ha vuelto inhabitable. El ex piloto de la NASA, Cooper, debe dejar a su familia para liderar una expedición más allá de nuestra galaxia para descubrir si la humanidad tiene un futuro entre las estrellas.",
+      "año": 2014,
+      "duracion": 169,
+      "director": 1,
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+      "trailer": "https://www.youtube.com/watch?v=zSWdZVtXT7E",
+      "fecha_estreno": "2014-11-07",
+      "presupuesto": "165000000.00",
+      "recaudacion": "677000000.00",
+      "clasificacion": "PG-13"
+    }
+  }
+]

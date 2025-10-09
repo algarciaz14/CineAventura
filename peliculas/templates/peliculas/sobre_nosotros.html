@@ -1,0 +1,176 @@
+{% extends 'peliculas/base.html' %}
+
+{% block title %}Sobre Nosotros - AKA Films{% endblock %}
+
+{% block content %}
+<div class="about-page">
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <div class="container">
+            <h1 class="about-title">Sobre AKA Films</h1>
+            <p class="about-subtitle">Tu portal definitivo para descubrir el mundo del cine</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Propuesta de Valor -->
+        <section class="about-section">
+            <div class="section-icon">🎬</div>
+            <h2 class="about-section-title">Nuestra Propuesta de Valor</h2>
+            <p class="about-text">
+                Ofrecemos una experiencia cinematográfica completa y personalizada que unifica todos los géneros del cine en una sola plataforma intuitiva, donde los usuarios pueden descubrir películas adaptadas a sus gustos específicos, acceder a información detallada y curada de cada film, participar en una comunidad activa de cinéfilos, crear colecciones personalizadas y recibir recomendaciones inteligentes que evolucionan con sus preferencias. Nos diferenciamos al combinar tecnología avanzada con pasión por el séptimo arte, ofreciendo no solo un catálogo, sino una experiencia inmersiva que conecta emocionalmente a los usuarios con el cine.
+            </p>
+        </section>
+
+        <!-- Elementos Innovadores -->
+        <section class="about-section">
+            <div class="section-icon">💡</div>
+            <h2 class="about-section-title">Elementos Innovadores</h2>
+            
+            <div class="innovations-grid">
+                <div class="innovation-card">
+                    <h3 class="innovation-title">Sistema de Recomendación Híbrido Multigenérico</h3>
+                    <p class="innovation-text">
+                        Algoritmo inteligente que combina filtrado colaborativo, análisis de contenido y aprendizaje de preferencias del usuario para sugerir películas de múltiples géneros, incluso aquellos que el usuario no ha explorado previamente, expandiendo sus horizontes cinematográficos.
+                    </p>
+                </div>
+
+                <div class="innovation-card">
+                    <h3 class="innovation-title">Mood-Based Movie Matcher</h3>
+                    <p class="innovation-text">
+                        Herramienta innovadora que permite a los usuarios seleccionar su estado emocional actual (alegre, melancólico, ansioso, reflexivo, aventurero) y recibe recomendaciones específicas de cualquier género que se alineen con ese mood, utilizando análisis de tonos narrativos y ritmos cinematográficos.
+                    </p>
+                </div>
+
+                <div class="innovation-card">
+                    <h3 class="innovation-title">Mapa Cinematográfico Interactivo</h3>
+                    <p class="innovation-text">
+                        Visualización dinámica que muestra la evolución temporal de cada género, conexiones entre películas (remakes, secuelas, inspiraciones), y permite explorar el cine mediante líneas de tiempo, directores influyentes y movimientos cinematográficos.
+                    </p>
+                </div>
+
+                <div class="innovation-card">
+                    <h3 class="innovation-title">Análisis de Sentimiento en Tiempo Real</h3>
+                    <p class="innovation-text">
+                        Sistema que procesa automáticamente las reseñas de usuarios aplicando procesamiento de lenguaje natural para generar métricas de satisfacción por aspectos específicos (actuaciones, guión, dirección, efectos visuales, banda sonora).
+                    </p>
+                </div>
+
+                <div class="innovation-card">
+                    <h3 class="innovation-title">Cross-Genre Discovery Engine</h3>
+                    <p class="innovation-text">
+                        Motor de descubrimiento que identifica películas híbridas que combinan elementos de múltiples géneros (ejemplo: terror-comedia, ciencia ficción-romance) ayudando a usuarios a encontrar films únicos que trascienden las categorías tradicionales.
+                    </p>
+                </div>
+
+                <div class="innovation-card">
+                    <h3 class="innovation-title">Cinephile Social Hub</h3>
+                    <p class="innovation-text">
+                        Espacio colaborativo donde usuarios pueden crear y unirse a clubes de cine temáticos, organizar watch parties virtuales, participar en debates moderados por género, y compartir listas curadas con la comunidad.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Misión, Visión, Valores -->
+        <div class="mvv-grid">
+            <!-- Misión -->
+            <section class="about-section mvv-card">
+                <div class="section-icon">🎯</div>
+                <h2 class="about-section-title">Misión</h2>
+                <p class="about-text">
+                    Democratizar el acceso al conocimiento cinematográfico proporcionando una plataforma tecnológica inclusiva, intuitiva y completa que conecte a personas de todas las edades y backgrounds con la riqueza del cine mundial. Nos comprometemos a ofrecer información curada, recomendaciones personalizadas y herramientas innovadoras que enriquezcan la experiencia de descubrimiento cinematográfico, fomentando la apreciación del séptimo arte en todas sus formas y géneros, mientras promovemos una comunidad respetuosa de cinéfilos que comparten su pasión por las historias audiovisuales.
+                </p>
+            </section>
+
+            <!-- Visión -->
+            <section class="about-section mvv-card">
+                <div class="section-icon">🔭</div>
+                <h2 class="about-section-title">Visión</h2>
+                <p class="about-text">
+                    Consolidarnos para 2027 como la plataforma de referencia en el ecosistema digital cinematográfico hispanohablante, reconocida por nuestra capacidad de conectar a millones de usuarios con películas que transforman su perspectiva, entretienen y educan. Aspiramos a ser pioneros en la implementación de tecnologías emergentes (inteligencia artificial, realidad virtual) aplicadas al descubrimiento cinematográfico, creando experiencias inmersivas que trasciendan la simple catalogación de films.
+                </p>
+            </section>
+        </div>
+
+        <!-- Valores -->
+        <section class="about-section">
+            <div class="section-icon">⭐</div>
+            <h2 class="about-section-title">Nuestros Valores</h2>
+            
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">🎭</div>
+                    <h3 class="value-title">Pasión Cinematográfica</h3>
+                    <p class="value-text">
+                        Celebramos el cine como arte y entretenimiento, transmitiendo entusiasmo genuino por las historias audiovisuales en cada funcionalidad de nuestra plataforma.
+                    </p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">🌍</div>
+                    <h3 class="value-title">Inclusión y Diversidad</h3>
+                    <p class="value-text">
+                        Promovemos contenido cinematográfico de todas las culturas, épocas y perspectivas, garantizando que cada usuario encuentre representación y películas que resuenen con su identidad.
+                    </p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">🚀</div>
+                    <h3 class="value-title">Innovación Tecnológica</h3>
+                    <p class="value-text">
+                        Adoptamos y desarrollamos tecnologías de vanguardia para mejorar continuamente la experiencia del usuario, manteniéndonos a la vanguardia de las soluciones digitales.
+                    </p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">🤝</div>
+                    <h3 class="value-title">Comunidad Respetuosa</h3>
+                    <p class="value-text">
+                        Fomentamos un ambiente de diálogo constructivo donde los usuarios pueden expresar opiniones diversas sobre cine manteniendo respeto mutuo y tolerancia.
+                    </p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">🔒</div>
+                    <h3 class="value-title">Transparencia y Confianza</h3>
+                    <p class="value-text">
+                        Operamos con honestidad en el manejo de datos de usuarios, algoritmos de recomendación y relaciones comerciales, construyendo confianza a largo plazo.
+                    </p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">✨</div>
+                    <h3 class="value-title">Calidad del Contenido</h3>
+                    <p class="value-text">
+                        Nos comprometemos con la precisión, actualización constante y curación profesional de toda la información cinematográfica presentada en la plataforma.
+                    </p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">♿</div>
+                    <h3 class="value-title">Accesibilidad Universal</h3>
+                    <p class="value-text">
+                        Diseñamos pensando en todos los usuarios, implementando estándares de accesibilidad web que permitan a personas con diferentes capacidades disfrutar plenamente de nuestros servicios.
+                    </p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">🌱</div>
+                    <h3 class="value-title">Sostenibilidad</h3>
+                    <p class="value-text">
+                        Desarrollamos tecnología eficiente que minimiza el impacto ambiental mientras construimos un modelo de negocio viable a largo plazo.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="about-cta">
+            <h2 class="cta-title">Únete a Nuestra Comunidad</h2>
+            <p class="cta-text">Descubre, comparte y disfruta del mejor cine en AKA Films</p>
+            <a href="{% url 'peliculas:index' %}" class="btn-cta">Explorar Películas</a>
+        </section>
+    </div>
+</div>
+{% endblock %}

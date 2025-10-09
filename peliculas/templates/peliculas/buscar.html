@@ -1,0 +1,60 @@
+{% extends 'peliculas/base.html' %}
+
+{% block title %}Buscar - AKA Films{% endblock %}
+
+{% block content %}
+<div class="search-page">
+    <div class="search-header">
+        <div class="container">
+            <h1 class="search-title">Resultados de Búsqueda</h1>
+            {% if query %}
+            <p class="search-query">Buscando: "{{ query }}"</p>
+            <p class="search-count">{{ peliculas.count }} resultados encontrados</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="container">
+        {% if peliculas %}
+        <div class="movies-grid">
+            {% for pelicula in peliculas %}
+            <div class="movie-card">
+                <a href="{% url 'peliculas:detalle' pelicula.id %}" class="movie-link">
+                    <div class="movie-poster">
+                        {% if pelicula.poster %}
+                        <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
+                        {% else %}
+                        <div class="movie-poster-placeholder">
+                            <span>🎬</span>
+                        </div>
+                        {% endif %}
+                        <div class="movie-rating">
+                            ⭐ {{ pelicula.calificacion_promedio|floatformat:1 }}
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">{{ pelicula.titulo }}</h3>
+                        <p class="movie-year">{{ pelicula.año }}</p>
+                        <div class="movie-genres">
+                            {% for genero in pelicula.generos.all|slice:":2" %}
+                            <span class="genre-tag">{{ genero.nombre }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% elif query %}
+        <div class="no-results-container">
+            <p class="no-results">No se encontraron películas que coincidan con tu búsqueda.</p>
+            <p class="no-results-hint">Intenta con otros términos o explora nuestros géneros.</p>
+        </div>
+        {% else %}
+        <div class="no-results-container">
+            <p class="no-results-hint">Escribe algo en el buscador para encontrar películas.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
