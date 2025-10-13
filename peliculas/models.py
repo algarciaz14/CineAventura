@@ -3,6 +3,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+
 class Genero(models.Model):
     """Modelo para los géneros cinematográficos"""
     nombre = models.CharField(max_length=50, unique=True)
@@ -93,8 +94,9 @@ class Pelicula(models.Model):
         ],
         default='PG-13'
     )
-    fecha_agregada = models.DateTimeField(auto_now_add=True)
-    actualizada = models.DateTimeField(auto_now=True)
+    # Modificado para que acepte valores nulos y pueda cargar fixtures
+    fecha_agregada = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    actualizada = models.DateTimeField(auto_now=True, null=True, blank=True)
     
     class Meta:
         verbose_name = "Película"
@@ -188,3 +190,23 @@ class ListaPersonalizada(models.Model):
     
     def __str__(self):
         return f"{self.nombre} - {self.usuario.username}"
+    
+
+
+User.add_to_class(
+    'peliculas_favoritas',
+    models.ManyToManyField(
+        Pelicula,  # SIN COMILLAS - usa la clase directamente
+        related_name='usuarios_favorito',
+        blank=True
+    )
+)
+
+User.add_to_class(
+    'peliculas_ver_despues',
+    models.ManyToManyField(
+        Pelicula,  # SIN COMILLAS - usa la clase directamente
+        related_name='usuarios_ver_despues',
+        blank=True
+    )
+)

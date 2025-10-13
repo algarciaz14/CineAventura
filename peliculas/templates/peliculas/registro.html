@@ -1,0 +1,317 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - AKA Films</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        
+        .register-container {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            max-width: 550px;
+            width: 100%;
+            padding: 50px 40px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            font-size: 36px;
+            font-weight: bold;
+        }
+        
+        .logo-aka {
+            color: #e50914;
+        }
+        
+        .logo-films {
+            color: #333;
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .register-header h2 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .register-header p {
+            color: #666;
+            font-size: 15px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #e50914;
+            box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
+        }
+        
+        .form-help {
+            display: block;
+            color: #888;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .field-error {
+            display: block;
+            color: #c33;
+            font-size: 13px;
+            margin-top: 5px;
+            padding: 8px 12px;
+            background: #fee;
+            border-radius: 5px;
+            border-left: 3px solid #c33;
+        }
+        
+        .form-errors {
+            background: #fee;
+            color: #c33;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-left: 4px solid #c33;
+        }
+        
+        .btn-register {
+            width: 100%;
+            background: #e50914;
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 10px;
+        }
+        
+        .btn-register:hover {
+            background: #c40812;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
+        }
+        
+        .login-prompt {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        
+        .login-prompt p {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .login-prompt a {
+            color: #e50914;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .login-prompt a:hover {
+            color: #c40812;
+            text-decoration: underline;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-link a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .back-link a:hover {
+            color: #e50914;
+        }
+
+        /* Animación de entrada */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .register-container {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .register-container {
+                padding: 40px 25px;
+            }
+
+            .logo h1 {
+                font-size: 32px;
+            }
+
+            .register-header h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="logo">
+            <h1><span class="logo-aka">AKA</span><span class="logo-films">FILMS</span></h1>
+        </div>
+        
+        <div class="register-header">
+            <h2>Crear Cuenta</h2>
+            <p>Únete a la comunidad de AKA Films</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+            <div class="form-errors">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.first_name.id_for_label }}">Nombre *</label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}
+                    <span class="field-error">{{ form.first_name.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.last_name.id_for_label }}">Apellido *</label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                    <span class="field-error">{{ form.last_name.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Nombre de usuario *</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                <span class="field-error">{{ form.username.errors.0 }}</span>
+                {% endif %}
+                <small class="form-help">Letras, números y @/./+/-/_ solamente.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Correo electrónico *</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <span class="field-error">{{ form.email.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Contraseña *</label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                <span class="field-error">{{ form.password1.errors.0 }}</span>
+                {% endif %}
+                <small class="form-help">Mínimo 8 caracteres. No solo números.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Confirmar contraseña *</label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                <span class="field-error">{{ form.password2.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-register">Crear mi cuenta</button>
+        </form>
+        
+        <div class="login-prompt">
+            <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></p>
+        </div>
+        
+        <div class="back-link">
+            <a href="{% url 'peliculas:index' %}">← Volver al inicio</a>
+        </div>
+    </div>
+</body>
+</html>

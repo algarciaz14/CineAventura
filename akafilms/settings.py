@@ -35,6 +35,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'peliculas.middleware.LoginRedirectMiddleware', 
 ]
 
 ROOT_URLCONF = 'akafilms.urls'
@@ -102,3 +103,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Configuración de redirección después del login
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = '/'  # Por defecto va al inicio
+
+# Función personalizada para redirigir según tipo de usuario
+def login_redirect(request):
+    if request.user.is_staff:
+        return '/admin/'  # Admins van al panel de administración
+    return '/'  # Usuarios normales van al inicio

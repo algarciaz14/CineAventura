@@ -1,0 +1,523 @@
+{% extends 'peliculas/base.html' %}
+
+{% block title %}Mi Perfil - AKA Films{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+    <div class="container">
+        <!-- Header del Perfil -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {{ user.username|slice:":1"|upper }}
+            </div>
+            <div class="profile-info">
+                <h1>{{ user.get_full_name|default:user.username }}</h1>
+                <p class="profile-username">@{{ user.username }}</p>
+                <p class="profile-email">{{ user.email }}</p>
+            </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="profile-stats">
+            <div class="stat-card">
+                <div class="stat-number">{{ favoritos.count }}</div>
+                <div class="stat-label">Favoritos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ ver_despues.count }}</div>
+                <div class="stat-label">Ver Después</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ mis_calificaciones.count }}</div>
+                <div class="stat-label">Calificaciones</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ mis_resenas.count }}</div>
+                <div class="stat-label">Reseñas</div>
+            </div>
+        </div>
+
+        <!-- Pestañas de Contenido -->
+        <div class="profile-tabs">
+            <button class="tab-button active" data-tab="favoritos">❤️ Favoritos</button>
+            <button class="tab-button" data-tab="ver-despues">🕒 Ver Después</button>
+            <button class="tab-button" data-tab="calificaciones">⭐ Calificaciones</button>
+            <button class="tab-button" data-tab="resenas">📝 Reseñas</button>
+        </div>
+
+        <!-- Contenido de Favoritos -->
+        <div class="tab-content active" id="favoritos">
+            <h2 class="section-title">Mis Películas Favoritas</h2>
+            {% if favoritos %}
+            <div class="movies-grid">
+                {% for pelicula in favoritos %}
+                <div class="movie-card">
+                    <a href="{% url 'peliculas:detalle' pelicula.id %}" class="movie-link">
+                        <div class="movie-poster">
+                            {% if pelicula.poster %}
+                            <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
+                            {% else %}
+                            <div class="movie-poster-placeholder">
+                                <span>🎬</span>
+                            </div>
+                            {% endif %}
+                            <div class="movie-rating">
+                                ⭐ {{ pelicula.calificacion_promedio|floatformat:1 }}
+                            </div>
+                        </div>
+                        <div class="movie-info">
+                            <h3 class="movie-title">{{ pelicula.titulo }}</h3>
+                            <p class="movie-year">{{ pelicula.año }}</p>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="empty-message">No tienes películas favoritas aún. ¡Explora y agrega tus favoritas!</p>
+            {% endif %}
+        </div>
+
+        <!-- Contenido de Ver Después -->
+        <div class="tab-content" id="ver-despues">
+            <h2 class="section-title">Lista para Ver Después</h2>
+            {% if ver_despues %}
+            <div class="movies-grid">
+                {% for pelicula in ver_despues %}
+                <div class="movie-card">
+                    <a href="{% url 'peliculas:detalle' pelicula.id %}" class="movie-link">
+                        <div class="movie-poster">
+                            {% if pelicula.poster %}
+                            <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
+                            {% else %}
+                            <div class="movie-poster-placeholder">
+                                <span>🎬</span>
+                            </div>
+                            {% endif %}
+                            <div class="movie-rating">
+                                ⭐ {{ pelicula.calificacion_promedio|floatformat:1 }}
+                            </div>
+                        </div>
+                        <div class="movie-info">
+                            <h3 class="movie-title">{{ pelicula.titulo }}</h3>
+                            <p class="movie-year">{{ pelicula.año }}</p>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="empty-message">Tu lista está vacía. Agrega películas que quieras ver más tarde.</p>
+            {% endif %}
+        </div>
+
+        <!-- Contenido de Calificaciones -->
+        <div class="tab-content" id="calificaciones">
+            <h2 class="section-title">Mis Calificaciones</h2>
+            {% if mis_calificaciones %}
+            <div class="ratings-list">
+                {% for calificacion in mis_calificaciones %}
+                <div class="rating-item">
+                    <div class="rating-poster">
+                        {% if calificacion.pelicula.poster %}
+                        <img src="{{ calificacion.pelicula.poster }}" alt="{{ calificacion.pelicula.titulo }}">
+                        {% else %}
+                        <div class="poster-placeholder">🎬</div>
+                        {% endif %}
+                    </div>
+                    <div class="rating-info">
+                        <h3><a href="{% url 'peliculas:detalle' calificacion.pelicula.id %}">{{ calificacion.pelicula.titulo }}</a></h3>
+                        <p class="rating-year">{{ calificacion.pelicula.año }}</p>
+                        <p class="rating-date">Calificada el {{ calificacion.fecha|date:"d/m/Y" }}</p>
+                    </div>
+                    <div class="rating-score">
+                        <span class="score-big">{{ calificacion.puntuacion }}</span>
+                        <span class="score-max">/10</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="empty-message">No has calificado ninguna película todavía.</p>
+            {% endif %}
+        </div>
+
+        <!-- Contenido de Reseñas -->
+        <div class="tab-content" id="resenas">
+            <h2 class="section-title">Mis Reseñas</h2>
+            {% if mis_resenas %}
+            <div class="reviews-list">
+                {% for resena in mis_resenas %}
+                <div class="review-item">
+                    <div class="review-header">
+                        <h3><a href="{% url 'peliculas:detalle' resena.pelicula.id %}">{{ resena.pelicula.titulo }}</a></h3>
+                        <span class="review-date">{{ resena.fecha|date:"d/m/Y" }}</span>
+                    </div>
+                    <h4 class="review-title">{{ resena.titulo }}</h4>
+                    <p class="review-content">{{ resena.contenido|truncatewords:50 }}</p>
+                    <a href="{% url 'peliculas:detalle' resena.pelicula.id %}" class="review-link">Ver reseña completa →</a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="empty-message">No has escrito ninguna reseña todavía.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-page {
+    padding: 40px 0;
+    min-height: calc(100vh - 200px);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 40px;
+    background: linear-gradient(135deg, #e50914 0%, #c40812 100%);
+    border-radius: 15px;
+    color: white;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px rgba(229, 9, 20, 0.3);
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: white;
+    color: #e50914;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    font-weight: bold;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.profile-info h1 {
+    font-size: 32px;
+    margin-bottom: 5px;
+}
+
+.profile-username {
+    font-size: 18px;
+    opacity: 0.9;
+    margin-bottom: 5px;
+}
+
+.profile-email {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stat-number {
+    font-size: 36px;
+    font-weight: bold;
+    color: #e50914;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    color: #666;
+    font-size: 14px;
+}
+
+.profile-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #eee;
+    flex-wrap: wrap;
+}
+
+.tab-button {
+    padding: 15px 25px;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+    font-family: 'Poppins', sans-serif;
+}
+
+.tab-button:hover {
+    color: #e50914;
+}
+
+.tab-button.active {
+    color: #e50914;
+    border-bottom-color: #e50914;
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.empty-message {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+    font-size: 18px;
+    background: white;
+    border-radius: 10px;
+}
+
+.ratings-list, .reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.rating-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.rating-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.rating-poster {
+    width: 80px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.rating-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.poster-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+}
+
+.rating-info {
+    flex: 1;
+}
+
+.rating-info h3 a {
+    color: #333;
+    text-decoration: none;
+    font-size: 20px;
+    transition: color 0.3s;
+}
+
+.rating-info h3 a:hover {
+    color: #e50914;
+}
+
+.rating-year, .rating-date {
+    color: #666;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.rating-score {
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.score-big {
+    font-size: 48px;
+    font-weight: bold;
+    color: #e50914;
+}
+
+.score-max {
+    font-size: 18px;
+    color: #999;
+}
+
+.review-item {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.review-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.review-header h3 a {
+    color: #333;
+    text-decoration: none;
+    font-size: 20px;
+    transition: color 0.3s;
+}
+
+.review-header h3 a:hover {
+    color: #e50914;
+}
+
+.review-date {
+    color: #999;
+    font-size: 14px;
+}
+
+.review-title {
+    color: #e50914;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.review-content {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.review-link {
+    color: #e50914;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.review-link:hover {
+    color: #c40812;
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 20px;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        font-size: 40px;
+    }
+
+    .profile-info h1 {
+        font-size: 26px;
+    }
+
+    .profile-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tab-button {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+
+    .rating-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .rating-poster {
+        width: 100%;
+        max-width: 150px;
+        height: 225px;
+    }
+}
+</style>
+
+<script>
+// Sistema de pestañas
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+
+            // Remover active de todos los botones y contenidos
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Agregar active al botón clickeado y su contenido
+            this.classList.add('active');
+            document.getElementById(targetTab).classList.add('active');
+        });
+    });
+
+    // Soporte para enlaces con hash (ej: #favoritos)
+    if (window.location.hash) {
+        const hash = window.location.hash.substring(1);
+        const targetButton = document.querySelector(`[data-tab="${hash}"]`);
+        if (targetButton) {
+            targetButton.click();
+        }
+    }
+});
+</script>
+{% endblock %}

@@ -114,6 +114,96 @@
     }
   },
   {
+    "model": "peliculas.director",
+    "pk": 6,
+    "fields": {
+      "nombre": "James Cameron",
+      "biografia": "Director canadiense maestro de la ciencia ficción y acción",
+      "fecha_nacimiento": "1954-08-16",
+      "nacionalidad": "Canadá"
+    }
+  },
+  {
+    "model": "peliculas.director",
+    "pk": 7,
+    "fields": {
+      "nombre": "Steven Spielberg",
+      "biografia": "Legendario director estadounidense",
+      "fecha_nacimiento": "1946-12-18",
+      "nacionalidad": "Estados Unidos"
+    }
+  },
+  {
+    "model": "peliculas.director",
+    "pk": 8,
+    "fields": {
+      "nombre": "Ridley Scott",
+      "biografia": "Director británico maestro de ciencia ficción",
+      "fecha_nacimiento": "1937-11-30",
+      "nacionalidad": "Reino Unido"
+    }
+  },
+  {
+    "model": "peliculas.director",
+    "pk": 9,
+    "fields": {
+      "nombre": "Peter Jackson",
+      "biografia": "Director neozelandés de épicas películas de fantasía",
+      "fecha_nacimiento": "1961-10-31",
+      "nacionalidad": "Nueva Zelanda"
+    }
+  },
+  {
+    "model": "peliculas.director",
+    "pk": 10,
+    "fields": {
+      "nombre": "Wes Anderson",
+      "biografia": "Director con estilo visual único y simétrico",
+      "fecha_nacimiento": "1969-05-01",
+      "nacionalidad": "Estados Unidos"
+    }
+  },
+  {
+    "model": "peliculas.director",
+    "pk": 11,
+    "fields": {
+      "nombre": "Todd Phillips",
+      "biografia": "Director estadounidense conocido por sus comedias",
+      "fecha_nacimiento": "1970-12-20",
+      "nacionalidad": "Estados Unidos"
+    }
+  },
+  {
+    "model": "peliculas.director",
+    "pk": 12,
+    "fields": {
+      "nombre": "Damien Chazelle",
+      "biografia": "Director estadounidense conocido por sus dramas musicales",
+      "fecha_nacimiento": "1985-01-19",
+      "nacionalidad": "Estados Unidos"
+    }
+  },
+  {
+    "model": "peliculas.director",
+    "pk": 13,
+    "fields": {
+      "nombre": "Ari Aster",
+      "biografia": "Director estadounidense conocido por su terror psicológico",
+      "fecha_nacimiento": "1986-07-15",
+      "nacionalidad": "Estados Unidos"
+    }
+  },
+  {
+    "model": "peliculas.director",
+    "pk": 14,
+    "fields": {
+      "nombre": "Nick Cassavetes",
+      "biografia": "Director estadounidense de dramas románticos",
+      "fecha_nacimiento": "1959-05-21",
+      "nacionalidad": "Estados Unidos"
+    }
+  },
+  {
     "model": "peliculas.actor",
     "pk": 1,
     "fields": {
@@ -157,12 +247,538 @@
     "model": "peliculas.pelicula",
     "pk": 1,
     "fields": {
+      "titulo": "The Dark Knight",
+      "titulo_original": "The Dark Knight",
+      "sinopsis": "Batman debe aceptar una de las pruebas más grandes cuando el Joker siembra el caos en Gotham City.",
+      "año": 2008,
+      "duracion": 152,
+      "director": 1,
+      "generos": [1, 4],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+      "trailer": "https://www.youtube.com/watch?v=EXeTwQWrcwY",
+      "fecha_estreno": "2008-07-18",
+      "presupuesto": "185000000.00",
+      "recaudacion": "1004900000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 2,
+    "fields": {
+      "titulo": "Mad Max Fury Road",
+      "titulo_original": "Mad Max Fury Road",
+      "sinopsis": "En un futuro apocalíptico, Max se une a Furiosa para escapar de un tirano en una persecución épica.",
+      "año": 2015,
+      "duracion": 120,
+      "director": 1,
+      "generos": [1],
+      "pais": "Australia",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/8tZYtuWezp8JbcsvHYO0O46tFbo.jpg",
+      "trailer": "https://www.youtube.com/watch?v=hEJnMQG9ev8",
+      "fecha_estreno": "2015-05-15",
+      "presupuesto": "150000000.00",
+      "recaudacion": "378900000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 3,
+    "fields": {
+      "titulo": "John Wick",
+      "titulo_original": "John Wick",
+      "sinopsis": "Un ex asesino a sueldo sale de su retiro para rastrear a los gángsters que mataron a su perro.",
+      "año": 2014,
+      "duracion": 101,
+      "director": 1,
+      "generos": [1],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/fZPSd91yGE9fCcCe6OoQr6E3Bev.jpg",
+      "trailer": "https://www.youtube.com/watch?v=C0BMx-qxsP4",
+      "fecha_estreno": "2014-10-24",
+      "presupuesto": "20000000.00",
+      "recaudacion": "86000000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 4,
+    "fields": {
+      "titulo": "The Matrix",
+      "titulo_original": "The Matrix",
+      "sinopsis": "Un hacker descubre que la realidad es una simulación y se une a una rebelión contra las máquinas.",
+      "año": 1999,
+      "duracion": 136,
+      "director": 1,
+      "generos": [1, 6],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg",
+      "trailer": "https://www.youtube.com/watch?v=vKQi3bBA1y8",
+      "fecha_estreno": "1999-03-31",
+      "presupuesto": "63000000.00",
+      "recaudacion": "467200000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 5,
+    "fields": {
+      "titulo": "Gladiator",
+      "titulo_original": "Gladiator",
+      "sinopsis": "Un general romano traicionado se convierte en gladiador para vengar el asesinato de su familia.",
+      "año": 2000,
+      "duracion": 155,
+      "director": 8,
+      "generos": [1, 4],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://www.themoviedb.org/t/p/w1280/90QFOG5zSN4cbrIVs4DL4ePAuA5.jpg",
+      "trailer": "https://www.youtube.com/watch?v=owK1qxDselE",
+      "fecha_estreno": "2000-05-05",
+      "presupuesto": "103000000.00",
+      "recaudacion": "460500000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 6,
+    "fields": {
+      "titulo": "Raiders of the Lost Ark",
+      "titulo_original": "Raiders of the Lost Ark",
+      "sinopsis": "El arqueólogo Indiana Jones debe encontrar el Arca de la Alianza antes que los nazis.",
+      "año": 1981,
+      "duracion": 115,
+      "director": 7,
+      "generos": [2],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/ceG9VzoRAVGwivFU403Wc3AHRys.jpg",
+      "trailer": "https://www.youtube.com/watch?v=0xNu6XaeLKs",
+      "fecha_estreno": "1981-06-12",
+      "presupuesto": "20000000.00",
+      "recaudacion": "389900000.00",
+      "clasificacion": "PG"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 7,
+    "fields": {
+      "titulo": "Jurassic Park",
+      "titulo_original": "Jurassic Park",
+      "sinopsis": "Un parque temático de dinosaurios clonados se convierte en una pesadilla cuando los animales escapan.",
+      "año": 1993,
+      "duracion": 127,
+      "director": 7,
+      "generos": [2, 6],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://www.themoviedb.org/t/p/w1280/h831eszSFmEyr94WKcgscqPIRbh.jpg",
+      "trailer": "https://www.youtube.com/watch?v=lc0UehYemQA",
+      "fecha_estreno": "1993-06-11",
+      "presupuesto": "63000000.00",
+      "recaudacion": "1029900000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 8,
+    "fields": {
+      "titulo": "Pirates of the Caribbean",
+      "titulo_original": "Pirates of the Caribbean The Curse of the Black Pearl",
+      "sinopsis": "El Capitán Jack Sparrow se une a un herrero para rescatar a la hija del gobernador de piratas malditos.",
+      "año": 2003,
+      "duracion": 143,
+      "director": 1,
+      "generos": [2, 7],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/z8onk7LV9Mmw6zKz4hT6pzzvmvl.jpg",
+      "trailer": "https://www.youtube.com/watch?v=naQr0uTrH_s",
+      "fecha_estreno": "2003-07-09",
+      "presupuesto": "140000000.00",
+      "recaudacion": "654300000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 9,
+    "fields": {
+      "titulo": "Avatar",
+      "titulo_original": "Avatar",
+      "sinopsis": "Un marine parapléjico es enviado a la luna Pandora en una misión única pero se enfrenta a una difícil elección.",
+      "año": 2009,
+      "duracion": 162,
+      "director": 6,
+      "generos": [2, 6, 7],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/6EiRUJpuoeQPghrs3YNktfnqOVh.jpg",
+      "trailer": "https://www.youtube.com/watch?v=5PSNL1qE6VY",
+      "fecha_estreno": "2009-12-18",
+      "presupuesto": "237000000.00",
+      "recaudacion": "2923706026.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 10,
+    "fields": {
+      "titulo": "The Hobbit An Unexpected Journey",
+      "titulo_original": "The Hobbit An Unexpected Journey",
+      "sinopsis": "Bilbo Bolsón se embarca en una gran aventura para ayudar a un grupo de enanos a reclamar su reino.",
+      "año": 2012,
+      "duracion": 169,
+      "director": 9,
+      "generos": [2, 7],
+      "pais": "Nueva Zelanda",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/yHA9Fc37VmpUA5UncTxxo3rTGVA.jpg",
+      "trailer": "https://www.youtube.com/watch?v=SDnYMbYB-nU",
+      "fecha_estreno": "2012-12-14",
+      "presupuesto": "180000000.00",
+      "recaudacion": "1017000000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 11,
+    "fields": {
+      "titulo": "The Hangover",
+      "titulo_original": "The Hangover",
+      "sinopsis": "Tres amigos despiertan de una despedida de soltero en Las Vegas sin recordar nada y deben encontrar al novio.",
+      "año": 2009,
+      "duracion": 100,
+      "director": 11,
+      "generos": [3],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://www.themoviedb.org/t/p/w1280/rqeim09TdaflSvPNVnCTBjUHlKu.jpg",
+      "trailer": "https://www.youtube.com/watch?v=tcdUhdOlz9M",
+      "fecha_estreno": "2009-06-05",
+      "presupuesto": "35000000.00",
+      "recaudacion": "469300000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 12,
+    "fields": {
+      "titulo": "Superbad",
+      "titulo_original": "Superbad",
+      "sinopsis": "Dos amigos inseparables intentan conseguir alcohol para una fiesta antes de graduarse de preparatoria.",
+      "año": 2007,
+      "duracion": 113,
+      "director": 1,
+      "generos": [3],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://www.themoviedb.org/t/p/w1280/ftUDFRYywWzajElI2RT9NIno2PS.jpg",
+      "trailer": "https://www.youtube.com/watch?v=4eaZ_48ZYog",
+      "fecha_estreno": "2007-08-17",
+      "presupuesto": "20000000.00",
+      "recaudacion": "170800000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 13,
+    "fields": {
+      "titulo": "Bridesmaids",
+      "titulo_original": "Bridesmaids",
+      "sinopsis": "Una dama de honor debe lidiar con sus propios problemas mientras ayuda a su mejor amiga a planear su boda.",
+      "año": 2011,
+      "duracion": 125,
+      "director": 1,
+      "generos": [3],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://www.themoviedb.org/t/p/w1280/rWPneguIfq8ZbhtRgMjwilH0Wyy.jpg",
+      "trailer": "https://www.youtube.com/watch?v=FP1E7ام7qGc",
+      "fecha_estreno": "2011-05-13",
+      "presupuesto": "32500000.00",
+      "recaudacion": "288400000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 14,
+    "fields": {
+      "titulo": "Step Brothers",
+      "titulo_original": "Step Brothers",
+      "sinopsis": "Dos hombres adultos que viven con sus padres se convierten en hermanastros y deben aprender a convivir.",
+      "año": 2008,
+      "duracion": 98,
+      "director": 1,
+      "generos": [3],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://www.themoviedb.org/t/p/w1280/jmiZebStqOpHlKinDP5keHCLRXQ.jpg",
+      "trailer": "https://www.youtube.com/watch?v=CewJ-ojUrNE",
+      "fecha_estreno": "2008-07-25",
+      "presupuesto": "65000000.00",
+      "recaudacion": "128100000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 15,
+    "fields": {
+      "titulo": "21 Jump Street",
+      "titulo_original": "21 Jump Street",
+      "sinopsis": "Dos policías jóvenes se infiltran en una preparatoria para desmantelar una red de drogas.",
+      "año": 2012,
+      "duracion": 109,
+      "director": 11,
+      "generos": [3, 1],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/8v3Sqv9UcIUC4ebmpKWROqPBINZ.jpg",
+      "trailer": "https://www.youtube.com/watch?v=RLoKtb4c4W0",
+      "fecha_estreno": "2012-03-16",
+      "presupuesto": "42000000.00",
+      "recaudacion": "201600000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 16,
+    "fields": {
+      "titulo": "The Shawshank Redemption",
+      "titulo_original": "The Shawshank Redemption",
+      "sinopsis": "Un banquero encarcelado injustamente forja una amistad con un compañero y encuentra redención.",
+      "año": 1994,
+      "duracion": 142,
+      "director": 1,
+      "generos": [4],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
+      "trailer": "https://www.youtube.com/watch?v=6hB3S9bIaco",
+      "fecha_estreno": "1994-09-23",
+      "presupuesto": "25000000.00",
+      "recaudacion": "28300000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 17,
+    "fields": {
+      "titulo": "Forrest Gump",
+      "titulo_original": "Forrest Gump",
+      "sinopsis": "La vida extraordinaria de un hombre simple que presencia y participa en eventos históricos importantes.",
+      "año": 1994,
+      "duracion": 142,
+      "director": 1,
+      "generos": [4, 8],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/clolk7rB5lAjs41SD0Vt6IXYLMm.jpg",
+      "trailer": "https://www.youtube.com/watch?v=bLvqoHBptjg",
+      "fecha_estreno": "1994-07-06",
+      "presupuesto": "55000000.00",
+      "recaudacion": "678200000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 18,
+    "fields": {
+      "titulo": "Whiplash",
+      "titulo_original": "Whiplash",
+      "sinopsis": "Un joven baterista es sometido a un entrenamiento brutal por un instructor de jazz obsesivo.",
+      "año": 2014,
+      "duracion": 106,
+      "director": 12,
+      "generos": [4],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/7fn624j5lj3xTme2SgiLCeuedmO.jpg",
+      "trailer": "https://www.youtube.com/watch?v=7d_jQycdQGo",
+      "fecha_estreno": "2014-10-10",
+      "presupuesto": "3300000.00",
+      "recaudacion": "49000000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 19,
+    "fields": {
+      "titulo": "The Green Mile",
+      "titulo_original": "The Green Mile",
+      "sinopsis": "Un guardia de prisión descubre que un recluso en el corredor de la muerte tiene poderes sobrenaturales.",
+      "año": 1999,
+      "duracion": 189,
+      "director": 1,
+      "generos": [4, 7],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/velWPhVMQeQKcxggNEU8YmIo52R.jpg",
+      "trailer": "https://www.youtube.com/watch?v=Ki4haFrqSrw",
+      "fecha_estreno": "1999-12-10",
+      "presupuesto": "60000000.00",
+      "recaudacion": "286800000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 20,
+    "fields": {
+      "titulo": "A Beautiful Mind",
+      "titulo_original": "A Beautiful Mind",
+      "sinopsis": "La historia real de John Nash, un brillante matemático que lucha contra la esquizofrenia.",
+      "año": 2001,
+      "duracion": 135,
+      "director": 1,
+      "generos": [4],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/zwzWCmH72OSC9NA0ipoqw5Zjya8.jpg",
+      "trailer": "https://www.youtube.com/watch?v=aS_d0Ayjw4o",
+      "fecha_estreno": "2001-12-21",
+      "presupuesto": "58000000.00",
+      "recaudacion": "313500000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 21,
+    "fields": {
+      "titulo": "Get Out",
+      "titulo_original": "Get Out",
+      "sinopsis": "Un joven afroamericano visita a la familia de su novia blanca y descubre un perturbador secreto.",
+      "año": 2017,
+      "duracion": 104,
+      "director": 5,
+      "generos": [5],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/tFXcEccSQMf3lfhfXKSU9iRBpa3.jpg",
+      "trailer": "https://www.youtube.com/watch?v=DzfpyUB60YY",
+      "fecha_estreno": "2017-02-24",
+      "presupuesto": "4500000.00",
+      "recaudacion": "255400000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 22,
+    "fields": {
+      "titulo": "The Conjuring",
+      "titulo_original": "The Conjuring",
+      "sinopsis": "Investigadores paranormales ayudan a una familia aterrorizada por una presencia oscura en su granja.",
+      "año": 2013,
+      "duracion": 112,
+      "director": 1,
+      "generos": [5],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/wVYREutTvI2tmxr6ujrHT704wGF.jpg",
+      "trailer": "https://www.youtube.com/watch?v=k10ETZ41q5o",
+      "fecha_estreno": "2013-07-19",
+      "presupuesto": "20000000.00",
+      "recaudacion": "319500000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 23,
+    "fields": {
+      "titulo": "A Quiet Place",
+      "titulo_original": "A Quiet Place",
+      "sinopsis": "Una familia debe vivir en silencio para evitar ser cazada por criaturas que cazan por el sonido.",
+      "año": 2018,
+      "duracion": 90,
+      "director": 1,
+      "generos": [5, 6],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/nAU74GmpUk7t5iklEp3bufwDq4n.jpg",
+      "trailer": "https://www.youtube.com/watch?v=WR7cc5t7tv8",
+      "fecha_estreno": "2018-04-06",
+      "presupuesto": "17000000.00",
+      "recaudacion": "340900000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 24,
+    "fields": {
+      "titulo": "Hereditary",
+      "titulo_original": "Hereditary",
+      "sinopsis": "Una familia es perseguida por una presencia misteriosa y traumática tras la muerte de la abuela.",
+      "año": 2018,
+      "duracion": 127,
+      "director": 13,
+      "generos": [5],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://www.themoviedb.org/t/p/w1280/6chE8jSfzggAudaHmKodzBz8Sl.jpg",
+      "trailer": "https://www.youtube.com/watch?v=V6wWKNij_1M",
+      "fecha_estreno": "2018-06-08",
+      "presupuesto": "10000000.00",
+      "recaudacion": "80200000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 25,
+    "fields": {
+      "titulo": "It",
+      "titulo_original": "It",
+      "sinopsis": "Un grupo de niños debe enfrentarse a un payaso demoníaco que aterroriza su pueblo.",
+      "año": 2017,
+      "duracion": 135,
+      "director": 1,
+      "generos": [5],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/9E2y5Q7WlCVNEhP5GiVTjhEhx1o.jpg",
+      "trailer": "https://www.youtube.com/watch?v=7X0hq0ug9q4",
+      "fecha_estreno": "2017-09-08",
+      "presupuesto": "35000000.00",
+      "recaudacion": "701800000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 26,
+    "fields": {
       "titulo": "Inception",
       "titulo_original": "Inception",
-      "sinopsis": "Un ladrón que roba secretos corporativos a través del uso de la tecnología de compartir sueños recibe la tarea inversa de plantar una idea en la mente de un CEO. Dom Cobb es un experto en el arte de la extracción, robando secretos valiosos del subconsciente durante el estado de sueño. Esta habilidad lo ha convertido en un jugador codiciado en el traicionero nuevo mundo del espionaje corporativo, pero también lo ha convertido en un fugitivo internacional.",
+      "sinopsis": "Un ladrón que roba secretos corporativos a través del uso de la tecnología de compartir sueños recibe la tarea inversa de plantar una idea en la mente de un CEO.",
       "año": 2010,
       "duracion": 148,
       "director": 1,
+      "generos": [6, 1],
       "pais": "Estados Unidos",
       "idioma": "Inglés",
       "poster": "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
@@ -175,34 +791,78 @@
   },
   {
     "model": "peliculas.pelicula",
-    "pk": 2,
+    "pk": 27,
     "fields": {
-      "titulo": "Barbie",
-      "titulo_original": "Barbie",
-      "sinopsis": "Barbie y Ken están pasando el mejor momento de sus vidas en el colorido y aparentemente perfecto mundo de Barbie Land. Sin embargo, cuando tienen la oportunidad de ir al mundo real, pronto descubren las alegrías y los peligros de vivir entre los humanos. Una comedia brillante y visualmente deslumbrante que explora temas de identidad, feminismo y autoaceptación.",
-      "año": 2023,
-      "duracion": 114,
-      "director": 3,
+      "titulo": "Interstellar",
+      "titulo_original": "Interstellar",
+      "sinopsis": "Un equipo de exploradores viaja a través de un agujero de gusano para asegurar la supervivencia de la humanidad.",
+      "año": 2014,
+      "duracion": 169,
+      "director": 1,
+      "generos": [6, 4],
       "pais": "Estados Unidos",
       "idioma": "Inglés",
-      "poster": "https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg",
-      "trailer": "https://www.youtube.com/watch?v=pBk4NYhWNMM",
-      "fecha_estreno": "2023-07-21",
-      "presupuesto": "145000000.00",
-      "recaudacion": "1445000000.00",
+      "poster": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+      "trailer": "https://www.youtube.com/watch?v=zSWdZVtXT7E",
+      "fecha_estreno": "2014-11-07",
+      "presupuesto": "165000000.00",
+      "recaudacion": "677500000.00",
       "clasificacion": "PG-13"
     }
   },
   {
     "model": "peliculas.pelicula",
-    "pk": 3,
+    "pk": 28,
+    "fields": {
+      "titulo": "Blade Runner 2049",
+      "titulo_original": "Blade Runner 2049",
+      "sinopsis": "Un nuevo blade runner descubre un secreto que podría sumergir a la sociedad en el caos.",
+      "año": 2017,
+      "duracion": 164,
+      "director": 4,
+      "generos": [6],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg",
+      "trailer": "https://www.youtube.com/watch?v=gCcx85zbxz4",
+      "fecha_estreno": "2017-10-06",
+      "presupuesto": "150000000.00",
+      "recaudacion": "259200000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 29,
+    "fields": {
+      "titulo": "Arrival",
+      "titulo_original": "Arrival",
+      "sinopsis": "Una lingüista es reclutada para comunicarse con extraterrestres que han llegado a la Tierra.",
+      "año": 2016,
+      "duracion": 116,
+      "director": 4,
+      "generos": [6, 4],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/x2FJsf1ElAgr63Y3PNPtJrcmpoe.jpg",
+      "trailer": "https://www.youtube.com/watch?v=tFMo3UJ4B4g",
+      "fecha_estreno": "2016-11-11",
+      "presupuesto": "47000000.00",
+      "recaudacion": "203400000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 30,
     "fields": {
       "titulo": "Dune",
       "titulo_original": "Dune",
-      "sinopsis": "Paul Atreides, un joven brillante y talentoso nacido con un gran destino más allá de su comprensión, debe viajar al planeta más peligroso del universo para asegurar el futuro de su familia y su pueblo. Mientras fuerzas malévolas explotan por el control del suministro exclusivo del planeta del recurso más preciado de la existencia, solo aquellos que puedan conquistar sus miedos sobrevivirán.",
+      "sinopsis": "Paul Atreides viaja al planeta más peligroso del universo para asegurar el futuro de su familia.",
       "año": 2021,
       "duracion": 155,
       "director": 4,
+      "generos": [6, 2],
       "pais": "Estados Unidos",
       "idioma": "Inglés",
       "poster": "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
@@ -215,62 +875,212 @@
   },
   {
     "model": "peliculas.pelicula",
-    "pk": 4,
+    "pk": 31,
     "fields": {
-      "titulo": "Get Out",
-      "titulo_original": "Get Out",
-      "sinopsis": "Chris y su novia Rose van a pasar un fin de semana a la casa de los padres de ella en el campo. Al principio, Chris lee el comportamiento excesivamente complaciente de los padres como nerviosismo por la relación interracial de su hija, pero a medida que pasan las horas, una serie de descubrimientos cada vez más inquietantes lo llevan a una verdad que nunca podría haber imaginado.",
-      "año": 2017,
-      "duracion": 104,
-      "director": 5,
-      "pais": "Estados Unidos",
+      "titulo": "The Lord of the Rings The Fellowship of the Ring",
+      "titulo_original": "The Lord of the Rings The Fellowship of the Ring",
+      "sinopsis": "Un hobbit debe destruir un anillo mágico que puede llevar al mundo a la oscuridad eterna.",
+      "año": 2001,
+      "duracion": 178,
+      "director": 9,
+      "generos": [7, 2],
+      "pais": "Nueva Zelanda",
       "idioma": "Inglés",
-      "poster": "https://image.tmdb.org/t/p/w500/tFXcEccSQMf3lfhfXKSU9iRBpa3.jpg",
-      "trailer": "https://www.youtube.com/watch?v=DzfpyUB60YY",
-      "fecha_estreno": "2017-02-24",
-      "presupuesto": "4500000.00",
-      "recaudacion": "255000000.00",
-      "clasificacion": "R"
-    }
-  },
-  {
-    "model": "peliculas.pelicula",
-    "pk": 5,
-    "fields": {
-      "titulo": "Pulp Fiction",
-      "titulo_original": "Pulp Fiction",
-      "sinopsis": "Las vidas de dos asesinos de la mafia, un boxeador, la esposa de un gánster y un par de bandidos de restaurantes se entrelazan en cuatro historias de violencia y redención. Una obra maestra del cine independiente que revolucionó la narrativa cinematográfica con su estructura no lineal y diálogos memorables.",
-      "año": 1994,
-      "duracion": 154,
-      "director": 2,
-      "pais": "Estados Unidos",
-      "idioma": "Inglés",
-      "poster": "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
-      "trailer": "https://www.youtube.com/watch?v=s7EdQ4FqbhY",
-      "fecha_estreno": "1994-10-14",
-      "presupuesto": "8000000.00",
-      "recaudacion": "213900000.00",
-      "clasificacion": "R"
-    }
-  },
-  {
-    "model": "peliculas.pelicula",
-    "pk": 6,
-    "fields": {
-      "titulo": "Interstellar",
-      "titulo_original": "Interstellar",
-      "sinopsis": "Un equipo de exploradores viaja a través de un agujero de gusano en el espacio en un intento de asegurar la supervivencia de la humanidad. En un futuro cercano, la Tierra se ha vuelto inhabitable. El ex piloto de la NASA, Cooper, debe dejar a su familia para liderar una expedición más allá de nuestra galaxia para descubrir si la humanidad tiene un futuro entre las estrellas.",
-      "año": 2014,
-      "duracion": 169,
-      "director": 1,
-      "pais": "Estados Unidos",
-      "idioma": "Inglés",
-      "poster": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
-      "trailer": "https://www.youtube.com/watch?v=zSWdZVtXT7E",
-      "fecha_estreno": "2014-11-07",
-      "presupuesto": "165000000.00",
-      "recaudacion": "677000000.00",
+      "poster": "https://image.tmdb.org/t/p/w500/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg",
+      "trailer": "https://www.youtube.com/watch?v=V75dMMIW2B4",
+      "fecha_estreno": "2001-12-19",
+      "presupuesto": "93000000.00",
+      "recaudacion": "871500000.00",
       "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 32,
+    "fields": {
+      "titulo": "Harry Potter and the Sorcerer's Stone",
+      "titulo_original": "Harry Potter and the Philosopher's Stone",
+      "sinopsis": "Un niño descubre que es un mago y asiste a una escuela de magia donde enfrenta grandes desafíos.",
+      "año": 2001,
+      "duracion": 152,
+      "director": 1,
+      "generos": [7, 2],
+      "pais": "Reino Unido",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/wuMc08IPKEatf9rnMNXvIDxqP4W.jpg",
+      "trailer": "https://www.youtube.com/watch?v=VyHV0BRtdxo",
+      "fecha_estreno": "2001-11-16",
+      "presupuesto": "125000000.00",
+      "recaudacion": "1024000000.00",
+      "clasificacion": "PG"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 33,
+    "fields": {
+      "titulo": "Pan's Labyrinth",
+      "titulo_original": "El Laberinto del Fauno",
+      "sinopsis": "Una niña escapa a un mundo mágico y peligroso durante la España fascista de posguerra.",
+      "año": 2006,
+      "duracion": 118,
+      "director": 1,
+      "generos": [7, 4],
+      "pais": "España",
+      "idioma": "Español",
+      "poster": "https://www.themoviedb.org/t/p/w1280/953ZprqPxXSfhHvjBVRiIv7fSP6.jpg",
+      "trailer": "https://www.youtube.com/watch?v=EqYyZLWVSw4",
+      "fecha_estreno": "2006-10-11",
+      "presupuesto": "19000000.00",
+      "recaudacion": "83300000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 34,
+    "fields": {
+      "titulo": "The Shape of Water",
+      "titulo_original": "The Shape of Water",
+      "sinopsis": "Una mujer muda se enamora de una criatura anfibia retenida en un laboratorio gubernamental.",
+      "año": 2017,
+      "duracion": 123,
+      "director": 1,
+      "generos": [7, 8, 4],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/9zfwPffUXpBrEP26yp0q1ckXDcj.jpg",
+      "trailer": "https://www.youtube.com/watch?v=XFYWazblaUA",
+      "fecha_estreno": "2017-12-08",
+      "presupuesto": "19500000.00",
+      "recaudacion": "195200000.00",
+      "clasificacion": "R"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 35,
+    "fields": {
+      "titulo": "Big Fish",
+      "titulo_original": "Big Fish",
+      "sinopsis": "Un hijo intenta separar la realidad de la ficción en las fantásticas historias de su padre moribundo.",
+      "año": 2003,
+      "duracion": 125,
+      "director": 1,
+      "generos": [7, 4],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://www.themoviedb.org/t/p/w1280/m4gYCeV4GfGDw4PpMgU9kFIaNxP.jpg",
+      "trailer": "https://www.youtube.com/watch?v=NGTmPRMKqCk",
+      "fecha_estreno": "2003-12-10",
+      "presupuesto": "70000000.00",
+      "recaudacion": "122900000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 36,
+    "fields": {
+      "titulo": "The Notebook",
+      "titulo_original": "The Notebook",
+      "sinopsis": "Un hombre lee a una mujer con demencia la historia de su amor juvenil, que resulta ser su propia historia.",
+      "año": 2004,
+      "duracion": 123,
+      "director": 14,
+      "generos": [8, 4],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/rNzQyW4f8B8cQeg7Dgj3n6eT5k9.jpg",
+      "trailer": "https://www.youtube.com/watch?v=yDJIcYE32v0",
+      "fecha_estreno": "2004-06-25",
+      "presupuesto": "29000000.00",
+      "recaudacion": "117800000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 37,
+    "fields": {
+      "titulo": "Pride and Prejudice",
+      "titulo_original": "Pride and Prejudice",
+      "sinopsis": "Elizabeth Bennet debe lidiar con las presiones sociales mientras se enamora del orgulloso Sr. Darcy.",
+      "año": 2005,
+      "duracion": 129,
+      "director": 1,
+      "generos": [8, 4],
+      "pais": "Reino Unido",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/sGjIvtVvTlWnia2zfJfHz81pZ9Q.jpg",
+      "trailer": "https://www.youtube.com/watch?v=1T0sSP9Z0vI",
+      "fecha_estreno": "2005-09-16",
+      "presupuesto": "28000000.00",
+      "recaudacion": "121600000.00",
+      "clasificacion": "PG"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 38,
+    "fields": {
+      "titulo": "La La Land",
+      "titulo_original": "La La Land",
+      "sinopsis": "Un músico de jazz y una actriz aspirante se enamoran mientras persiguen sus sueños en Los Ángeles.",
+      "año": 2016,
+      "duracion": 128,
+      "director": 12,
+      "generos": [8, 4],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg",
+      "trailer": "https://www.youtube.com/watch?v=0pdqf4P9MB8",
+      "fecha_estreno": "2016-12-09",
+      "presupuesto": "30000000.00",
+      "recaudacion": "448900000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 39,
+    "fields": {
+      "titulo": "Titanic",
+      "titulo_original": "Titanic",
+      "sinopsis": "Un romance entre un artista pobre y una aristócrata a bordo del fatídico viaje del RMS Titanic.",
+      "año": 1997,
+      "duracion": 194,
+      "director": 6,
+      "generos": [8, 4],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg",
+      "trailer": "https://www.youtube.com/watch?v=kVrqfYjkTdQ",
+      "fecha_estreno": "1997-12-19",
+      "presupuesto": "200000000.00",
+      "recaudacion": "2208000000.00",
+      "clasificacion": "PG-13"
+    }
+  },
+  {
+    "model": "peliculas.pelicula",
+    "pk": 40,
+    "fields": {
+      "titulo": "Eternal Sunshine of the Spotless Mind",
+      "titulo_original": "Eternal Sunshine of the Spotless Mind",
+      "sinopsis": "Una pareja se somete a un procedimiento para borrar sus recuerdos mutuos después de una ruptura.",
+      "año": 2004,
+      "duracion": 108,
+      "director": 1,
+      "generos": [8, 4, 6],
+      "pais": "Estados Unidos",
+      "idioma": "Inglés",
+      "poster": "https://image.tmdb.org/t/p/w500/5MwkWH9tYHv3mV9OdYTMR5qreIz.jpg",
+      "trailer": "https://www.youtube.com/watch?v=rbp8vylJkv8",
+      "fecha_estreno": "2004-03-19",
+      "presupuesto": "20000000.00",
+      "recaudacion": "74000000.00",
+      "clasificacion": "R"
     }
   }
 ]

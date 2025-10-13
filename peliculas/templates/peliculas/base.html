@@ -22,7 +22,7 @@
                     <div class="nav-links">
                         <a href="{% url 'peliculas:index' %}" class="nav-link">Inicio</a>
                         <div class="dropdown">
-                            <button class="nav-link dropdown-toggle">Géneros</button>
+                            <button class="nav-link dropdown-toggle">Géneros ▼</button>
                             <div class="dropdown-menu">
                                 {% for genero in generos %}
                                 <a href="{% url 'peliculas:por_genero' genero.id %}" class="dropdown-item">
@@ -40,10 +40,36 @@
                     
                     <div class="auth-links">
                         {% if user.is_authenticated %}
-                            <span class="user-name">Hola, {{ user.username }}</span>
-                            <a href="{% url 'admin:index' %}" class="btn-secondary">Admin</a>
+                            <div class="user-dropdown">
+                                <button class="user-menu-toggle">
+                                    <span class="user-avatar">{{ user.username|slice:":1"|upper }}</span>
+                                    <span class="user-name-display">{{ user.username }}</span>
+                                    <span class="dropdown-arrow">▼</span>
+                                </button>
+                                <div class="user-menu">
+                                    <a href="{% url 'peliculas:perfil' %}" class="user-menu-item">
+                                        👤 Mi Perfil
+                                    </a>
+                                    <a href="{% url 'peliculas:perfil' %}#favoritos" class="user-menu-item">
+                                        ❤️ Mis Favoritos
+                                    </a>
+                                    <a href="{% url 'peliculas:perfil' %}#ver-despues" class="user-menu-item">
+                                        🕒 Ver Después
+                                    </a>
+                                    {% if user.is_staff %}
+                                    <a href="{% url 'admin:index' %}" class="user-menu-item">
+                                        ⚙️ Panel Admin
+                                    </a>
+                                    {% endif %}
+                                    <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
+                                    <a href="{% url 'logout' %}" class="user-menu-item logout">
+                                        🚪 Cerrar Sesión
+                                    </a>
+                                </div>
+                            </div>
                         {% else %}
-                            <a href="{% url 'admin:index' %}" class="btn-primary">Iniciar Sesión</a>
+                            <a href="{% url 'login' %}" class="btn-secondary">Iniciar Sesión</a>
+                            <a href="{% url 'peliculas:registro' %}" class="btn-primary">Registrarse</a>
                         {% endif %}
                     </div>
                 </div>
@@ -56,7 +82,11 @@
     <div class="messages-container">
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }}">
+            <span class="alert-icon">
+                {% if message.tags == 'success' %}✓{% elif message.tags == 'error' %}✕{% else %}ℹ{% endif %}
+            </span>
             {{ message }}
+            <button class="alert-close" onclick="this.parentElement.remove()">×</button>
         </div>
         {% endfor %}
     </div>
@@ -102,22 +132,225 @@
     </footer>
 
     <script>
-        // Dropdown functionality
+        // Dropdown de géneros
         document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
             toggle.addEventListener('click', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 this.parentElement.classList.toggle('active');
             });
         });
 
-        // Close dropdown when clicking outside
+        // Dropdown de usuario
+        const userToggle = document.querySelector('.user-menu-toggle');
+        if (userToggle) {
+            userToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.parentElement.classList.toggle('active');
+            });
+        }
+
+        // Cerrar dropdowns al hacer click fuera
         document.addEventListener('click', function(e) {
-            if (!e.target.matches('.dropdown-toggle')) {
-                document.querySelectorAll('.dropdown').forEach(dropdown => {
+            if (!e.target.closest('.dropdown') && !e.target.closest('.user-dropdown')) {
+                document.querySelectorAll('.dropdown, .user-dropdown').forEach(dropdown => {
                     dropdown.classList.remove('active');
                 });
             }
         });
+
+        // Auto-ocultar mensajes después de 5 segundos
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                alert.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => alert.remove(), 300);
+            });
+        }, 5000);
     </script>
+
+    <style>
+        /* Estilos para el menú de usuario */
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-menu-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .user-menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e50914;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .user-name-display {
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .dropdown-arrow {
+            font-size: 10px;
+            transition: transform 0.3s;
+        }
+
+        .user-dropdown.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .user-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .user-dropdown.active .user-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-menu-item {
+            display: block;
+            padding: 12px 16px;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .user-menu-item:hover {
+            background: #f5f5f5;
+        }
+
+        .user-menu-item.logout {
+            color: #e50914;
+        }
+
+        .user-menu-item.logout:hover {
+            background: #fee;
+        }
+
+        /* Estilos mejorados para alertas */
+        .messages-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+        }
+
+        .alert {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .alert-success {
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-error {
+            border-left: 4px solid #dc3545;
+        }
+
+        .alert-icon {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .alert-success .alert-icon {
+            color: #28a745;
+        }
+
+        .alert-error .alert-icon {
+            color: #dc3545;
+        }
+
+        .alert-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .alert-close:hover {
+            color: #333;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .user-name-display {
+                display: none;
+            }
+
+            .messages-container {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+        }
+    </style>
 </body>
 </html>
