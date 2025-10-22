@@ -1185,6 +1185,12 @@ body {
     box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
 }
 
+.text-danger {
+    color: var(--primary-color);
+    margin-top: 5px;
+    font-size: 14px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .about-title {

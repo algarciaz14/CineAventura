@@ -15,4 +15,5 @@ urlpatterns = [
     path('pelicula/<int:pelicula_id>/favoritos/', views.agregar_favoritos, name='agregar_favoritos'),  # NUEVA
     path('pelicula/<int:pelicula_id>/ver-despues/', views.agregar_ver_despues, name='agregar_ver_despues'),  # NUEVA
     path('sobre-nosotros/', views.sobre_nosotros, name='sobre_nosotros'),
+    path('nueva-pelicula/', views.nueva_pelicula, name='nueva_pelicula'),
 ]
