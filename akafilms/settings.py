@@ -108,6 +108,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'  # Por defecto va al inicio
 
+# Configuración de redirección después del logout
+LOGOUT_REDIRECT_URL = '/' # Por defecto va al inicio
+
 # Función personalizada para redirigir según tipo de usuario
 def login_redirect(request):
     if request.user.is_staff:
