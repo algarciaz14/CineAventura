@@ -49,6 +49,7 @@ def detalle_pelicula(request, pelicula_id):
         'pelicula': pelicula,
         'resenas': resenas,
         'calificacion_usuario': calificacion_usuario,
+        'range_10': range(1, 11),
     }
     return render(request, 'peliculas/detalle.html', context)
 

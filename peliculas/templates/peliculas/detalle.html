@@ -117,10 +117,10 @@
                 <form method="post" action="{% url 'peliculas:agregar_calificacion' pelicula.id %}" class="rating-form">
                     {% csrf_token %}
                     <div class="rating-input">
-                        {% for i in "12345678910" %}
-                        <input type="radio" name="puntuacion" value="{{ forloop.counter }}" id="rating-{{ forloop.counter }}"
-                               {% if calificacion_usuario and calificacion_usuario.puntuacion == forloop.counter %}checked{% endif %}>
-                        <label for="rating-{{ forloop.counter }}">{{ forloop.counter }}</label>
+                        {% for i in range_10 %}
+                        <input type="radio" name="puntuacion" value="{{ i }}" id="rating-{{ i }}"
+                               {% if calificacion_usuario and calificacion_usuario.puntuacion == i %}checked{% endif %}>
+                        <label for="rating-{{ i }}">{{ i }}</label>
                         {% endfor %}
                     </div>
                     <button type="submit" class="btn-primary">Guardar Calificación</button>
