@@ -9,13 +9,21 @@
             <h1 class="search-title">Resultados de Búsqueda</h1>
             {% if query %}
             <p class="search-query">Buscando: "{{ query }}"</p>
-            <p class="search-count">{{ peliculas.count }} resultados encontrados</p>
+            {% if mensaje_error %}
+            <p class="search-error" style="color: #ff6b6b; font-size: 1.1em; margin-top: 10px;">{{ mensaje_error }}</p>
+            {% else %}
+            <p class="search-count">{{ peliculas.count }} resultado{{ peliculas.count|pluralize }} encontrado{{ peliculas.count|pluralize }}</p>
+            {% endif %}
             {% endif %}
         </div>
     </div>
     
     <div class="container">
-        {% if peliculas %}
+        {% if mensaje_error %}
+        <div class="no-results-container">
+            <p class="no-results-hint">Intenta con una búsqueda más específica (mínimo 3 caracteres).</p>
+        </div>
+        {% elif peliculas %}
         <div class="movies-grid">
             {% for pelicula in peliculas %}
             <div class="movie-card">
@@ -57,4 +65,13 @@
         {% endif %}
     </div>
 </div>
+
+<style>
+.search-error {
+    color: #ff6b6b !important;
+    font-size: 1.1em;
+    margin-top: 10px;
+    font-weight: 500;
+}
+</style>
 {% endblock %}

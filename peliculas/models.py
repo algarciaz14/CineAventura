@@ -196,7 +196,7 @@ class ListaPersonalizada(models.Model):
 User.add_to_class(
     'peliculas_favoritas',
     models.ManyToManyField(
-        Pelicula,  # SIN COMILLAS - usa la clase directamente
+        Pelicula,  
         related_name='usuarios_favorito',
         blank=True
     )
@@ -205,7 +205,7 @@ User.add_to_class(
 User.add_to_class(
     'peliculas_ver_despues',
     models.ManyToManyField(
-        Pelicula,  # SIN COMILLAS - usa la clase directamente
+        Pelicula,  
         related_name='usuarios_ver_despues',
         blank=True
     )

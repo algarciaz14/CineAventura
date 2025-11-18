@@ -45,11 +45,15 @@ def detalle_pelicula(request, pelicula_id):
         except Calificacion.DoesNotExist:
             pass
     
+    # Géneros para el navbar
+    generos = Genero.objects.all()
+    
     context = {
         'pelicula': pelicula,
         'resenas': resenas,
         'calificacion_usuario': calificacion_usuario,
         'range_10': range(1, 11),
+        'generos': generos,
     }
     return render(request, 'peliculas/detalle.html', context)
 
@@ -65,31 +69,236 @@ def peliculas_por_genero(request, genero_id):
     page_number = request.GET.get('page')
     peliculas = paginator.get_page(page_number)
     
+    # Géneros para el navbar
+    generos = Genero.objects.all()
+    
     context = {
         'genero': genero,
         'peliculas': peliculas,
+        'generos': generos,
     }
     return render(request, 'peliculas/por_genero.html', context)
 
 def buscar(request):
-    """Vista de búsqueda de películas"""
-    query = request.GET.get('q', '')
+    """Vista de búsqueda de películas mejorada con traducciones"""
+    query = request.GET.get('q', '').strip()
     peliculas = []
+    generos = Genero.objects.all()
+    
+    # Diccionario de traducciones español -> inglés 
+    TRADUCCIONES = {
+        # Artículos y palabras comunes
+        'el': 'the',
+        'la': 'the',
+        'los': 'the',
+        'las': 'the',
+        'un': 'a',
+        'una': 'a',
+        'de': 'of',
+        'del': 'of the',
+        'y': 'and',
+        
+        # Películas específicas en nuestra  base de datos
+        'caballero': 'knight',
+        'oscuro': 'dark',
+        'cuaderno': 'notebook',
+        'diario': 'notebook',
+        'resaca': 'hangover',
+        'piratas': 'pirates',
+        'caribe': 'caribbean',
+        'gladiador': 'gladiator',
+        'jurasico': 'jurassic',
+        'parque': 'park',
+        'hobbit': 'hobbit',
+        'viaje': 'journey',
+        'inesperado': 'unexpected',
+        'señor': 'lord',
+        'anillos': 'rings',
+        'comunidad': 'fellowship',
+        'anillo': 'ring',
+        'harry': 'harry',
+        'potter': 'potter',
+        'piedra': 'stone',
+        'filosofal': "sorcerer's",
+        'hechicero': "sorcerer's",
+        'laberinto': 'labyrinth',
+        'fauno': "pan's",
+        'forma': 'shape',
+        'agua': 'water',
+        'pez': 'fish',
+        'grande': 'big',
+        'orgullo': 'pride',
+        'prejuicio': 'prejudice',
+        'tierra': 'land',
+        'eterno': 'eternal',
+        'resplandor': 'sunshine',
+        'mente': 'mind',
+        'sin': 'spotless',
+        'mancha': 'spotless',
+        'inmaculada': 'spotless',
+        
+        # Términos de títulos comunes
+        'origen': 'inception',
+        'comienzo': 'inception',
+        'interestelar': 'interstellar',
+        'llegada': 'arrival',
+        'duna': 'dune',
+        'corredor': 'runner',
+        'hoja': 'blade',
+        'redencion': 'redemption',
+        'cadena': 'shawshank',
+        'perpetua': 'shawshank',
+        'milla': 'mile',
+        'milagro': 'green mile',
+        'mente': 'mind',
+        'hermosa': 'beautiful',
+        'bella': 'beautiful',
+        'salir': 'get out',
+        'huir': 'get out',
+        'fuera': 'out',
+        'conjuro': 'conjuring',
+        'invocacion': 'conjuring',
+        'lugar': 'place',
+        'silencio': 'quiet',
+        'silencioso': 'quiet',
+        'hereditario': 'hereditary',
+        'eso': 'it',
+        'payaso': 'it',
+        
+        # Términos generales
+        'guerra': 'war',
+        'amor': 'love',
+        'muerte': 'death',
+        'vida': 'life',
+        'rey': 'king',
+        'reina': 'queen',
+        'principe': 'prince',
+        'princesa': 'princess',
+        'dragon': 'dragon',
+        'noche': 'night',  
+        'dia': 'day',
+        'ciudad': 'city',
+        'mundo': 'world',
+        'hombre': 'man',
+        'mujer': 'woman',
+        'niño': 'boy',
+        'niña': 'girl',
+        'estrella': 'star',
+        'estrellas': 'stars',
+        'planeta': 'planet',
+        'cielo': 'sky',
+        'infierno': 'hell',
+        'paraiso': 'paradise',
+        'hermano': 'brother',
+        'hermanos': 'brothers',
+        'hermana': 'sister',
+        'familia': 'family',
+        'casa': 'house',
+        'hogar': 'home',
+        'rojo': 'red',
+        'azul': 'blue',
+        'verde': 'green',
+        'negro': 'black',
+        'blanco': 'white',
+        'secreto': 'secret',
+        'misterio': 'mystery',
+        'ultimo': 'last',
+        'primera': 'first',
+        'primer': 'first',
+        'nuevo': 'new',
+        'viejo': 'old',
+        'joven': 'young',
+        'pequeño': 'small',
+        'loco': 'mad',
+        'max': 'max',
+        'furia': 'fury',
+        'camino': 'road',
+        'carretera': 'road',
+        'matrix': 'matrix',
+        'invasores': 'raiders',
+        'arca': 'ark',
+        'perdida': 'lost',
+        'perdido': 'lost',
+        'avatar': 'avatar',
+        'titanic': 'titanic',
+        'forrest': 'forrest',
+        'gump': 'gump',
+        'latigo': 'whiplash',
+        'damas': 'bridesmaids',
+        'honor': 'bridesmaids',
+        'hermanastros': 'step brothers',
+        'calle': 'street',
+        'salto': 'jump',
+    }
     
     if query:
-        peliculas = Pelicula.objects.filter(
-            Q(titulo__icontains=query) |
-            Q(titulo_original__icontains=query) |
-            Q(sinopsis__icontains=query) |
-            Q(director__nombre__icontains=query) |
-            Q(actores__nombre__icontains=query)
-        ).distinct().annotate(
+        # Ignorar búsquedas muy cortas (menos de 3 caracteres)
+        if len(query) < 3:
+            context = {
+                'query': query,
+                'peliculas': peliculas,
+                'generos': generos,
+                'mensaje_error': 'Por favor ingresa al menos 3 caracteres para buscar.'
+            }
+            return render(request, 'peliculas/buscar.html', context)
+        
+        # Limpiar y normalizar el query
+        query_limpio = query.strip().lower()
+        
+        # Crear consulta base
+        q_objects = Q()
+        
+        # 1. SIEMPRE buscar con el texto original primero
+        q_objects |= Q(titulo__icontains=query)
+        q_objects |= Q(titulo_original__icontains=query)
+        
+        # 2. Buscar si la frase completa tiene traducción exacta
+        if query_limpio in TRADUCCIONES:
+            query_traducido = TRADUCCIONES[query_limpio]
+            q_objects |= Q(titulo__icontains=query_traducido)
+            q_objects |= Q(titulo_original__icontains=query_traducido)
+        
+        # 3. Traducir palabra por palabra Y buscar cada palabra clave
+        palabras = query_limpio.split()
+        palabras_importantes = []  # Solo palabras de 4+ caracteres
+        
+        for palabra in palabras:
+            # Traducir si existe
+            if palabra in TRADUCCIONES:
+                palabra_trad = TRADUCCIONES[palabra]
+                # Si la traducción no es un artículo, es importante
+                if palabra_trad not in ['the', 'a', 'an', 'of', 'in', 'and']:
+                    palabras_importantes.append(palabra_trad)
+                    # Buscar cada palabra importante individualmente
+                    if len(palabra_trad) >= 4:
+                        q_objects |= Q(titulo__icontains=palabra_trad)
+                        q_objects |= Q(titulo_original__icontains=palabra_trad)
+            elif len(palabra) >= 4:
+                # Palabra sin traducción pero suficientemente larga
+                palabras_importantes.append(palabra)
+                q_objects |= Q(titulo__icontains=palabra)
+                q_objects |= Q(titulo_original__icontains=palabra)
+        
+        # 4. Buscar con la frase completa traducida (palabra por palabra)
+        if palabras_importantes:
+            query_traducido_completo = ' '.join(palabras_importantes)
+            if query_traducido_completo != query_limpio:
+                q_objects |= Q(titulo__icontains=query_traducido_completo)
+                q_objects |= Q(titulo_original__icontains=query_traducido_completo)
+        
+        # 5. Buscar en géneros (solo si no es muy corto)
+        if len(query) >= 4:
+            q_objects |= Q(generos__nombre__icontains=query)
+        
+        # Ejecutar búsqueda
+        peliculas = Pelicula.objects.filter(q_objects).distinct().annotate(
             promedio=Avg('calificaciones__puntuacion')
         ).order_by('-promedio')
     
     context = {
         'query': query,
         'peliculas': peliculas,
+        'generos': generos,
     }
     return render(request, 'peliculas/buscar.html', context)
 
@@ -145,12 +354,15 @@ def agregar_resena(request, pelicula_id):
 
 def sobre_nosotros(request):
     """Vista de la página Sobre Nosotros"""
-    return render(request, 'peliculas/sobre_nosotros.html')
+    generos = Genero.objects.all()
+    return render(request, 'peliculas/sobre_nosotros.html', {'generos': generos})
 
 def registro(request):
     """Vista de registro de nuevos usuarios"""
     if request.user.is_authenticated:
         return redirect('peliculas:index')
+    
+    generos = Genero.objects.all()
     
     if request.method == 'POST':
         form = RegistroUsuarioForm(request.POST)
@@ -169,7 +381,7 @@ def registro(request):
     else:
         form = RegistroUsuarioForm()
     
-    return render(request, 'peliculas/registro.html', {'form': form})
+    return render(request, 'peliculas/registro.html', {'form': form, 'generos': generos})
 
 @login_required
 def agregar_favoritos(request, pelicula_id):
@@ -207,11 +419,14 @@ def mi_perfil(request):
     mis_calificaciones = Calificacion.objects.filter(usuario=request.user).select_related('pelicula')
     mis_resenas = Resena.objects.filter(usuario=request.user).select_related('pelicula')
     
+    generos = Genero.objects.all()
+    
     context = {
         'favoritos': favoritos,
         'ver_despues': ver_despues,
         'mis_calificaciones': mis_calificaciones,
         'mis_resenas': mis_resenas,
+        'generos': generos,
     }
     return render(request, 'peliculas/perfil.html', context)
 
@@ -221,13 +436,16 @@ def nueva_pelicula(request):
     if not request.user.is_staff:
         messages.error(request, 'No tienes permiso para acceder a esta página.')
         return redirect('peliculas:index')
+    
+    generos = Genero.objects.all()
+    
     if request.method == 'POST':
         form = PeliculaForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, '¡Nueva película agregada exitosamente!')
             return redirect('peliculas:index')
-        pass
     else:
         form = PeliculaForm()
-    return render(request, 'peliculas/nueva_pelicula.html', {'form': form})
+    
+    return render(request, 'peliculas/nueva_pelicula.html', {'form': form, 'generos': generos})
