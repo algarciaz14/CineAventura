@@ -22,7 +22,7 @@
                     <div class="nav-links">
                         <a href="{% url 'peliculas:index' %}" class="nav-link">Inicio</a>
                         <div class="dropdown">
-                            <button class="nav-link dropdown-toggle">Géneros ▼</button>
+                            <button class="nav-link dropdown-toggle">Géneros</button>
                             <div class="dropdown-menu">
                                 {% for genero in generos %}
                                 <a href="{% url 'peliculas:por_genero' genero.id %}" class="dropdown-item">
