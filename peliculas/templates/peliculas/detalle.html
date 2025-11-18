@@ -183,8 +183,11 @@
                     <div class="review-card">
                         <div class="review-header">
                             <div class="review-author">
-                                <span class="author-avatar">👤</span>
-                                <span class="author-name">{{ resena.usuario.username }}</span>
+                                <span class="author-avatar">{{ resena.usuario.first_name|slice:":1"|upper }}{{ resena.usuario.last_name|slice:":1"|upper }}</span>
+                                <div class="author-info">
+                                    <span class="author-name">{{ resena.usuario.get_full_name|default:resena.usuario.username }}</span>
+                                    <span class="author-username">@{{ resena.usuario.username }}</span>
+                                </div>
                             </div>
                             <span class="review-date">{{ resena.fecha|date:"d/m/Y" }}</span>
                         </div>
@@ -204,6 +207,44 @@
 </div>
 
 <style>
+/* Estilos para las reseñas */
+.review-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.author-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e50914, #c40812);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.author-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+}
+
+.author-username {
+    font-size: 13px;
+    color: #999;
+}
+
 /* Estilos para los botones de acción */
 .movie-actions {
     display: flex;
