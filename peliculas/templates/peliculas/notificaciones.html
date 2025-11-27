@@ -1,0 +1,27 @@
+{% extends 'peliculas/base.html' %}
+
+{% block title %}Notificaciones - AKA Films{% endblock %}
+
+{% block content %}
+<div class="notificaciones-container">
+    <h1>Notificaciones</h1>
+    
+    {% for notif in notificaciones %}
+    <div class="notificacion-item {% if not notif.leida %}no-leida{% endif %}">
+        <div class="notif-icon">
+            {% if notif.tipo == 'mensaje' %}💬
+            {% elif notif.tipo == 'watch_party' %}🎉
+            {% else %}📢{% endif %}
+        </div>
+        <div class="notif-contenido">
+            <h3>{{ notif.titulo }}</h3>
+            <p>{{ notif.mensaje }}</p>
+            <small>{{ notif.fecha_creacion|timesince }} atrás</small>
+        </div>
+        {% if notif.url %}
+        <a href="{{ notif.url }}" class="notif-link">Ver →</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

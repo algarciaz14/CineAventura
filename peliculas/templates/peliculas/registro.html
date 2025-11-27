@@ -128,6 +128,56 @@
             border-left: 4px solid #c33;
         }
         
+        /* NUEVO: Estilos para términos y condiciones */
+        .terminos-container {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .terminos-checkbox-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .form-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .terminos-text {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .terminos-text a {
+            color: #e50914;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .terminos-text a:hover {
+            text-decoration: underline;
+        }
+        
+        .license-badge {
+            display: inline-block;
+            background: #e50914;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+        
         .btn-register {
             width: 100%;
             background: #e50914;
@@ -151,6 +201,12 @@
 
         .btn-register:active {
             transform: translateY(0);
+        }
+        
+        .btn-register:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
         }
         
         .login-prompt {
@@ -194,7 +250,6 @@
             color: #e50914;
         }
 
-        /* Animación de entrada */
         @keyframes slideIn {
             from {
                 opacity: 0;
@@ -210,7 +265,6 @@
             animation: slideIn 0.5s ease-out;
         }
 
-        /* Responsive */
         @media (max-width: 600px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -241,7 +295,7 @@
             <p>Únete a la comunidad de AKA Films</p>
         </div>
 
-        <form method="post">
+        <form method="post" id="registro-form">
             {% csrf_token %}
             
             {% if form.non_field_errors %}
@@ -302,7 +356,25 @@
                 {% endif %}
             </div>
 
-            <button type="submit" class="btn-register">Crear mi cuenta</button>
+            <!--  Términos y Condiciones -->
+            <div class="terminos-container">
+                <div class="terminos-checkbox-wrapper">
+                    {{ form.aceptar_terminos }}
+                    <label for="terminos-checkbox" class="terminos-text">
+                        He leído y acepto los 
+                        <a href="{% url 'peliculas:terminos' %}" target="_blank">Términos y Condiciones</a>. 
+                        Entiendo que todo el contenido que genere estará bajo licencia 
+                        <span class="license-badge">CC BY-NC-SA 4.0</span>
+                    </label>
+                </div>
+                {% if form.aceptar_terminos.errors %}
+                <span class="field-error" style="margin-left: 32px; margin-top: 10px;">
+                    {{ form.aceptar_terminos.errors.0 }}
+                </span>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-register" id="btn-submit">Crear mi cuenta</button>
         </form>
         
         <div class="login-prompt">
@@ -313,5 +385,19 @@
             <a href="{% url 'peliculas:index' %}">← Volver al inicio</a>
         </div>
     </div>
+
+    <script>
+        // Validación del checkbox de términos
+        document.getElementById('registro-form').addEventListener('submit', function(e) {
+            const checkbox = document.getElementById('terminos-checkbox');
+            const btnSubmit = document.getElementById('btn-submit');
+            
+            if (!checkbox.checked) {
+                e.preventDefault();
+                alert('Debes aceptar los términos y condiciones para continuar.');
+                checkbox.focus();
+            }
+        });
+    </script>
 </body>
 </html>

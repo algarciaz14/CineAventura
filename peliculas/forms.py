@@ -2,10 +2,12 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from .models import Pelicula, Genero, Director, Actor
+from .models import Pelicula, Genero, Director, Actor, Mensaje, WatchParty
+from django.utils import timezone
+
 
 class RegistroUsuarioForm(UserCreationForm):
-    """Formulario de registro con nombre completo"""
+    """Formulario de registro con términos y condiciones"""
     email = forms.EmailField(
         required=True,
         label='Correo Electrónico',
@@ -33,9 +35,20 @@ class RegistroUsuarioForm(UserCreationForm):
         })
     )
     
+    # Campo para aceptar términos y condiciones
+    aceptar_terminos = forms.BooleanField(
+        required=True,
+        label='',
+        error_messages={'required': 'Debes aceptar los términos y condiciones para continuar.'},
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-checkbox',
+            'id': 'terminos-checkbox'
+        })
+    )
+    
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'aceptar_terminos')
         labels = {
             'username': 'Nombre de usuario',
         }
@@ -79,13 +92,22 @@ class RegistroUsuarioForm(UserCreationForm):
         return username
         
     def save(self, commit=True):
-        """Guardar el usuario con nombre completo"""
+        """Guardar el usuario con nombre completo y perfil"""
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+        
         if commit:
             user.save()
+            # Crear perfil con términos aceptados
+            from .models import PerfilUsuario
+            PerfilUsuario.objects.create(
+                usuario=user,
+                aceptado_terminos=True,
+                fecha_aceptacion_terminos=timezone.now(),
+                version_terminos='1.0'
+            )
         return user
 
 
@@ -244,21 +266,9 @@ class PeliculaForm(forms.ModelForm):
     class Meta:
         model = Pelicula
         fields = [
-            'titulo',
-            'titulo_original',
-            'sinopsis',
-            'año',
-            'duracion',
-            'generos',
-            'director',
-            'actores',
-            'pais',
-            'idioma',
-            'poster',
-            'trailer',
-            'fecha_estreno',
-            'presupuesto',
-            'recaudacion',
+            'titulo', 'titulo_original', 'sinopsis', 'año', 'duracion',
+            'generos', 'director', 'actores', 'pais', 'idioma', 'poster',
+            'trailer', 'fecha_estreno', 'presupuesto', 'recaudacion',
             'clasificacion',
         ]
     
@@ -266,7 +276,7 @@ class PeliculaForm(forms.ModelForm):
         """Validar que el año sea razonable"""
         año = self.cleaned_data.get('año')
         if año < 1888:
-            raise ValidationError('El año no puede ser anterior a 1888 (primera película de la historia).')
+            raise ValidationError('El año no puede ser anterior a 1888.')
         if año > 2030:
             raise ValidationError('El año no puede ser mayor a 2030.')
         return año
@@ -279,19 +289,72 @@ class PeliculaForm(forms.ModelForm):
         if duracion > 400:
             raise ValidationError('La duración no puede ser mayor a 400 minutos.')
         return duracion
+
+
+class MensajeForm(forms.ModelForm):
+    class Meta:
+        model = Mensaje
+        fields = ['contenido']
+        widgets = {
+            'contenido': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Escribe tu mensaje...'
+            })
+        }
     
-    def clean(self):
-        """Validaciones adicionales del formulario"""
-        cleaned_data = super().clean()
-        presupuesto = cleaned_data.get('presupuesto')
-        recaudacion = cleaned_data.get('recaudacion')
-        
-        # Validar que la recaudación no sea negativa
-        if recaudacion and recaudacion < 0:
-            self.add_error('recaudacion', 'La recaudación no puede ser negativa.')
-        
-        # Validar que el presupuesto no sea negativo
-        if presupuesto and presupuesto < 0:
-            self.add_error('presupuesto', 'El presupuesto no puede ser negativo.')
-        
-        return cleaned_data
+    class Meta:
+        model = Mensaje
+        fields = ['contenido']
+
+
+class WatchPartyForm(forms.ModelForm):
+    """Formulario para crear Watch Parties"""
+    nombre = forms.CharField(
+        max_length=200,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Nombre de tu Watch Party'
+        })
+    )
+    descripcion = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 3,
+            'placeholder': 'Descripción opcional'
+        })
+    )
+    fecha_programada = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={
+            'class': 'form-control',
+            'type': 'datetime-local'
+        }),
+        label='Fecha y Hora'
+    )
+    publico = forms.BooleanField(
+        required=False,
+        label='Watch Party Público',
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input'
+        })
+    )
+    max_participantes = forms.IntegerField(
+        initial=10,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'min': 2,
+            'max': 50
+        }),
+        label='Máximo de Participantes'
+    )
+    
+    class Meta:
+        model = WatchParty
+        fields = ['nombre', 'descripcion', 'fecha_programada', 'publico', 'max_participantes']
+    
+    def clean_fecha_programada(self):
+        """Validar que la fecha sea futura"""
+        fecha = self.cleaned_data.get('fecha_programada')
+        if fecha and fecha < timezone.now():
+            raise ValidationError('La fecha debe ser en el futuro.')
+        return fecha

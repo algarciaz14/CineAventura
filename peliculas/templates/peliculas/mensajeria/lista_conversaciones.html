@@ -1,0 +1,203 @@
+{% extends 'peliculas/base.html' %}
+
+{% block title %}Mensajes - AKA Films{% endblock %}
+
+{% block extra_css %}
+<style>
+    .mensajes-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+    
+    .mensajes-header {
+        margin-bottom: 30px;
+    }
+    
+    .mensajes-header h1 {
+        font-size: 36px;
+        color: #fff;
+        margin-bottom: 10px;
+    }
+    
+    .conversaciones-lista {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .conversacion-item {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    .conversacion-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+    }
+    
+    .conversacion-item:last-child {
+        border-bottom: none;
+    }
+    
+    .conversacion-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #e50914, #ff6b6b);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        margin-right: 20px;
+        flex-shrink: 0;
+    }
+    
+    .conversacion-info {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .conversacion-nombre {
+        font-size: 18px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 5px;
+    }
+    
+    .conversacion-preview {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .conversacion-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 5px;
+    }
+    
+    .conversacion-fecha {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .conversacion-badge {
+        background: #e50914;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 4px 10px;
+        border-radius: 12px;
+        min-width: 24px;
+        text-align: center;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .empty-state-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+    }
+    
+    @media (max-width: 768px) {
+        .conversacion-avatar {
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+        
+        .conversacion-nombre {
+            font-size: 16px;
+        }
+        
+        .conversacion-preview {
+            font-size: 13px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mensajes-container">
+    <div class="mensajes-header">
+        <h1>💬 Mensajes</h1>
+        {% if total_no_leidos > 0 %}
+        <p style="color: rgba(255, 255, 255, 0.7);">
+            Tienes {{ total_no_leidos }} mensaje{{ total_no_leidos|pluralize }} sin leer
+        </p>
+        {% endif %}
+    </div>
+    
+    {% if conversaciones_con_info %}
+    <div class="conversaciones-lista">
+        {% for item in conversaciones_con_info %}
+        <a href="{% url 'peliculas:conversacion' item.conversacion.id %}" class="conversacion-item">
+            <div class="conversacion-avatar">
+                {% if item.otro_usuario %}
+                    {{ item.otro_usuario.first_name.0|default:item.otro_usuario.username.0|upper }}
+                {% else %}
+                    ?
+                {% endif %}
+            </div>
+            
+            <div class="conversacion-info">
+                <div class="conversacion-nombre">
+                    {% if item.otro_usuario %}
+                        {{ item.otro_usuario.get_full_name|default:item.otro_usuario.username }}
+                    {% else %}
+                        Usuario desconocido
+                    {% endif %}
+                </div>
+                <div class="conversacion-preview">
+                    {% if item.ultimo_mensaje %}
+                        {% if item.ultimo_mensaje.remitente == user %}
+                            Tú: 
+                        {% endif %}
+                        {{ item.ultimo_mensaje.contenido|truncatewords:10 }}
+                    {% else %}
+                        No hay mensajes todavía
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="conversacion-meta">
+                {% if item.ultimo_mensaje %}
+                <div class="conversacion-fecha">
+                    {{ item.ultimo_mensaje.fecha_envio|date:"d/m/Y H:i" }}
+                </div>
+                {% endif %}
+                
+                {% if item.mensajes_no_leidos > 0 %}
+                <div class="conversacion-badge">
+                    {{ item.mensajes_no_leidos }}
+                </div>
+                {% endif %}
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">💬</div>
+        <h3>No tienes conversaciones</h3>
+        <p>Ve al <a href="{% url 'peliculas:social_hub' %}" style="color: #e50914;">Social Hub</a> para conectar con otros usuarios</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

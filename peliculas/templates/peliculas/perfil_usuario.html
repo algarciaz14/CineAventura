@@ -1,0 +1,362 @@
+{% extends 'peliculas/base.html' %}
+
+{% block title %}{{ usuario_perfil.get_full_name|default:usuario_perfil.username }} - AKA Films{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+    
+    .profile-banner {
+        background: linear-gradient(135deg, #e50914, #c40812);
+        padding: 60px 40px;
+        border-radius: 20px;
+        text-align: center;
+        color: white;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .profile-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><text x="10" y="50" font-size="40" opacity="0.1">🎬</text></svg>');
+        opacity: 0.1;
+    }
+    
+    .profile-banner-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .profile-avatar-large {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: white;
+        color: #e50914;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 64px;
+        font-weight: bold;
+        margin: 0 auto 25px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .profile-name {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    
+    .profile-username-tag {
+        font-size: 18px;
+        opacity: 0.9;
+        margin-bottom: 25px;
+    }
+    
+    .profile-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+    
+    .btn-action {
+        padding: 12px 30px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-enviar-mensaje {
+        background: white;
+        color: #e50914;
+    }
+    
+    .btn-enviar-mensaje:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+    }
+    
+    .btn-volver {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .btn-volver:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .profile-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 50px;
+    }
+    
+    .stat-box {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s;
+    }
+    
+    .stat-box:hover {
+        border-color: #e50914;
+        transform: translateY(-5px);
+    }
+    
+    .stat-number {
+        font-size: 42px;
+        font-weight: bold;
+        color: #e50914;
+        margin-bottom: 10px;
+    }
+    
+    .stat-label {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 16px;
+    }
+    
+    .section {
+        margin-bottom: 50px;
+    }
+    
+    .section-title {
+        font-size: 28px;
+        color: #fff;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid #e50914;
+        display: inline-block;
+    }
+    
+    .movies-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+    }
+    
+    .movie-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+    
+    .movie-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
+    }
+    
+    .movie-poster {
+        position: relative;
+        padding-top: 150%;
+        background: #1a1a1a;
+    }
+    
+    .movie-poster img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .movie-info {
+        padding: 15px;
+    }
+    
+    .movie-title {
+        font-size: 16px;
+        color: #fff;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+    
+    .movie-year {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .ratings-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .rating-item {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 20px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: all 0.3s;
+    }
+    
+    .rating-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+    }
+    
+    .rating-movie {
+        flex: 1;
+    }
+    
+    .rating-movie h4 {
+        color: #fff;
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    
+    .rating-movie p {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 14px;
+    }
+    
+    .rating-score {
+        font-size: 36px;
+        font-weight: bold;
+        color: #e50914;
+    }
+    
+    .empty-message {
+        text-align: center;
+        padding: 60px 20px;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 16px;
+    }
+    
+    @media (max-width: 768px) {
+        .profile-banner {
+            padding: 40px 20px;
+        }
+        
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            font-size: 48px;
+        }
+        
+        .profile-name {
+            font-size: 28px;
+        }
+        
+        .profile-actions {
+            flex-direction: column;
+        }
+        
+        .movies-grid {
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-banner">
+        <div class="profile-banner-content">
+            <div class="profile-avatar-large">
+                {{ usuario_perfil.first_name.0|default:usuario_perfil.username.0|upper }}
+            </div>
+            <h1 class="profile-name">{{ usuario_perfil.get_full_name|default:usuario_perfil.username }}</h1>
+            <p class="profile-username-tag">@{{ usuario_perfil.username }}</p>
+            
+            <div class="profile-actions">
+                {% if conversacion_existente %}
+                    <a href="{% url 'peliculas:conversacion' conversacion_existente.id %}" class="btn-action btn-enviar-mensaje">
+                        💬 Continuar conversación
+                    </a>
+                {% else %}
+                    <a href="{% url 'peliculas:nueva_conversacion' usuario_perfil.id %}" class="btn-action btn-enviar-mensaje">
+                        💬 Enviar mensaje
+                    </a>
+                {% endif %}
+                <a href="{% url 'peliculas:social_hub' %}" class="btn-action btn-volver">
+                    ← Volver al Social Hub
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="profile-stats">
+        <div class="stat-box">
+            <div class="stat-number">{{ calificaciones.count }}</div>
+            <div class="stat-label">Calificaciones</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">{{ resenas.count }}</div>
+            <div class="stat-label">Reseñas</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">{{ favoritos.count }}</div>
+            <div class="stat-label">Películas Favoritas</div>
+        </div>
+    </div>
+    
+    {% if favoritos %}
+    <div class="section">
+        <h2 class="section-title">❤️ Películas Favoritas</h2>
+        <div class="movies-grid">
+            {% for pelicula in favoritos %}
+            <div class="movie-card">
+                <a href="{% url 'peliculas:detalle' pelicula.id %}" style="text-decoration: none; color: inherit;">
+                    <div class="movie-poster">
+                        {% if pelicula.poster %}
+                        <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
+                        {% endif %}
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">{{ pelicula.titulo }}</h3>
+                        <p class="movie-year">{{ pelicula.año }}</p>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if calificaciones %}
+    <div class="section">
+        <h2 class="section-title">⭐ Calificaciones Recientes</h2>
+        <div class="ratings-list">
+            {% for calificacion in calificaciones|slice:":5" %}
+            <div class="rating-item">
+                <div class="rating-movie">
+                    <h4><a href="{% url 'peliculas:detalle' calificacion.pelicula.id %}" style="color: #fff; text-decoration: none;">{{ calificacion.pelicula.titulo }}</a></h4>
+                    <p>{{ calificacion.fecha|date:"d/m/Y" }}</p>
+                </div>
+                <div class="rating-score">{{ calificacion.puntuacion }}/10</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if not favoritos and not calificaciones and not resenas %}
+    <div class="empty-message">
+        <p>Este usuario aún no ha compartido su actividad en la plataforma.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

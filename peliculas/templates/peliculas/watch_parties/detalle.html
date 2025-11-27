@@ -1,0 +1,297 @@
+{% extends 'peliculas/base.html' %}
+{% load static %}
+
+{% block title %}{{ watch_party.nombre }} - Watch Party - AKA Films{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 40px 20px; max-width: 1200px; margin: 0 auto;">
+    <!-- Encabezado del Watch Party -->
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 40px; margin-bottom: 40px; color: white; box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);">
+        <div style="display: flex; gap: 30px; align-items: flex-start; flex-wrap: wrap;">
+            <!-- Poster de la película -->
+            <div style="flex-shrink: 0;">
+                {% if watch_party.pelicula.poster %}
+                <img src="{{ watch_party.pelicula.poster }}" alt="{{ watch_party.pelicula.titulo }}"
+                     style="width: 200px; height: 300px; object-fit: cover; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">
+                {% else %}
+                <div style="width: 200px; height: 300px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 48px;">
+                    🎬
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Información del Watch Party -->
+            <div style="flex: 1; min-width: 300px;">
+                <!-- Badge de estado -->
+                <div style="margin-bottom: 15px;">
+                    {% if watch_party.estado == 'esperando' %}
+                    <span style="background: #28a745; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600;">
+                        ⏳ Esperando Inicio
+                    </span>
+                    {% elif watch_party.estado == 'en_curso' %}
+                    <span style="background: #e50914; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; animation: pulse 2s infinite;">
+                        ▶️ En Curso
+                    </span>
+                    {% elif watch_party.estado == 'finalizada' %}
+                    <span style="background: #6c757d; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600;">
+                        ✅ Finalizada
+                    </span>
+                    {% elif watch_party.estado == 'cancelada' %}
+                    <span style="background: #dc3545; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600;">
+                        ❌ Cancelada
+                    </span>
+                    {% endif %}
+                </div>
+
+                <h1 style="font-size: 36px; margin-bottom: 10px; font-weight: 700;">
+                    🎉 {{ watch_party.nombre }}
+                </h1>
+
+                <h2 style="font-size: 24px; margin-bottom: 20px; opacity: 0.95;">
+                    {{ watch_party.pelicula.titulo }}
+                </h2>
+
+                {% if watch_party.descripcion %}
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 25px; opacity: 0.9;">
+                    {{ watch_party.descripcion }}
+                </p>
+                {% endif %}
+
+                <!-- Información del Watch Party -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                    <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px; backdrop-filter: blur(10px);">
+                        <div style="font-size: 12px; opacity: 0.8; margin-bottom: 5px;">👤 ANFITRIÓN</div>
+                        <div style="font-size: 16px; font-weight: 600;">
+                            {% if watch_party.anfitrion == user %}
+                                Tú
+                            {% else %}
+                                <a href="{% url 'peliculas:perfil_usuario' watch_party.anfitrion.id %}" 
+                                   style="color: white; text-decoration: none; border-bottom: 2px solid rgba(255,255,255,0.5);">
+                                    {{ watch_party.anfitrion.get_full_name|default:watch_party.anfitrion.username }}
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px; backdrop-filter: blur(10px);">
+                        <div style="font-size: 12px; opacity: 0.8; margin-bottom: 5px;">📅 FECHA Y HORA</div>
+                        <div style="font-size: 16px; font-weight: 600;">{{ watch_party.fecha_programada|date:"d/m/Y H:i" }}</div>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px; backdrop-filter: blur(10px);">
+                        <div style="font-size: 12px; opacity: 0.8; margin-bottom: 5px;">👥 PARTICIPANTES</div>
+                        <div style="font-size: 16px; font-weight: 600;">
+                            {{ watch_party.total_participantes }} / {{ watch_party.max_participantes }}
+                        </div>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px; backdrop-filter: blur(10px);">
+                        <div style="font-size: 12px; opacity: 0.8; margin-bottom: 5px;">🎬 DURACIÓN</div>
+                        <div style="font-size: 16px; font-weight: 600;">{{ watch_party.pelicula.duracion }} min</div>
+                    </div>
+                </div>
+
+                <!-- Código de invitación (solo para el anfitrión) -->
+                {% if es_anfitrion %}
+                <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; backdrop-filter: blur(10px);">
+                    <div style="font-size: 14px; margin-bottom: 8px; opacity: 0.9;">🔑 Código de Invitación</div>
+                    <div style="font-size: 32px; font-weight: 700; letter-spacing: 4px; font-family: 'Courier New', monospace;">
+                        {{ watch_party.codigo_invitacion }}
+                    </div>
+                    <div style="font-size: 12px; margin-top: 8px; opacity: 0.8;">Comparte este código con tus amigos</div>
+                </div>
+                {% endif %}
+
+                <!-- Botones de acción -->
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    {% if not es_participante and watch_party.estado == 'esperando' and watch_party.puede_unirse %}
+                    <a href="{% url 'peliculas:unirse_watch_party' watch_party.id %}"
+                       style="flex: 1; min-width: 150px; text-align: center; padding: 15px 30px; background: #28a745; color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 16px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);">
+                        ➕ Unirse al Watch Party
+                    </a>
+                    {% elif es_participante and not es_anfitrion and watch_party.estado == 'esperando' %}
+                    <a href="{% url 'peliculas:salir_watch_party' watch_party.id %}"
+                       style="flex: 1; min-width: 150px; text-align: center; padding: 15px 30px; background: #dc3545; color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 16px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);">
+                        ❌ Salir del Watch Party
+                    </a>
+                    {% endif %}
+
+                    <a href="{% url 'peliculas:detalle' watch_party.pelicula.id %}"
+                       style="flex: 1; min-width: 150px; text-align: center; padding: 15px 30px; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 16px; transition: all 0.3s; border: 2px solid white;">
+                        🎬 Ver Película
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Participantes -->
+    <div style="background: white; border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+        <h2 style="font-size: 24px; color: #333; margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+            <span>👥</span> Participantes ({{ watch_party.total_participantes }}/{{ watch_party.max_participantes }})
+        </h2>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
+            {% for participante in watch_party.participantes.all %}
+            <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #f8f9fa; border-radius: 10px; transition: all 0.3s;">
+                <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; flex-shrink: 0;">
+                    {{ participante.first_name|slice:":1"|upper|default:participante.username|slice:":1"|upper }}
+                </div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 600; color: #333; margin-bottom: 3px;">
+                        {{ participante.get_full_name|default:participante.username }}
+                        {% if participante == watch_party.anfitrion %}
+                        <span style="background: #e50914; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 5px;">ANFITRIÓN</span>
+                        {% endif %}
+                        {% if participante == user %}
+                        <span style="background: #ffc107; color: #333; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 5px;">TÚ</span>
+                        {% endif %}
+                    </div>
+                    <div style="font-size: 13px; color: #666;">@{{ participante.username }}</div>
+                </div>
+                {% if participante != user %}
+                <a href="{% url 'peliculas:perfil_usuario' participante.id %}" 
+                   style="padding: 6px 12px; background: #e50914; color: white; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 600;">
+                    Ver Perfil
+                </a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if watch_party.puede_unirse and not es_participante %}
+        <div style="text-align: center; margin-top: 25px; padding-top: 25px; border-top: 2px dashed #e0e0e0;">
+            <p style="color: #666; margin-bottom: 15px;">¡Todavía hay espacio! Únete a este watch party</p>
+            <a href="{% url 'peliculas:unirse_watch_party' watch_party.id %}"
+               style="display: inline-block; padding: 12px 30px; background: #28a745; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+                ➕ Unirse Ahora
+            </a>
+        </div>
+        {% elif not watch_party.puede_unirse %}
+        <div style="text-align: center; margin-top: 25px; padding: 15px; background: #fff3cd; border-radius: 8px;">
+            <p style="color: #856404; margin: 0;">⚠️ Este watch party está completo</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Chat del Watch Party -->
+    {% if es_participante %}
+    <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+        <h2 style="font-size: 24px; color: #333; margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+            <span>💬</span> Chat del Watch Party
+        </h2>
+
+        <!-- Mensajes del chat -->
+        <div id="chat-messages" style="max-height: 400px; overflow-y: auto; margin-bottom: 20px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+            {% for mensaje in mensajes_chat %}
+            <div style="margin-bottom: 15px; padding: 12px; background: {% if mensaje.usuario == user %}#e3f2fd{% else %}white{% endif %}; border-radius: 8px; border-left: 3px solid {% if mensaje.usuario == user %}#2196f3{% else %}#e0e0e0{% endif %};">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <strong style="color: {% if mensaje.usuario == watch_party.anfitrion %}#e50914{% else %}#333{% endif %};">
+                        {{ mensaje.usuario.get_full_name|default:mensaje.usuario.username }}
+                        {% if mensaje.usuario == watch_party.anfitrion %}
+                        <span style="font-size: 11px; background: #e50914; color: white; padding: 2px 6px; border-radius: 10px; margin-left: 5px;">ANFITRIÓN</span>
+                        {% endif %}
+                    </strong>
+                    <span style="font-size: 12px; color: #999;">{{ mensaje.fecha_envio|date:"H:i" }}</span>
+                </div>
+                <p style="margin: 0; color: #444; line-height: 1.5;">{{ mensaje.contenido }}</p>
+            </div>
+            {% empty %}
+            <p style="text-align: center; color: #999; padding: 40px 0;">
+                No hay mensajes aún. ¡Sé el primero en escribir! 🎉
+            </p>
+            {% endfor %}
+        </div>
+
+        <!-- Formulario de envío de mensajes -->
+        <form id="chat-form" method="post" action="{% url 'peliculas:enviar_mensaje_watch_party' watch_party.id %}" 
+              style="display: flex; gap: 10px;">
+            {% csrf_token %}
+            <input type="text" name="contenido" id="mensaje-input" placeholder="Escribe un mensaje..." required
+                   style="flex: 1; padding: 12px 20px; border: 2px solid #e0e0e0; border-radius: 25px; font-size: 15px; transition: all 0.3s;">
+            <button type="submit" 
+                    style="padding: 12px 30px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                Enviar 📤
+            </button>
+        </form>
+    </div>
+    {% else %}
+    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; border-radius: 8px;">
+        <p style="color: #856404; margin: 0; font-size: 16px;">
+            💡 <strong>Únete al watch party para acceder al chat</strong>
+        </p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.7;
+        }
+    }
+
+    #mensaje-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #chat-form button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    #chat-messages::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #chat-messages::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    #chat-messages::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+
+    #chat-messages::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    @media (max-width: 768px) {
+        .container > div:first-child > div {
+            flex-direction: column;
+        }
+
+        #chat-form {
+            flex-direction: column;
+        }
+
+        #chat-form button {
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+    // Auto-scroll del chat al final
+    const chatMessages = document.getElementById('chat-messages');
+    if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Envío de mensajes con AJAX (opcional, mejora la experiencia)
+    const chatForm = document.getElementById('chat-form');
+    if (chatForm) {
+        chatForm.addEventListener('submit', function(e) {
+            // Puedes agregar AJAX aquí si quieres actualización en tiempo real
+            // Por ahora funciona con reload de página
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,161 @@
+{% extends 'peliculas/base.html' %}
+{% load static %}
+
+{% block title %}Crear Watch Party - AKA Films{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 40px 20px; max-width: 800px; margin: 0 auto;">
+    <!-- Encabezado -->
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="color: #e50914; font-size: 36px; margin-bottom: 10px;">🎉 Crear Watch Party</h1>
+        <p style="color: #666; font-size: 18px;">Invita a tus amigos a ver una película juntos</p>
+    </div>
+
+    <!-- Información de la película -->
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 20px; margin-bottom: 30px; display: flex; gap: 20px; align-items: center;">
+        {% if pelicula.poster %}
+        <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}" 
+             style="width: 120px; height: 180px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+        {% endif %}
+        <div style="color: white;">
+            <h2 style="font-size: 24px; margin-bottom: 8px;">{{ pelicula.titulo }}</h2>
+            <p style="opacity: 0.9; margin-bottom: 5px;">📅 {{ pelicula.año }} • ⏱️ {{ pelicula.duracion }} min</p>
+            <p style="opacity: 0.8; font-size: 14px; line-height: 1.4;">{{ pelicula.sinopsis|truncatewords:20 }}</p>
+        </div>
+    </div>
+
+    <!-- Formulario -->
+    <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+        <form method="post" id="watchPartyForm">
+            {% csrf_token %}
+            
+            <!-- Nombre del Watch Party -->
+            <div style="margin-bottom: 25px;">
+                <label for="{{ form.nombre.id_for_label }}" style="display: block; font-weight: 600; color: #333; margin-bottom: 8px;">
+                    📝 Nombre del Watch Party *
+                </label>
+                {{ form.nombre }}
+                {% if form.nombre.errors %}
+                    <div style="color: #e50914; font-size: 14px; margin-top: 5px;">
+                        {{ form.nombre.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Descripción -->
+            <div style="margin-bottom: 25px;">
+                <label for="{{ form.descripcion.id_for_label }}" style="display: block; font-weight: 600; color: #333; margin-bottom: 8px;">
+                    📄 Descripción (opcional)
+                </label>
+                {{ form.descripcion }}
+                {% if form.descripcion.errors %}
+                    <div style="color: #e50914; font-size: 14px; margin-top: 5px;">
+                        {{ form.descripcion.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Fecha y Hora -->
+            <div style="margin-bottom: 25px;">
+                <label for="{{ form.fecha_programada.id_for_label }}" style="display: block; font-weight: 600; color: #333; margin-bottom: 8px;">
+                    🕐 Fecha y Hora *
+                </label>
+                {{ form.fecha_programada }}
+                {% if form.fecha_programada.errors %}
+                    <div style="color: #e50914; font-size: 14px; margin-top: 5px;">
+                        {{ form.fecha_programada.errors }}
+                    </div>
+                {% endif %}
+                <small style="display: block; color: #666; margin-top: 5px;">
+                    Selecciona cuándo quieres iniciar el watch party
+                </small>
+            </div>
+
+            <!-- Máximo de Participantes -->
+            <div style="margin-bottom: 25px;">
+                <label for="{{ form.max_participantes.id_for_label }}" style="display: block; font-weight: 600; color: #333; margin-bottom: 8px;">
+                    👥 Máximo de Participantes *
+                </label>
+                {{ form.max_participantes }}
+                {% if form.max_participantes.errors %}
+                    <div style="color: #e50914; font-size: 14px; margin-top: 5px;">
+                        {{ form.max_participantes.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Watch Party Público -->
+            <div style="margin-bottom: 30px; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    {{ form.publico }}
+                    <span style="margin-left: 10px; font-weight: 500; color: #333;">
+                        🌍 Hacer público (cualquiera puede unirse)
+                    </span>
+                </label>
+                <small style="display: block; color: #666; margin-top: 8px; margin-left: 30px;">
+                    Si no es público, solo las personas con el código de invitación podrán unirse
+                </small>
+            </div>
+
+            <!-- Botones -->
+            <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                <a href="{% url 'peliculas:detalle' pelicula.id %}" 
+                   style="padding: 12px 30px; background: #6c757d; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s;">
+                    ❌ Cancelar
+                </a>
+                <button type="submit" 
+                        style="padding: 12px 30px; background: linear-gradient(135deg, #e50914 0%, #b20710 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(229,9,20,0.3);">
+                    ✅ Crear Watch Party
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Consejos -->
+    <div style="margin-top: 30px; background: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; border-radius: 8px;">
+        <h3 style="color: #856404; margin-bottom: 10px; font-size: 18px;">💡 Consejos para tu Watch Party</h3>
+        <ul style="color: #856404; line-height: 1.8; margin-left: 20px;">
+            <li>Elige una hora conveniente para todos los participantes</li>
+            <li>Comparte el código de invitación con tus amigos</li>
+            <li>Asegúrate de tener una buena conexión a internet</li>
+            <li>Usa el chat para interactuar durante la película</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    /* Estilos para los campos del formulario */
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #e50914;
+        box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
+    }
+
+    .form-check-input {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(229,9,20,0.4);
+    }
+
+    a[href*="cancelar"]:hover,
+    a[href*="detalle"]:hover {
+        transform: translateY(-2px);
+        opacity: 0.9;
+    }
+</style>
+{% endblock %}

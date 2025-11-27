@@ -7,6 +7,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'peliculas/css/styles.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
     <!-- Header -->
@@ -21,6 +22,8 @@
                     
                     <div class="nav-links">
                         <a href="{% url 'peliculas:index' %}" class="nav-link">Inicio</a>
+                        
+                        <!-- Dropdown de Géneros -->
                         <div class="dropdown">
                             <button class="nav-link dropdown-toggle">Géneros</button>
                             <div class="dropdown-menu">
@@ -31,6 +34,13 @@
                                 {% endfor %}
                             </div>
                         </div>
+                        
+                        <!-- Enlaces de funcionalidades sociales -->
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'peliculas:recomendaciones' %}" class="nav-link"> Recomendaciones</a>
+                        <a href="{% url 'peliculas:lista_watch_parties' %}" class="nav-link"> Watch Parties</a>
+                        <a href="{% url 'peliculas:social_hub' %}" class="nav-link"> Social Hub</a>
+                        {% endif %}
                     </div>
                     
                     <form action="{% url 'peliculas:buscar' %}" method="get" class="search-form">
@@ -40,6 +50,19 @@
                     
                     <div class="auth-links">
                         {% if user.is_authenticated %}
+                            <!-- Iconos de Mensajes y Notificaciones -->
+                            <div class="notification-icons">
+                                <a href="{% url 'peliculas:lista_conversaciones' %}" class="icon-link" title="Mensajes">
+                                    <span class="icon">💬</span>
+                                    <span class="badge" id="badge-mensajes" style="display: none;"></span>
+                                </a>
+                                <a href="{% url 'peliculas:notificaciones' %}" class="icon-link" title="Notificaciones">
+                                    <span class="icon">🔔</span>
+                                    <span class="badge" id="badge-notificaciones" style="display: none;"></span>
+                                </a>
+                            </div>
+                            
+                            <!-- Dropdown de Usuario -->
                             <div class="user-dropdown">
                                 <button class="user-menu-toggle">
                                     <span class="user-avatar">{{ user.username|slice:":1"|upper }}</span>
@@ -56,13 +79,23 @@
                                     <a href="{% url 'peliculas:perfil' %}#ver-despues" class="user-menu-item">
                                         🕒 Ver Después
                                     </a>
+                                    <a href="{% url 'peliculas:recomendaciones' %}" class="user-menu-item">
+                                        🎯 Recomendaciones
+                                    </a>
+                                    <a href="{% url 'peliculas:lista_conversaciones' %}" class="user-menu-item">
+                                        💬 Mensajes
+                                    </a>
+                                    <a href="{% url 'peliculas:lista_watch_parties' %}" class="user-menu-item">
+                                        🎉 Watch Parties
+                                    </a>
                                     {% if user.is_staff %}
+                                    <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
                                     <a href="{% url 'admin:index' %}" class="user-menu-item">
                                         ⚙️ Panel Admin
                                     </a>
                                     {% endif %}
                                     <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
-                                    <form action="{% url 'logout' %}" method="post">
+                                    <form action="{% url 'logout' %}" method="post" style="margin: 0;">
                                         {% csrf_token %}
                                         <button type="submit" class="user-menu-item logout">🚪 Cerrar Sesión</button>
                                     </form>
@@ -106,33 +139,59 @@
                 <div class="footer-section">
                     <h3>AKA FILMS</h3>
                     <p>Tu portal definitivo para descubrir, explorar y compartir tu pasión por el cine.</p>
+                    <p style="margin-top: 15px; font-size: 12px; opacity: 0.7;">
+                        📄 Contenido bajo licencia 
+                        <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" 
+                           target="_blank" 
+                           style="color: #e50914; text-decoration: none;">
+                           CC BY-NC-SA 4.0
+                        </a>
+                    </p>
                 </div>
                 <div class="footer-section">
                     <h4>Géneros</h4>
                     <ul>
-                        <li><a href="#">Acción</a></li>
-                        <li><a href="#">Drama</a></li>
-                        <li><a href="#">Comedia</a></li>
-                        <li><a href="#">Terror</a></li>
+                        {% for genero in generos|slice:":4" %}
+                        <li><a href="{% url 'peliculas:por_genero' genero.id %}">{{ genero.nombre }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Acerca de</h4>
                     <ul>
                         <li><a href="{% url 'peliculas:sobre_nosotros' %}">Sobre Nosotros</a></li>
+                        <li><a href="{% url 'peliculas:terminos' %}">Términos y Condiciones</a></li>
                         <li><a href="#">Contacto</a></li>
-                        <li><a href="#">Términos de Uso</a></li>
                         <li><a href="#">Privacidad</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Comunidad</h4>
+                    <ul>
+                        {% if user.is_authenticated %}
+                        <li><a href="{% url 'peliculas:lista_conversaciones' %}">💬 Mensajes</a></li>
+                        <li><a href="{% url 'peliculas:lista_watch_parties' %}">🎉 Watch Parties</a></li>
+                        <li><a href="{% url 'peliculas:recomendaciones' %}">🎯 Recomendaciones</a></li>
+                        {% else %}
+                        <li><a href="{% url 'peliculas:registro' %}">Únete a la comunidad</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 AKA Films. Todos los derechos reservados.</p>
+                <p>&copy; 2025 AKA Films. Todos los derechos reservados. Materia Riesgo Tecnológico</p>
             </div>
         </div>
     </footer>
 
+    <!-- ====================================
+         SCRIPTS PRINCIPALES
+         ==================================== -->
     <script>
+        // ====================================
+        // FUNCIONALIDADES BÁSICAS
+        // ====================================
+        
         // Dropdown de géneros
         document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
             toggle.addEventListener('click', function(e) {
@@ -170,8 +229,169 @@
         }, 5000);
     </script>
 
+   <!-- ====================================
+     SISTEMA DE NOTIFICACIONES EN TIEMPO REAL
+     ==================================== -->
+{% if user.is_authenticated %}
+<script>
+    // ====================================
+    // POLLING DE MENSAJES NO LEÍDOS
+    // ====================================
+    
+    let ultimosMensajesIds = new Set();
+    
+    function actualizarMensajesNoLeidos() {
+        fetch('{% url "peliculas:mensajes_no_leidos_json" %}')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const badgeMensajes = document.getElementById('badge-mensajes');
+                if (badgeMensajes) {
+                    if (data.total_no_leidos > 0) {
+                        badgeMensajes.textContent = data.total_no_leidos;
+                        badgeMensajes.style.display = 'inline-block';
+                        
+                        // Verificar si hay mensajes nuevos
+                        data.conversaciones.forEach(conv => {
+                            if (conv.mensajes_no_leidos > 0) {
+                                // Verificar si es un mensaje que no habíamos visto antes
+                                const mensajeKey = `${conv.id}_${conv.ultimo_mensaje_id}`;
+                                if (!ultimosMensajesIds.has(mensajeKey)) {
+                                    ultimosMensajesIds.add(mensajeKey);
+                                    
+                                    // Mostrar notificación del navegador
+                                    mostrarNotificacionNavegador(
+                                        `Nuevo mensaje de ${conv.otro_usuario}`,
+                                        conv.ultimo_mensaje_preview,
+                                        `/mensajes/${conv.id}/`
+                                    );
+                                    
+                                    // Reproducir sonido (opcional)
+                                    reproducirSonidoNotificacion();
+                                }
+                            }
+                        });
+                    } else {
+                        badgeMensajes.style.display = 'none';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error al obtener mensajes no leídos:', error);
+            });
+    }
+    
+    function actualizarNotificaciones() {
+        fetch('{% url "peliculas:notificaciones_json" %}')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const badgeNotif = document.getElementById('badge-notificaciones');
+                if (badgeNotif) {
+                    // Filtrar solo notificaciones que NO sean mensajes
+                    const notificacionesNoMensaje = data.notificaciones.filter(n => n.tipo !== 'mensaje');
+                    
+                    if (notificacionesNoMensaje.length > 0) {
+                        badgeNotif.textContent = notificacionesNoMensaje.length;
+                        badgeNotif.style.display = 'inline-block';
+                    } else {
+                        badgeNotif.style.display = 'none';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error al obtener notificaciones:', error);
+            });
+    }
+
+    function mostrarNotificacionNavegador(titulo, mensaje, url) {
+        if (!('Notification' in window)) {
+            return;
+        }
+
+        if (Notification.permission === 'granted') {
+            const notification = new Notification(titulo, {
+                body: mensaje,
+                icon: '/static/peliculas/img/logo.png',
+                badge: '/static/peliculas/img/badge.png',
+                tag: 'akafilms-mensaje-' + Date.now(),
+                requireInteraction: false,
+                silent: false
+            });
+
+            notification.onclick = function() {
+                window.focus();
+                window.location.href = url;
+                notification.close();
+            };
+
+            setTimeout(() => notification.close(), 5000);
+        } 
+        else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    mostrarNotificacionNavegador(titulo, mensaje, url);
+                }
+            });
+        }
+    }
+    
+    function reproducirSonidoNotificacion() {
+        // Sonido de notificación simple (opcional)
+        try {
+            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZURE');
+            audio.volume = 0.3;
+            audio.play().catch(() => {}); // Ignorar errores si el navegador bloquea
+        } catch(e) {}
+    }
+
+    function solicitarPermisoNotificaciones() {
+        if ('Notification' in window && Notification.permission === 'default') {
+            console.log('AKA Films puede enviarte notificaciones de mensajes nuevos');
+        }
+    }
+
+    // Inicializar sistema de notificaciones
+    window.addEventListener('load', function() {
+        solicitarPermisoNotificaciones();
+        
+        // Primera actualización inmediata
+        actualizarMensajesNoLeidos();
+        actualizarNotificaciones();
+        
+        // Actualizar mensajes cada 15 segundos
+        setInterval(actualizarMensajesNoLeidos, 15000);
+        
+        // Actualizar notificaciones cada 30 segundos
+        setInterval(actualizarNotificaciones, 30000);
+    });
+
+    // Actualizar cuando la página vuelve a estar visible
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            actualizarMensajesNoLeidos();
+            actualizarNotificaciones();
+        }
+    });
+</script>
+{% endif %}
+
+    <!-- ====================================
+         ESTILOS INTEGRADOS
+         ==================================== -->
     <style>
-        /* Estilos para el menú de usuario */
+        /* ====================================
+           ESTILOS DEL MENÚ DE USUARIO
+           ==================================== */
+        
         .user-dropdown {
             position: relative;
         }
@@ -251,6 +471,12 @@
             color: #333;
             text-decoration: none;
             transition: background 0.2s;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font: inherit;
         }
 
         .user-menu-item:hover {
@@ -259,26 +485,16 @@
 
         .user-menu-item.logout {
             color: #e50914;
-            display: block;
-            text-decoration: none;
-        }
-
-        .user-menu-item.logout[type="submit"] {
-            border: none;
-            background: transparent;
-            padding: 12px 16px;
-            font: inherit;
-            text-align: left;
-            cursor: pointer; 
-            display: block;
-            width: 100%;
         }
 
         .user-menu-item.logout:hover {
             background: #fee;
         }
 
-        /* Estilos mejorados para alertas */
+        /* ====================================
+           ALERTAS Y MENSAJES
+           ==================================== */
+        
         .messages-container {
             position: fixed;
             top: 80px;
@@ -308,6 +524,14 @@
             border-left: 4px solid #dc3545;
         }
 
+        .alert-info {
+            border-left: 4px solid #17a2b8;
+        }
+
+        .alert-warning {
+            border-left: 4px solid #ffc107;
+        }
+
         .alert-icon {
             font-size: 20px;
             font-weight: bold;
@@ -321,6 +545,14 @@
             color: #dc3545;
         }
 
+        .alert-info .alert-icon {
+            color: #17a2b8;
+        }
+
+        .alert-warning .alert-icon {
+            color: #ffc107;
+        }
+
         .alert-close {
             margin-left: auto;
             background: none;
@@ -329,6 +561,7 @@
             color: #999;
             cursor: pointer;
             line-height: 1;
+            padding: 0;
         }
 
         .alert-close:hover {
@@ -357,7 +590,70 @@
             }
         }
 
-        /* Responsive */
+        /* ====================================
+           ICONOS DE NOTIFICACIÓN
+           ==================================== */
+        
+        .notification-icons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        .icon-link {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .icon-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .icon-link .icon {
+            font-size: 20px;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e50914;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        /* ====================================
+           RESPONSIVE
+           ==================================== */
+        
         @media (max-width: 768px) {
             .user-name-display {
                 display: none;
@@ -368,7 +664,50 @@
                 left: 10px;
                 max-width: none;
             }
+
+            .notification-icons {
+                gap: 10px;
+                margin-right: 10px;
+            }
+
+            .icon-link {
+                width: 35px;
+                height: 35px;
+            }
+
+            .icon-link .icon {
+                font-size: 18px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .notification-icons {
+                margin-right: 5px;
+                gap: 8px;
+            }
+
+            .icon-link {
+                width: 32px;
+                height: 32px;
+            }
+
+            .user-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+
+            .alert {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
         }
     </style>
+
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -1,0 +1,21 @@
+{% extends 'peliculas/base.html' %}
+
+{% block title %}Recomendaciones - AKA Films{% endblock %}
+
+{% block content %}
+<div class="recomendaciones-container">
+    <h1>Recomendaciones para ti</h1>
+    
+    <div class="peliculas-grid">
+        {% for pelicula in recomendaciones %}
+        <div class="pelicula-card">
+            <a href="{% url 'peliculas:detalle' pelicula.id %}">
+                <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
+                <h3>{{ pelicula.titulo }}</h3>
+                <p>⭐ {{ pelicula.calificacion_promedio }}/10</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
