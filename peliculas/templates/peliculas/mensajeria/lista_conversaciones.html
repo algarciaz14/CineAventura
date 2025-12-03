@@ -1,31 +1,70 @@
 {% extends 'peliculas/base.html' %}
 
+{# ============================================================================ #}
+{# TEMPLATE: Lista de conversaciones (Bandeja de entrada de mensajes)          #}
+{# ============================================================================ #}
+{# 
+    Este template muestra la lista de todas las conversaciones del usuario,
+    similar a una bandeja de entrada de mensajería.
+    
+    Contexto requerido desde la vista:
+        - conversaciones_con_info: Lista de diccionarios con:
+            * conversacion: Objeto Conversacion
+            * otro_usuario: Usuario con quien se conversa (User object)
+            * ultimo_mensaje: Último mensaje de la conversación (Mensaje object)
+            * mensajes_no_leidos: Contador de mensajes sin leer (int)
+        - total_no_leidos: Total de mensajes no leídos en todas las conversaciones
+        - user: Usuario actual (inyectado automáticamente por Django)
+    
+    Funcionalidades:
+        - Lista todas las conversaciones del usuario
+        - Muestra preview del último mensaje
+        - Contador de mensajes no leídos por conversación
+        - Badge con total de mensajes no leídos
+        - Estado vacío cuando no hay conversaciones
+        - Ordenamiento por actividad reciente (último mensaje)
+    
+    Vista asociada: lista_conversaciones(request)
+    URL: /mensajes/
+#}
+{# ============================================================================ #}
+
 {% block title %}Mensajes - AKA Films{% endblock %}
 
 {% block extra_css %}
 <style>
+    /*CONTENEDOR PRINCIPAL DE MENSAJES*/
+    
     .mensajes-container {
         max-width: 1200px;
         margin: 40px auto;
         padding: 20px;
     }
     
+    /* HEADER DE LA SECCIÓN DE MENSAJES */
+    
     .mensajes-header {
         margin-bottom: 30px;
     }
     
+    /* Título principal de la página */
     .mensajes-header h1 {
         font-size: 36px;
         color: #fff;
         margin-bottom: 10px;
     }
     
+    /*LISTA DE CONVERSACIONES: Contenedor principal que agrupa todas las conversaciones*/
+    
     .conversaciones-lista {
         background: rgba(255, 255, 255, 0.05);
         border-radius: 15px;
-        overflow: hidden;
+        overflow: hidden; /* Para que el border-radius funcione correctamente */
     }
     
+    /* ITEM INDIVIDUAL DE CONVERSACIÓN: Cada conversación en la lista */
+    
+    /* Contenedor de cada conversación (funciona como enlace) */
     .conversacion-item {
         display: flex;
         align-items: center;
@@ -33,17 +72,21 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         transition: all 0.3s;
         cursor: pointer;
-        text-decoration: none;
-        color: inherit;
+        text-decoration: none; /* Quitar subrayado de enlace */
+        color: inherit; /* Heredar color del padre */
     }
     
+    /* Efecto hover para resaltar conversación */
     .conversacion-item:hover {
         background: rgba(255, 255, 255, 0.08);
     }
     
+    /* Último item no necesita borde inferior */
     .conversacion-item:last-child {
         border-bottom: none;
     }
+    
+    /* AVATAR DEL USUARIO: Avatar circular con la inicial del usuario */
     
     .conversacion-avatar {
         width: 60px;
@@ -57,14 +100,18 @@
         font-weight: bold;
         color: white;
         margin-right: 20px;
-        flex-shrink: 0;
+        flex-shrink: 0; /* No permitir que se comprima */
     }
     
+    /* INFORMACIÓN DE LA CONVERSACIÓN: Nombre del usuario y preview del último mensaje*/
+    
+    /* Contenedor que ocupa el espacio central */
     .conversacion-info {
-        flex: 1;
-        min-width: 0;
+        flex: 1; /* Ocupa todo el espacio disponible */
+        min-width: 0; /* Necesario para que text-overflow funcione en flex items */
     }
     
+    /* Nombre del usuario con quien se conversa */
     .conversacion-nombre {
         font-size: 18px;
         font-weight: 600;
@@ -72,36 +119,44 @@
         margin-bottom: 5px;
     }
     
+    /* Preview del último mensaje (truncado con ...) */
     .conversacion-preview {
         font-size: 14px;
         color: rgba(255, 255, 255, 0.6);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        white-space: nowrap; /* No permitir saltos de línea */
+        overflow: hidden; /* Ocultar texto que se desborda */
+        text-overflow: ellipsis; /* Mostrar ... al final */
     }
     
+    /* METADATOS DE LA CONVERSACIÓN: Fecha del último mensaje y contador de no leídos*/
+    
+    /* Contenedor alineado a la derecha */
     .conversacion-meta {
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 5px;
+        flex-direction: column; /* Apilar fecha y badge verticalmente */
+        align-items: flex-end; /* Alinear a la derecha */
+        gap: 5px; /* Espacio entre fecha y badge */
     }
     
+    /* Fecha del último mensaje */
     .conversacion-fecha {
         font-size: 12px;
         color: rgba(255, 255, 255, 0.5);
     }
     
+    /* Badge circular con contador de mensajes no leídos */
     .conversacion-badge {
-        background: #e50914;
+        background: #e50914; /* Color rojo característico de AKA Films */
         color: white;
         font-size: 12px;
         font-weight: bold;
         padding: 4px 10px;
-        border-radius: 12px;
-        min-width: 24px;
+        border-radius: 12px; /* Bordes muy redondeados */
+        min-width: 24px; /* Ancho mínimo para mantener forma circular */
         text-align: center;
     }
+    
+    /* ESTADO VACÍO: Mostrado cuando el usuario no tiene conversaciones */
     
     .empty-state {
         text-align: center;
@@ -109,12 +164,16 @@
         color: rgba(255, 255, 255, 0.6);
     }
     
+    /* Ícono grande de mensajes (emoji) */
     .empty-state-icon {
         font-size: 80px;
         margin-bottom: 20px;
     }
     
+    /* RESPONSIVE DESIGN: Adaptación para dispositivos móviles*/
+    
     @media (max-width: 768px) {
+        /* Avatar más pequeño en móviles */
         .conversacion-avatar {
             width: 50px;
             height: 50px;
@@ -122,6 +181,7 @@
             margin-right: 15px;
         }
         
+        /* Texto más pequeño en móviles */
         .conversacion-nombre {
             font-size: 16px;
         }
@@ -135,54 +195,75 @@
 
 {% block content %}
 <div class="mensajes-container">
+    {# HEADER: Título y contador de mensajes no leídos#}
     <div class="mensajes-header">
         <h1>💬 Mensajes</h1>
+        {# Mostrar total de mensajes no leídos si hay alguno #}
         {% if total_no_leidos > 0 %}
         <p style="color: rgba(255, 255, 255, 0.7);">
+            {# pluralize agrega 's' si total_no_leidos != 1 #}
             Tienes {{ total_no_leidos }} mensaje{{ total_no_leidos|pluralize }} sin leer
         </p>
         {% endif %}
     </div>
     
+    {# LISTA DE CONVERSACIONES: Se muestra si el usuario tiene al menos una conversación #}
     {% if conversaciones_con_info %}
     <div class="conversaciones-lista">
+        {# Iterar sobre cada conversación con su información agregada #}
         {% for item in conversaciones_con_info %}
+        {# Cada conversación es un enlace a la vista detallada#}
         <a href="{% url 'peliculas:conversacion' item.conversacion.id %}" class="conversacion-item">
+            {# Avatar con la inicial del usuario #}
             <div class="conversacion-avatar">
                 {% if item.otro_usuario %}
+                    {# Muestra primera letra del nombre o username #}
                     {{ item.otro_usuario.first_name.0|default:item.otro_usuario.username.0|upper }}
                 {% else %}
+                    {# Fallback si no hay usuario (no debería ocurrir) #}
                     ?
                 {% endif %}
             </div>
             
+            {# Información central: nombre y preview del mensaje #}
             <div class="conversacion-info">
+                {# Nombre completo o username del otro usuario #}
                 <div class="conversacion-nombre">
                     {% if item.otro_usuario %}
+                        {# get_full_name retorna "first_name last_name" o fallback a username #}
                         {{ item.otro_usuario.get_full_name|default:item.otro_usuario.username }}
                     {% else %}
                         Usuario desconocido
                     {% endif %}
                 </div>
+                
+                {# Preview del último mensaje (truncado a 10 palabras) #}
                 <div class="conversacion-preview">
                     {% if item.ultimo_mensaje %}
+                        {# Si el mensaje es del usuario actual, agregar "Tú: " #}
                         {% if item.ultimo_mensaje.remitente == user %}
                             Tú: 
                         {% endif %}
+                        {# truncatewords:10 limita a 10 palabras y agrega ... #}
                         {{ item.ultimo_mensaje.contenido|truncatewords:10 }}
                     {% else %}
+                        {# Fallback si no hay mensajes (conversación nueva) #}
                         No hay mensajes todavía
                     {% endif %}
                 </div>
             </div>
             
+            {# Metadatos: fecha y contador de no leídos #}
             <div class="conversacion-meta">
+                {# Fecha del último mensaje #}
                 {% if item.ultimo_mensaje %}
                 <div class="conversacion-fecha">
+                    {# Formato: día/mes/año hora:minuto #}
                     {{ item.ultimo_mensaje.fecha_envio|date:"d/m/Y H:i" }}
                 </div>
                 {% endif %}
                 
+                {# Badge con contador de mensajes no leídos (solo si > 0) #}
                 {% if item.mensajes_no_leidos > 0 %}
                 <div class="conversacion-badge">
                     {{ item.mensajes_no_leidos }}
@@ -192,10 +273,17 @@
         </a>
         {% endfor %}
     </div>
+    
+    {# ESTADO VACÍO: Se muestra si el usuario no tiene ninguna conversación #}
     {% else %}
     <div class="empty-state">
+        {# Ícono decorativo (emoji) #}
         <div class="empty-state-icon">💬</div>
+        
+        {# Mensaje informativo #}
         <h3>No tienes conversaciones</h3>
+        
+        {# Call-to-action: dirigir al usuario al Social Hub #}
         <p>Ve al <a href="{% url 'peliculas:social_hub' %}" style="color: #e50914;">Social Hub</a> para conectar con otros usuarios</p>
     </div>
     {% endif %}

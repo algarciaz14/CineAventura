@@ -1,25 +1,41 @@
+{# Template de películas por género - Extiende la plantilla base de la aplicación #}
 {% extends 'peliculas/base.html' %}
 
+{# Define el título dinámico de la página con el nombre del género #}
 {% block title %}{{ genero.nombre }} - AKA Films{% endblock %}
 
+{# Bloque principal de contenido de la página #}
 {% block content %}
 <div class="genre-page">
+    {# Encabezado del género con información descriptiva #}
     <div class="genre-header">
         <div class="container">
+            {# Título del género (ej: Acción, Drama, Comedia) #}
             <h1 class="genre-title">{{ genero.nombre }}</h1>
+            
+            {# Descripción del género - Solo se muestra si existe #}
             {% if genero.descripcion %}
             <p class="genre-description">{{ genero.descripcion }}</p>
             {% endif %}
+            
+            {# Contador total de películas en este género #}
             <p class="genre-count">{{ peliculas.paginator.count }} películas encontradas</p>
         </div>
     </div>
     
+    {# Contenedor principal con grid de películas #}
     <div class="container">
+        {# Grid responsivo de tarjetas de películas #}
         <div class="movies-grid">
+            {# Itera sobre cada película del género actual #}
             {% for pelicula in peliculas %}
             <div class="movie-card">
+                {# Enlace a la página de detalle de la película #}
                 <a href="{% url 'peliculas:detalle' pelicula.id %}" class="movie-link">
+                    
+                    {# Sección del póster de la película #}
                     <div class="movie-poster">
+                        {# Muestra el póster si existe, sino muestra un placeholder #}
                         {% if pelicula.poster %}
                         <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
                         {% else %}
@@ -27,32 +43,43 @@
                             <span>🎬</span>
                         </div>
                         {% endif %}
+                        
+                        {# Badge flotante con la calificación promedio (formato: 7.5) #}
                         <div class="movie-rating">
                             ⭐ {{ pelicula.calificacion_promedio|floatformat:1 }}
                         </div>
                     </div>
+                    
+                    {# Información textual de la película #}
                     <div class="movie-info">
+                        {# Título de la película #}
                         <h3 class="movie-title">{{ pelicula.titulo }}</h3>
+                        {# Año de estreno #}
                         <p class="movie-year">{{ pelicula.año }}</p>
                     </div>
                 </a>
             </div>
+            
+            {# Mensaje cuando no hay películas en este género #}
             {% empty %}
             <p class="no-results">No se encontraron películas en este género.</p>
             {% endfor %}
         </div>
         
-        <!-- Paginación -->
+        {# Sistema de paginación - Solo se muestra si hay múltiples páginas #}
         {% if peliculas.has_other_pages %}
         <div class="pagination">
+            {# Enlace a la página anterior - Solo si existe página previa #}
             {% if peliculas.has_previous %}
             <a href="?page={{ peliculas.previous_page_number }}" class="pagination-link">← Anterior</a>
             {% endif %}
             
+            {# Indicador de página actual y total de páginas #}
             <span class="pagination-info">
                 Página {{ peliculas.number }} de {{ peliculas.paginator.num_pages }}
             </span>
             
+            {# Enlace a la página siguiente - Solo si existe página siguiente #}
             {% if peliculas.has_next %}
             <a href="?page={{ peliculas.next_page_number }}" class="pagination-link">Siguiente →</a>
             {% endif %}

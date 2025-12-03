@@ -1,17 +1,27 @@
+{# Template de recomendaciones personalizadas - Extiende la plantilla base de la aplicación #}
 {% extends 'peliculas/base.html' %}
 
+{# Define el título de la página que aparecerá en la pestaña del navegador #}
 {% block title %}Recomendaciones - AKA Films{% endblock %}
 
+{# Bloque principal de contenido de la página #}
 {% block content %}
 <div class="recomendaciones-container">
+    {# Título principal de la página de recomendaciones #}
     <h1>Recomendaciones para ti</h1>
     
+    {# Grid de películas recomendadas basadas en el algoritmo de recomendación #}
     <div class="peliculas-grid">
+        {# Itera sobre cada película recomendada para el usuario #}
         {% for pelicula in recomendaciones %}
         <div class="pelicula-card">
+            {# Enlace a la página de detalle de la película recomendada #}
             <a href="{% url 'peliculas:detalle' pelicula.id %}">
+                {# Póster de la película recomendada #}
                 <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
+                {# Título de la película #}
                 <h3>{{ pelicula.titulo }}</h3>
+                {# Calificación promedio de la película #}
                 <p>⭐ {{ pelicula.calificacion_promedio }}/10</p>
             </a>
         </div>

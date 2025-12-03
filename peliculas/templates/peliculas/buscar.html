@@ -1,34 +1,52 @@
+{# Template de búsqueda de películas - Extiende la plantilla base de la aplicación #}
 {% extends 'peliculas/base.html' %}
 
+{# Define el título de la página que aparecerá en la pestaña del navegador #}
 {% block title %}Buscar - AKA Films{% endblock %}
 
+{# Bloque principal de contenido de la página #}
 {% block content %}
 <div class="search-page">
+    {# Sección de encabezado de búsqueda con título y estadísticas #}
     <div class="search-header">
         <div class="container">
             <h1 class="search-title">Resultados de Búsqueda</h1>
+            
+            {# Muestra información solo si hay una consulta de búsqueda #}
             {% if query %}
             <p class="search-query">Buscando: "{{ query }}"</p>
+            
+            {# Verifica si hay un mensaje de error (ej: búsqueda muy corta) #}
             {% if mensaje_error %}
             <p class="search-error" style="color: #ff6b6b; font-size: 1.1em; margin-top: 10px;">{{ mensaje_error }}</p>
             {% else %}
+            {# Muestra el conteo de resultados con pluralización automática #}
             <p class="search-count">{{ peliculas.count }} resultado{{ peliculas.count|pluralize }} encontrado{{ peliculas.count|pluralize }}</p>
             {% endif %}
             {% endif %}
         </div>
     </div>
     
+    {# Contenedor principal de resultados #}
     <div class="container">
+        {# Escenario 1: Mostrar mensaje de error si la búsqueda es inválida #}
         {% if mensaje_error %}
         <div class="no-results-container">
             <p class="no-results-hint">Intenta con una búsqueda más específica (mínimo 3 caracteres).</p>
         </div>
+        
+        {# Escenario 2: Mostrar grid de películas si hay resultados #}
         {% elif peliculas %}
         <div class="movies-grid">
+            {# Itera sobre cada película encontrada #}
             {% for pelicula in peliculas %}
             <div class="movie-card">
+                {# Enlace a la página de detalle de la película #}
                 <a href="{% url 'peliculas:detalle' pelicula.id %}" class="movie-link">
+                    
+                    {# Sección del póster de la película #}
                     <div class="movie-poster">
+                        {# Muestra el póster si existe, sino muestra un placeholder #}
                         {% if pelicula.poster %}
                         <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
                         {% else %}
@@ -36,13 +54,19 @@
                             <span>🎬</span>
                         </div>
                         {% endif %}
+                        
+                        {# Badge de calificación flotante sobre el póster #}
                         <div class="movie-rating">
                             ⭐ {{ pelicula.calificacion_promedio|floatformat:1 }}
                         </div>
                     </div>
+                    
+                    {# Información textual de la película #}
                     <div class="movie-info">
                         <h3 class="movie-title">{{ pelicula.titulo }}</h3>
                         <p class="movie-year">{{ pelicula.año }}</p>
+                        
+                        {# Muestra solo los primeros 2 géneros de la película #}
                         <div class="movie-genres">
                             {% for genero in pelicula.generos.all|slice:":2" %}
                             <span class="genre-tag">{{ genero.nombre }}</span>
@@ -53,11 +77,15 @@
             </div>
             {% endfor %}
         </div>
+        
+        {# Escenario 3: No se encontraron resultados pero la búsqueda es válida #}
         {% elif query %}
         <div class="no-results-container">
             <p class="no-results">No se encontraron películas que coincidan con tu búsqueda.</p>
             <p class="no-results-hint">Intenta con otros términos o explora nuestros géneros.</p>
         </div>
+        
+        {# Escenario 4: Página cargada sin búsqueda inicial #}
         {% else %}
         <div class="no-results-container">
             <p class="no-results-hint">Escribe algo en el buscador para encontrar películas.</p>
@@ -66,6 +94,7 @@
     </div>
 </div>
 
+{# Estilos inline para el mensaje de error (sobrescribe estilos previos) #}
 <style>
 .search-error {
     color: #ff6b6b !important;

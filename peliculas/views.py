@@ -24,12 +24,21 @@ from .forms import (
 
 
 def index(request):
-    """Vista principal - Pagina de inicio"""
+    """
+    Vista principal - Página de inicio.
+    
+    Muestra películas destacadas, recientes y recomendaciones personalizadas.
+    Las recomendaciones solo aparecen para usuarios autenticados.
+    """
+    
+    # Películas con mejor calificación promedio (top 6)
     peliculas_destacadas = Pelicula.objects.annotate(
         promedio=Avg('calificaciones__puntuacion')
     ).order_by('-promedio')[:6]
     
+    # Películas agregadas más recientemente (top 6)
     peliculas_recientes = Pelicula.objects.order_by('-fecha_agregada')[:6]
+    # Obtener todos los géneros para el menú
     generos = Genero.objects.all()
     
     # Recomendaciones personalizadas si esta autenticado
@@ -47,10 +56,19 @@ def index(request):
 
 
 def detalle_pelicula(request, pelicula_id):
-    """Vista de detalle de una pelicula"""
+    """
+    Vista de detalle de una película.
+    
+    Muestra información completa, reseñas, calificación del usuario
+    y watch parties próximas. Registra la visualización si el usuario
+    está autenticado.
+    """
+    
+    # Obtiene la película o retorna 404 si no existe
     pelicula = get_object_or_404(Pelicula, pk=pelicula_id)
     
     # Registrar visualización si esta autenticado
+    # Registrar visualización en el historial del usuario
     if request.user.is_authenticated:
         HistorialVisualizacion.objects.get_or_create(
             usuario=request.user,
@@ -58,8 +76,10 @@ def detalle_pelicula(request, pelicula_id):
             defaults={'fecha_visualizacion': timezone.now()}
         )
     
+    # Obtener reseñas con información del usuario (optimización con select_related)
     resenas = pelicula.resenas.select_related('usuario').order_by('-fecha')[:10]
     
+    # Verificar si el usuario ya calificó esta película
     calificacion_usuario = None
     if request.user.is_authenticated:
         try:
@@ -70,6 +90,7 @@ def detalle_pelicula(request, pelicula_id):
         except Calificacion.DoesNotExist:
             pass
     
+    # Obtener géneros para el menú
     generos = Genero.objects.all()
     
     # Watch parties próximas para esta película
@@ -91,16 +112,26 @@ def detalle_pelicula(request, pelicula_id):
 
 
 def peliculas_por_genero(request, genero_id):
-    """Vista de peliculas filtradas por genero"""
+    """
+    Vista de películas filtradas por género.
+    
+    Muestra todas las películas de un género específico
+    ordenadas por calificación promedio con paginación.
+    """
+    
+    # Obtiene el género o retorna 404
     genero = get_object_or_404(Genero, pk=genero_id)
+    # Filtra películas por género y calcula promedio de calificaciones
     peliculas_list = Pelicula.objects.filter(generos=genero).annotate(
         promedio=Avg('calificaciones__puntuacion')
     ).order_by('-promedio')
     
+    # Paginación: 12 películas por página
     paginator = Paginator(peliculas_list, 12)
     page_number = request.GET.get('page')
     peliculas = paginator.get_page(page_number)
     
+    # Obtener géneros para el menú
     generos = Genero.objects.all()
     
     context = {
@@ -112,19 +143,28 @@ def peliculas_por_genero(request, genero_id):
 
 
 def buscar(request):
-    """Vista de busqueda de peliculas"""
+    """
+    Vista de búsqueda de películas.
+    
+    Busca películas por título, título original, sinopsis,
+    género o director usando el parámetro 'q' en la query string.
+    """
+    
+    # Obtiene y limpia el término de búsqueda
     query = request.GET.get('q', '').strip()
     peliculas = []
     generos = Genero.objects.all()
     
+    # Realiza búsqueda solo si hay término ingresado
     if query:
+        # Búsqueda en múltiples campos usando Q objects
         peliculas = Pelicula.objects.filter(
             Q(titulo__icontains=query) |
             Q(titulo_original__icontains=query) |
             Q(sinopsis__icontains=query) |
             Q(generos__nombre__icontains=query) |
             Q(director__nombre__icontains=query)
-        ).distinct()
+        ).distinct() # Elimina duplicados de relaciones many-to-many
     
     context = {
         'query': query,
@@ -136,18 +176,28 @@ def buscar(request):
 
 @login_required
 def agregar_calificacion(request, pelicula_id):
-    """Vista para agregar o actualizar calificacion"""
+    """
+    Vista para agregar o actualizar calificación de una película.
+    
+    Permite calificar películas en escala 1-10. Si el usuario
+    ya calificó, actualiza la calificación existente.
+    """
     if request.method == 'POST':
+        # Obtiene la película o retorna 404
         pelicula = get_object_or_404(Pelicula, pk=pelicula_id)
+        # Obtiene puntuación del formulario
         puntuacion = int(request.POST.get('puntuacion', 0))
         
+        # Valida que la puntuación esté en el rango permitido
         if 1 <= puntuacion <= 10:
+            # Crea nueva calificación o actualiza existente
             calificacion, created = Calificacion.objects.update_or_create(
                 pelicula=pelicula,
                 usuario=request.user,
                 defaults={'puntuacion': puntuacion}
             )
             
+            # Mensaje de éxito diferente según si es nueva o actualizada
             if created:
                 messages.success(request, '¡Calificación agregada exitosamente!')
             else:
@@ -155,17 +205,26 @@ def agregar_calificacion(request, pelicula_id):
         else:
             messages.error(request, 'La calificación debe estar entre 1 y 10.')
     
+    # Redirige de vuelta a la página de detalle
     return redirect('peliculas:detalle', pelicula_id=pelicula_id)
 
 
 @login_required
 def agregar_resena(request, pelicula_id):
-    """Vista para agregar reseña"""
+    """
+    Vista para agregar o actualizar reseña de una película.
+    
+    Permite escribir reseñas con título y contenido.
+    Un usuario solo puede tener una reseña por película.
+    """
     if request.method == 'POST':
+        # Obtiene la película o retorna 404
         pelicula = get_object_or_404(Pelicula, pk=pelicula_id)
+        # Obtiene datos del formulario
         titulo = request.POST.get('titulo', '')
         contenido = request.POST.get('contenido', '')
         
+        # Valida que ambos campos estén completos
         if titulo and contenido:
             resena, created = Resena.objects.update_or_create(
                 pelicula=pelicula,
@@ -176,29 +235,47 @@ def agregar_resena(request, pelicula_id):
                 }
             )
             
+            # Mensaje de éxito diferente según si es nueva o actualizada
             if created:
                 messages.success(request, '¡Reseña publicada exitosamente!')
             else:
                 messages.success(request, '¡Reseña actualizada!')
         else:
             messages.error(request, 'Debes completar todos los campos.')
-    
+    # Redirige de vuelta a la página de detalle
     return redirect('peliculas:detalle', pelicula_id=pelicula_id)
 
 
 def sobre_nosotros(request):
-    """Vista de la pagina Sobre Nosotros"""
+    """
+    Vista de la página 'Sobre Nosotros'.
+    
+    Página estática con información sobre la plataforma.
+    """
     generos = Genero.objects.all()
     return render(request, 'peliculas/sobre_nosotros.html', {'generos': generos})
 
 
 def terminos_condiciones(request):
-    """Vista para mostrar terminos y condiciones"""
+    """
+    Vista para mostrar términos y condiciones.
+    
+    Muestra el documento legal de términos, condiciones y
+    licencia Creative Commons.
+    """
     return render(request, 'peliculas/terminos_condiciones.html')
 
 
 def registro(request):
-    """Vista de registro de nuevos usuarios"""
+    """
+    Vista de registro de nuevos usuarios.
+    
+    Maneja el formulario de registro, crea la cuenta,
+    autentica automáticamente al usuario y lo redirige.
+    Redirige a usuarios ya autenticados al inicio.
+    """
+    
+    # Redirige a inicio si ya está autenticado
     if request.user.is_authenticated:
         return redirect('peliculas:index')
     
@@ -207,7 +284,9 @@ def registro(request):
     if request.method == 'POST':
         form = RegistroUsuarioForm(request.POST)
         if form.is_valid():
+            # Guarda el nuevo usuario
             user = form.save()
+            # Obtiene credenciales para autenticación automática
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
@@ -218,6 +297,7 @@ def registro(request):
                 return redirect('/admin/')
             return redirect('peliculas:index')
     else:
+        # Formulario vacío para GET
         form = RegistroUsuarioForm()
     
     return render(request, 'peliculas/registro.html', {'form': form, 'generos': generos})
@@ -225,22 +305,36 @@ def registro(request):
 
 @login_required
 def agregar_favoritos(request, pelicula_id):
-    """Agregar/quitar pelicula de favoritos"""
+    """
+    Agregar o quitar película de favoritos.
+    
+    Funciona como toggle: si está en favoritos la quita,
+    si no está la agrega.
+    """
     pelicula = get_object_or_404(Pelicula, pk=pelicula_id)
     
+    # Verifica si la película ya está en favoritos
     if request.user.peliculas_favoritas.filter(id=pelicula_id).exists():
+        # Quita de favoritos
         request.user.peliculas_favoritas.remove(pelicula)
         messages.success(request, f'"{pelicula.titulo}" eliminada de tus favoritos.')
     else:
+        # Agrega a favoritos
         request.user.peliculas_favoritas.add(pelicula)
         messages.success(request, f'"{pelicula.titulo}" agregada a tus favoritos.')
     
+    # Redirige de vuelta a la página de detalle
     return redirect('peliculas:detalle', pelicula_id=pelicula_id)
 
 
 @login_required
 def agregar_ver_despues(request, pelicula_id):
-    """Agregar/quitar pelicula de ver despues"""
+    """
+    Agregar o quitar película de la lista 'Ver Después'.
+    
+    Funciona como toggle: si está en la lista la quita,
+    si no está la agrega.
+    """
     pelicula = get_object_or_404(Pelicula, pk=pelicula_id)
     
     if request.user.peliculas_ver_despues.filter(id=pelicula_id).exists():
@@ -255,9 +349,11 @@ def agregar_ver_despues(request, pelicula_id):
 
 @login_required
 def mi_perfil(request):
-    """Vista del perfil del usuario"""
+    """Vista del perfil del usuario autenticado.
+    Muestra favoritos, lista ver después, calificaciones,reseñas y recomendaciones personalizadas."""
     favoritos = request.user.peliculas_favoritas.all()
     ver_despues = request.user.peliculas_ver_despues.all()
+    # Obtiene calificaciones y reseñas con optimización de consultas
     mis_calificaciones = Calificacion.objects.filter(usuario=request.user).select_related('pelicula')
     mis_resenas = Resena.objects.filter(usuario=request.user).select_related('pelicula')
     

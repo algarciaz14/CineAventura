@@ -1,23 +1,38 @@
+{# Template de notificaciones - Extiende la plantilla base de la aplicación #}
 {% extends 'peliculas/base.html' %}
 
+{# Define el título de la página que aparecerá en la pestaña del navegador #}
 {% block title %}Notificaciones - AKA Films{% endblock %}
 
+{# Bloque principal de contenido de la página #}
 {% block content %}
 <div class="notificaciones-container">
+    {# Título principal de la página de notificaciones #}
     <h1>Notificaciones</h1>
     
+    {# Itera sobre cada notificación del usuario #}
     {% for notif in notificaciones %}
+    {# Contenedor de cada notificación individual con clase condicional para no leídas #}
     <div class="notificacion-item {% if not notif.leida %}no-leida{% endif %}">
+        
+        {# Sección del ícono - Muestra diferente emoji según el tipo de notificación #}
         <div class="notif-icon">
             {% if notif.tipo == 'mensaje' %}💬
             {% elif notif.tipo == 'watch_party' %}🎉
             {% else %}📢{% endif %}
         </div>
+        
+        {# Contenido principal de la notificación #}
         <div class="notif-contenido">
+            {# Título de la notificación #}
             <h3>{{ notif.titulo }}</h3>
+            {# Mensaje descriptivo de la notificación #}
             <p>{{ notif.mensaje }}</p>
+            {# Timestamp relativo mostrando cuánto tiempo ha pasado desde su creación #}
             <small>{{ notif.fecha_creacion|timesince }} atrás</small>
         </div>
+        
+        {# Enlace de acción - Solo se muestra si la notificación tiene una URL asociada #}
         {% if notif.url %}
         <a href="{{ notif.url }}" class="notif-link">Ver →</a>
         {% endif %}

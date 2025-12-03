@@ -1,18 +1,26 @@
+{# Carga archivos estáticos de Django (CSS, JS, imágenes) #}
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    {# Configuración responsive para dispositivos móviles #}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - AKA Films</title>
+    
+    {# Importa la fuente Poppins desde Google Fonts #}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    {# Estilos CSS embebidos para la página de registro #}
     <style>
+        /* Reset global de márgenes y paddings */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
+        /* Estilos del body - Pantalla completa con gradiente oscuro */
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
@@ -23,6 +31,7 @@
             padding: 40px 20px;
         }
         
+        /* Contenedor principal del formulario de registro */
         .register-container {
             background: #fff;
             border-radius: 15px;
@@ -32,50 +41,60 @@
             padding: 50px 40px;
         }
         
+        /* Sección del logo de la aplicación */
         .logo {
             text-align: center;
             margin-bottom: 30px;
         }
         
+        /* Título del logo principal */
         .logo h1 {
             font-size: 36px;
             font-weight: bold;
         }
         
+        /* Parte "AKA" del logo en rojo característico */
         .logo-aka {
             color: #e50914;
         }
         
+        /* Parte "FILMS" del logo en negro */
         .logo-films {
             color: #333;
         }
         
+        /* Encabezado con mensaje de bienvenida */
         .register-header {
             text-align: center;
             margin-bottom: 30px;
         }
         
+        /* Título principal del encabezado */
         .register-header h2 {
             color: #333;
             font-size: 28px;
             margin-bottom: 10px;
         }
         
+        /* Subtítulo del encabezado */
         .register-header p {
             color: #666;
             font-size: 15px;
         }
         
+        /* Grid de 2 columnas para campos de nombre y apellido */
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
         
+        /* Grupo de formulario para cada campo */
         .form-group {
             margin-bottom: 20px;
         }
         
+        /* Etiquetas de los campos del formulario */
         label {
             display: block;
             color: #333;
@@ -84,6 +103,7 @@
             font-size: 14px;
         }
         
+        /* Estilos para inputs de texto, email y contraseña */
         .form-input {
             width: 100%;
             padding: 14px 16px;
@@ -94,12 +114,14 @@
             transition: all 0.3s;
         }
         
+        /* Efecto de focus en los inputs - Borde rojo con sombra */
         .form-input:focus {
             outline: none;
             border-color: #e50914;
             box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
         }
         
+        /* Texto de ayuda debajo de los campos */
         .form-help {
             display: block;
             color: #888;
@@ -107,6 +129,7 @@
             margin-top: 5px;
         }
         
+        /* Mensaje de error específico de cada campo */
         .field-error {
             display: block;
             color: #c33;
@@ -118,6 +141,7 @@
             border-left: 3px solid #c33;
         }
         
+        /* Caja de errores generales del formulario */
         .form-errors {
             background: #fee;
             color: #c33;
@@ -128,7 +152,7 @@
             border-left: 4px solid #c33;
         }
         
-        /* NUEVO: Estilos para términos y condiciones */
+        /* Contenedor destacado para términos y condiciones */
         .terminos-container {
             background: #f9f9f9;
             border: 2px solid #e0e0e0;
@@ -137,12 +161,14 @@
             margin-bottom: 20px;
         }
         
+        /* Wrapper flex para alinear checkbox con texto */
         .terminos-checkbox-wrapper {
             display: flex;
             align-items: flex-start;
             gap: 12px;
         }
         
+        /* Estilo del checkbox de términos */
         .form-checkbox {
             width: 20px;
             height: 20px;
@@ -151,22 +177,26 @@
             flex-shrink: 0;
         }
         
+        /* Texto de términos y condiciones */
         .terminos-text {
             color: #555;
             font-size: 14px;
             line-height: 1.5;
         }
         
+        /* Enlaces dentro del texto de términos */
         .terminos-text a {
             color: #e50914;
             text-decoration: none;
             font-weight: 600;
         }
         
+        /* Efecto hover de los enlaces de términos */
         .terminos-text a:hover {
             text-decoration: underline;
         }
         
+        /* Badge de licencia Creative Commons */
         .license-badge {
             display: inline-block;
             background: #e50914;
@@ -178,6 +208,7 @@
             margin-left: 5px;
         }
         
+        /* Botón principal de registro */
         .btn-register {
             width: 100%;
             background: #e50914;
@@ -193,22 +224,26 @@
             margin-top: 10px;
         }
         
+        /* Efecto hover del botón de registro */
         .btn-register:hover {
             background: #c40812;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
         }
 
+        /* Efecto active del botón de registro */
         .btn-register:active {
             transform: translateY(0);
         }
         
+        /* Estado deshabilitado del botón */
         .btn-register:disabled {
             background: #ccc;
             cursor: not-allowed;
             transform: none;
         }
         
+        /* Sección de invitación a iniciar sesión */
         .login-prompt {
             text-align: center;
             margin-top: 25px;
@@ -216,12 +251,14 @@
             border-top: 1px solid #eee;
         }
         
+        /* Texto de la invitación */
         .login-prompt p {
             color: #666;
             margin-bottom: 10px;
             font-size: 14px;
         }
         
+        /* Enlaces de la invitación a login */
         .login-prompt a {
             color: #e50914;
             text-decoration: none;
@@ -229,16 +266,19 @@
             transition: color 0.3s;
         }
         
+        /* Efecto hover del enlace de login */
         .login-prompt a:hover {
             color: #c40812;
             text-decoration: underline;
         }
         
+        /* Contenedor del enlace para volver al inicio */
         .back-link {
             text-align: center;
             margin-top: 20px;
         }
         
+        /* Estilo del enlace de volver */
         .back-link a {
             color: #666;
             text-decoration: none;
@@ -246,10 +286,12 @@
             transition: color 0.3s;
         }
         
+        /* Efecto hover del enlace de volver */
         .back-link a:hover {
             color: #e50914;
         }
 
+        /* Animación de entrada para el contenedor de registro */
         @keyframes slideIn {
             from {
                 opacity: 0;
@@ -261,23 +303,29 @@
             }
         }
 
+        /* Aplica la animación slideIn al contenedor */
         .register-container {
             animation: slideIn 0.5s ease-out;
         }
 
+        /* Media query para dispositivos móviles */
         @media (max-width: 600px) {
+            /* Grid de una sola columna en móviles */
             .form-row {
                 grid-template-columns: 1fr;
             }
             
+            /* Reduce padding en móviles */
             .register-container {
                 padding: 40px 25px;
             }
 
+            /* Reduce tamaño del logo en móviles */
             .logo h1 {
                 font-size: 32px;
             }
 
+            /* Reduce tamaño del título en móviles */
             .register-header h2 {
                 font-size: 24px;
             }
@@ -285,88 +333,113 @@
     </style>
 </head>
 <body>
+    {# Contenedor principal del formulario de registro #}
     <div class="register-container">
+        {# Logo de la aplicación AKA FILMS #}
         <div class="logo">
             <h1><span class="logo-aka">AKA</span><span class="logo-films">FILMS</span></h1>
         </div>
         
+        {# Encabezado con mensaje de bienvenida #}
         <div class="register-header">
             <h2>Crear Cuenta</h2>
             <p>Únete a la comunidad de AKA Films</p>
         </div>
 
+        {# Formulario de registro #}
         <form method="post" id="registro-form">
+            {# Token CSRF requerido por Django para seguridad #}
             {% csrf_token %}
             
+            {# Errores generales del formulario (no específicos de un campo) #}
             {% if form.non_field_errors %}
             <div class="form-errors">
                 {{ form.non_field_errors }}
             </div>
             {% endif %}
 
+            {# Fila de campos: Nombre y Apellido en grid de 2 columnas #}
             <div class="form-row">
+                {# Campo: Nombre (obligatorio) #}
                 <div class="form-group">
                     <label for="{{ form.first_name.id_for_label }}">Nombre *</label>
                     {{ form.first_name }}
+                    {# Muestra el primer error si existe #}
                     {% if form.first_name.errors %}
                     <span class="field-error">{{ form.first_name.errors.0 }}</span>
                     {% endif %}
                 </div>
 
+                {# Campo: Apellido (obligatorio) #}
                 <div class="form-group">
                     <label for="{{ form.last_name.id_for_label }}">Apellido *</label>
                     {{ form.last_name }}
+                    {# Muestra el primer error si existe #}
                     {% if form.last_name.errors %}
                     <span class="field-error">{{ form.last_name.errors.0 }}</span>
                     {% endif %}
                 </div>
             </div>
 
+            {# Campo: Nombre de usuario (obligatorio) #}
             <div class="form-group">
                 <label for="{{ form.username.id_for_label }}">Nombre de usuario *</label>
                 {{ form.username }}
+                {# Muestra errores de validación si existen #}
                 {% if form.username.errors %}
                 <span class="field-error">{{ form.username.errors.0 }}</span>
                 {% endif %}
+                {# Texto de ayuda con restricciones del campo #}
                 <small class="form-help">Letras, números y @/./+/-/_ solamente.</small>
             </div>
 
+            {# Campo: Correo electrónico (obligatorio) #}
             <div class="form-group">
                 <label for="{{ form.email.id_for_label }}">Correo electrónico *</label>
                 {{ form.email }}
+                {# Muestra errores de validación si existen #}
                 {% if form.email.errors %}
                 <span class="field-error">{{ form.email.errors.0 }}</span>
                 {% endif %}
             </div>
 
+            {# Campo: Contraseña (obligatorio) #}
             <div class="form-group">
                 <label for="{{ form.password1.id_for_label }}">Contraseña *</label>
                 {{ form.password1 }}
+                {# Muestra errores de validación si existen #}
                 {% if form.password1.errors %}
                 <span class="field-error">{{ form.password1.errors.0 }}</span>
                 {% endif %}
+                {# Texto de ayuda con requisitos de seguridad #}
                 <small class="form-help">Mínimo 8 caracteres. No solo números.</small>
             </div>
 
+            {# Campo: Confirmar contraseña (obligatorio) #}
             <div class="form-group">
                 <label for="{{ form.password2.id_for_label }}">Confirmar contraseña *</label>
                 {{ form.password2 }}
+                {# Muestra errores de validación si existen #}
                 {% if form.password2.errors %}
                 <span class="field-error">{{ form.password2.errors.0 }}</span>
                 {% endif %}
             </div>
 
-            <!--  Términos y Condiciones -->
+            {# Sección de Términos y Condiciones con licencia Creative Commons #}
             <div class="terminos-container">
                 <div class="terminos-checkbox-wrapper">
+                    {# Checkbox de aceptación de términos #}
                     {{ form.aceptar_terminos }}
                     <label for="terminos-checkbox" class="terminos-text">
                         He leído y acepto los 
+                        {# Enlace a página de términos (se abre en nueva pestaña) #}
                         <a href="{% url 'peliculas:terminos' %}" target="_blank">Términos y Condiciones</a>. 
                         Entiendo que todo el contenido que genere estará bajo licencia 
+                        {# Badge de licencia Creative Commons #}
                         <span class="license-badge">CC BY-NC-SA 4.0</span>
                     </label>
                 </div>
+                {# Muestra error si no se aceptan los términos #}
                 {% if form.aceptar_terminos.errors %}
                 <span class="field-error" style="margin-left: 32px; margin-top: 10px;">
                     {{ form.aceptar_terminos.errors.0 }}
@@ -374,24 +447,30 @@
                 {% endif %}
             </div>
 
+            {# Botón de envío del formulario #}
             <button type="submit" class="btn-register" id="btn-submit">Crear mi cuenta</button>
         </form>
         
+        {# Sección de invitación a iniciar sesión para usuarios existentes #}
         <div class="login-prompt">
             <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></p>
         </div>
         
+        {# Enlace para volver a la página principal #}
         <div class="back-link">
             <a href="{% url 'peliculas:index' %}">← Volver al inicio</a>
         </div>
     </div>
 
+    {# Script JavaScript para validación del checkbox de términos #}
     <script>
-        // Validación del checkbox de términos
+        // Validación del checkbox de términos antes de enviar el formulario
         document.getElementById('registro-form').addEventListener('submit', function(e) {
+            // Obtiene referencias al checkbox y botón de envío
             const checkbox = document.getElementById('terminos-checkbox');
             const btnSubmit = document.getElementById('btn-submit');
             
+            // Si el checkbox no está marcado, previene el envío y muestra alerta
             if (!checkbox.checked) {
                 e.preventDefault();
                 alert('Debes aceptar los términos y condiciones para continuar.');

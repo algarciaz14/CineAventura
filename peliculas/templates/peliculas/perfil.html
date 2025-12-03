@@ -1,59 +1,81 @@
+{# Template de perfil personal del usuario - Extiende la plantilla base de la aplicación #}
 {% extends 'peliculas/base.html' %}
 
+{# Define el título de la página que aparecerá en la pestaña del navegador #}
 {% block title %}Mi Perfil - AKA Films{% endblock %}
 
+{# Bloque principal de contenido de la página #}
 {% block content %}
 <div class="profile-page">
     <div class="container">
-        <!-- Header del Perfil -->
+        {# Header del Perfil - Sección superior con avatar e información del usuario #}
         <div class="profile-header">
+            {# Avatar circular con inicial del username #}
             <div class="profile-avatar">
                 {{ user.username|slice:":1"|upper }}
             </div>
+            {# Información personal del usuario #}
             <div class="profile-info">
+                {# Nombre completo o username como fallback #}
                 <h1>{{ user.get_full_name|default:user.username }}</h1>
+                {# Nombre de usuario con @ #}
                 <p class="profile-username">@{{ user.username }}</p>
+                {# Correo electrónico del usuario #}
                 <p class="profile-email">{{ user.email }}</p>
             </div>
         </div>
 
-        <!-- Estadísticas -->
+        {# Sección de Estadísticas - Grid de 4 tarjetas con contadores #}
         <div class="profile-stats">
+            {# Estadística: Total de películas favoritas #}
             <div class="stat-card">
                 <div class="stat-number">{{ favoritos.count }}</div>
                 <div class="stat-label">Favoritos</div>
             </div>
+            {# Estadística: Total de películas en lista de ver después #}
             <div class="stat-card">
                 <div class="stat-number">{{ ver_despues.count }}</div>
                 <div class="stat-label">Ver Después</div>
             </div>
+            {# Estadística: Total de calificaciones realizadas #}
             <div class="stat-card">
                 <div class="stat-number">{{ mis_calificaciones.count }}</div>
                 <div class="stat-label">Calificaciones</div>
             </div>
+            {# Estadística: Total de reseñas escritas #}
             <div class="stat-card">
                 <div class="stat-number">{{ mis_resenas.count }}</div>
                 <div class="stat-label">Reseñas</div>
             </div>
         </div>
 
-        <!-- Pestañas de Contenido -->
+        {# Sistema de Pestañas - Navegación entre diferentes secciones del perfil #}
         <div class="profile-tabs">
+            {# Pestaña de Favoritos (activa por defecto) #}
             <button class="tab-button active" data-tab="favoritos">❤️ Favoritos</button>
+            {# Pestaña de Ver Después #}
             <button class="tab-button" data-tab="ver-despues">🕒 Ver Después</button>
+            {# Pestaña de Calificaciones #}
             <button class="tab-button" data-tab="calificaciones">⭐ Calificaciones</button>
+            {# Pestaña de Reseñas #}
             <button class="tab-button" data-tab="resenas">📝 Reseñas</button>
         </div>
 
-        <!-- Contenido de Favoritos -->
+        {# Contenido de la pestaña Favoritos (visible por defecto) #}
         <div class="tab-content active" id="favoritos">
             <h2 class="section-title">Mis Películas Favoritas</h2>
+            {# Verifica si el usuario tiene películas favoritas #}
             {% if favoritos %}
+            {# Grid de tarjetas de películas favoritas #}
             <div class="movies-grid">
+                {# Itera sobre cada película favorita #}
                 {% for pelicula in favoritos %}
                 <div class="movie-card">
+                    {# Enlace a la página de detalle de la película #}
                     <a href="{% url 'peliculas:detalle' pelicula.id %}" class="movie-link">
+                        {# Sección del póster #}
                         <div class="movie-poster">
+                            {# Muestra el póster si existe, sino muestra placeholder #}
                             {% if pelicula.poster %}
                             <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
                             {% else %}
@@ -61,10 +83,12 @@
                                 <span>🎬</span>
                             </div>
                             {% endif %}
+                            {# Badge flotante con calificación promedio #}
                             <div class="movie-rating">
                                 ⭐ {{ pelicula.calificacion_promedio|floatformat:1 }}
                             </div>
                         </div>
+                        {# Información de la película #}
                         <div class="movie-info">
                             <h3 class="movie-title">{{ pelicula.titulo }}</h3>
                             <p class="movie-year">{{ pelicula.año }}</p>
@@ -73,20 +97,27 @@
                 </div>
                 {% endfor %}
             </div>
+            {# Mensaje cuando no hay favoritos #}
             {% else %}
             <p class="empty-message">No tienes películas favoritas aún. ¡Explora y agrega tus favoritas!</p>
             {% endif %}
         </div>
 
-        <!-- Contenido de Ver Después -->
+        {# Contenido de la pestaña Ver Después (oculto por defecto) #}
         <div class="tab-content" id="ver-despues">
             <h2 class="section-title">Lista para Ver Después</h2>
+            {# Verifica si el usuario tiene películas en ver después #}
             {% if ver_despues %}
+            {# Grid de tarjetas de películas para ver después #}
             <div class="movies-grid">
+                {# Itera sobre cada película en la lista #}
                 {% for pelicula in ver_despues %}
                 <div class="movie-card">
+                    {# Enlace a la página de detalle de la película #}
                     <a href="{% url 'peliculas:detalle' pelicula.id %}" class="movie-link">
+                        {# Sección del póster #}
                         <div class="movie-poster">
+                            {# Muestra el póster si existe, sino muestra placeholder #}
                             {% if pelicula.poster %}
                             <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
                             {% else %}
@@ -94,10 +125,12 @@
                                 <span>🎬</span>
                             </div>
                             {% endif %}
+                            {# Badge flotante con calificación promedio #}
                             <div class="movie-rating">
                                 ⭐ {{ pelicula.calificacion_promedio|floatformat:1 }}
                             </div>
                         </div>
+                        {# Información de la película #}
                         <div class="movie-info">
                             <h3 class="movie-title">{{ pelicula.titulo }}</h3>
                             <p class="movie-year">{{ pelicula.año }}</p>
@@ -106,18 +139,23 @@
                 </div>
                 {% endfor %}
             </div>
+            {# Mensaje cuando la lista está vacía #}
             {% else %}
             <p class="empty-message">Tu lista está vacía. Agrega películas que quieras ver más tarde.</p>
             {% endif %}
         </div>
 
-        <!-- Contenido de Calificaciones -->
+        {# Contenido de la pestaña Calificaciones (oculto por defecto) #}
         <div class="tab-content" id="calificaciones">
             <h2 class="section-title">Mis Calificaciones</h2>
+            {# Verifica si el usuario tiene calificaciones #}
             {% if mis_calificaciones %}
+            {# Lista de calificaciones con diseño horizontal #}
             <div class="ratings-list">
+                {# Itera sobre cada calificación #}
                 {% for calificacion in mis_calificaciones %}
                 <div class="rating-item">
+                    {# Póster pequeño de la película #}
                     <div class="rating-poster">
                         {% if calificacion.pelicula.poster %}
                         <img src="{{ calificacion.pelicula.poster }}" alt="{{ calificacion.pelicula.titulo }}">
@@ -125,11 +163,14 @@
                         <div class="poster-placeholder">🎬</div>
                         {% endif %}
                     </div>
+                    {# Información de la película y fecha de calificación #}
                     <div class="rating-info">
+                        {# Título enlazado a la página de detalle #}
                         <h3><a href="{% url 'peliculas:detalle' calificacion.pelicula.id %}">{{ calificacion.pelicula.titulo }}</a></h3>
                         <p class="rating-year">{{ calificacion.pelicula.año }}</p>
                         <p class="rating-date">Calificada el {{ calificacion.fecha|date:"d/m/Y" }}</p>
                     </div>
+                    {# Puntuación grande destacada #}
                     <div class="rating-score">
                         <span class="score-big">{{ calificacion.puntuacion }}</span>
                         <span class="score-max">/10</span>
@@ -137,28 +178,39 @@
                 </div>
                 {% endfor %}
             </div>
+            {# Mensaje cuando no hay calificaciones #}
             {% else %}
             <p class="empty-message">No has calificado ninguna película todavía.</p>
             {% endif %}
         </div>
 
-        <!-- Contenido de Reseñas -->
+        {# Contenido de la pestaña Reseñas (oculto por defecto) #}
         <div class="tab-content" id="resenas">
             <h2 class="section-title">Mis Reseñas</h2>
+            {# Verifica si el usuario tiene reseñas #}
             {% if mis_resenas %}
+            {# Lista de reseñas con vista previa #}
             <div class="reviews-list">
+                {# Itera sobre cada reseña #}
                 {% for resena in mis_resenas %}
                 <div class="review-item">
+                    {# Encabezado con título de película y fecha #}
                     <div class="review-header">
+                        {# Título de la película enlazado #}
                         <h3><a href="{% url 'peliculas:detalle' resena.pelicula.id %}">{{ resena.pelicula.titulo }}</a></h3>
+                        {# Fecha de publicación de la reseña #}
                         <span class="review-date">{{ resena.fecha|date:"d/m/Y" }}</span>
                     </div>
+                    {# Título de la reseña #}
                     <h4 class="review-title">{{ resena.titulo }}</h4>
+                    {# Contenido truncado a 50 palabras #}
                     <p class="review-content">{{ resena.contenido|truncatewords:50 }}</p>
+                    {# Enlace para ver la reseña completa #}
                     <a href="{% url 'peliculas:detalle' resena.pelicula.id %}" class="review-link">Ver reseña completa →</a>
                 </div>
                 {% endfor %}
             </div>
+            {# Mensaje cuando no hay reseñas #}
             {% else %}
             <p class="empty-message">No has escrito ninguna reseña todavía.</p>
             {% endif %}
@@ -166,12 +218,15 @@
     </div>
 </div>
 
+{# Estilos CSS embebidos para la página de perfil #}
 <style>
+/* Contenedor principal de la página de perfil */
 .profile-page {
     padding: 40px 0;
     min-height: calc(100vh - 200px);
 }
 
+/* Header del perfil con gradiente rojo */
 .profile-header {
     display: flex;
     align-items: center;
@@ -184,6 +239,7 @@
     box-shadow: 0 5px 20px rgba(229, 9, 20, 0.3);
 }
 
+/* Avatar circular grande con inicial del usuario */
 .profile-avatar {
     width: 120px;
     height: 120px;
@@ -199,22 +255,26 @@
     flex-shrink: 0;
 }
 
+/* Nombre del usuario en el header */
 .profile-info h1 {
     font-size: 32px;
     margin-bottom: 5px;
 }
 
+/* Username con @ */
 .profile-username {
     font-size: 18px;
     opacity: 0.9;
     margin-bottom: 5px;
 }
 
+/* Email del usuario */
 .profile-email {
     font-size: 14px;
     opacity: 0.8;
 }
 
+/* Grid responsivo de tarjetas de estadísticas */
 .profile-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -222,6 +282,7 @@
     margin-bottom: 40px;
 }
 
+/* Tarjeta individual de estadística */
 .stat-card {
     background: white;
     padding: 25px;
@@ -231,11 +292,13 @@
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
+/* Efecto hover de tarjeta de estadística */
 .stat-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Número grande de la estadística */
 .stat-number {
     font-size: 36px;
     font-weight: bold;
@@ -243,11 +306,13 @@
     margin-bottom: 5px;
 }
 
+/* Etiqueta descriptiva de la estadística */
 .stat-label {
     color: #666;
     font-size: 14px;
 }
 
+/* Barra de pestañas con borde inferior */
 .profile-tabs {
     display: flex;
     gap: 10px;
@@ -256,6 +321,7 @@
     flex-wrap: wrap;
 }
 
+/* Botón individual de pestaña */
 .tab-button {
     padding: 15px 25px;
     background: none;
@@ -269,24 +335,29 @@
     font-family: 'Poppins', sans-serif;
 }
 
+/* Efecto hover de botón de pestaña */
 .tab-button:hover {
     color: #e50914;
 }
 
+/* Estado activo de botón de pestaña */
 .tab-button.active {
     color: #e50914;
     border-bottom-color: #e50914;
 }
 
+/* Contenedor de contenido de pestaña (oculto por defecto) */
 .tab-content {
     display: none;
     animation: fadeIn 0.3s;
 }
 
+/* Contenido de pestaña activa (visible) */
 .tab-content.active {
     display: block;
 }
 
+/* Animación de aparición gradual */
 @keyframes fadeIn {
     from { 
         opacity: 0; 
@@ -298,6 +369,7 @@
     }
 }
 
+/* Mensaje cuando no hay contenido en una sección */
 .empty-message {
     text-align: center;
     padding: 60px 20px;
@@ -307,12 +379,14 @@
     border-radius: 10px;
 }
 
+/* Listas de calificaciones y reseñas en columna */
 .ratings-list, .reviews-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
+/* Item individual de calificación con layout horizontal */
 .rating-item {
     display: flex;
     align-items: center;
@@ -324,11 +398,13 @@
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
+/* Efecto hover de item de calificación */
 .rating-item:hover {
     transform: translateX(5px);
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Póster pequeño en calificaciones */
 .rating-poster {
     width: 80px;
     height: 120px;
@@ -337,12 +413,14 @@
     flex-shrink: 0;
 }
 
+/* Imagen del póster en calificaciones */
 .rating-poster img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
+/* Placeholder cuando no hay póster */
 .poster-placeholder {
     width: 100%;
     height: 100%;
@@ -353,10 +431,12 @@
     font-size: 32px;
 }
 
+/* Información de la película en calificaciones */
 .rating-info {
     flex: 1;
 }
 
+/* Título de película en calificaciones */
 .rating-info h3 a {
     color: #333;
     text-decoration: none;
@@ -364,32 +444,38 @@
     transition: color 0.3s;
 }
 
+/* Efecto hover del título */
 .rating-info h3 a:hover {
     color: #e50914;
 }
 
+/* Año y fecha de calificación */
 .rating-year, .rating-date {
     color: #666;
     font-size: 14px;
     margin: 5px 0;
 }
 
+/* Contenedor de puntuación */
 .rating-score {
     text-align: center;
     flex-shrink: 0;
 }
 
+/* Número grande de puntuación */
 .score-big {
     font-size: 48px;
     font-weight: bold;
     color: #e50914;
 }
 
+/* Denominador /10 */
 .score-max {
     font-size: 18px;
     color: #999;
 }
 
+/* Item individual de reseña */
 .review-item {
     background: white;
     padding: 25px;
@@ -398,11 +484,13 @@
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
+/* Efecto hover de item de reseña */
 .review-item:hover {
     transform: translateY(-3px);
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Encabezado de reseña con título y fecha */
 .review-header {
     display: flex;
     justify-content: space-between;
@@ -410,6 +498,7 @@
     margin-bottom: 15px;
 }
 
+/* Título de película en reseña */
 .review-header h3 a {
     color: #333;
     text-decoration: none;
@@ -417,27 +506,32 @@
     transition: color 0.3s;
 }
 
+/* Efecto hover del título de película */
 .review-header h3 a:hover {
     color: #e50914;
 }
 
+/* Fecha de publicación de reseña */
 .review-date {
     color: #999;
     font-size: 14px;
 }
 
+/* Título de la reseña */
 .review-title {
     color: #e50914;
     font-size: 18px;
     margin-bottom: 10px;
 }
 
+/* Contenido de la reseña */
 .review-content {
     color: #666;
     line-height: 1.6;
     margin-bottom: 15px;
 }
 
+/* Enlace para ver reseña completa */
 .review-link {
     color: #e50914;
     text-decoration: none;
@@ -445,43 +539,51 @@
     transition: color 0.3s;
 }
 
+/* Efecto hover del enlace */
 .review-link:hover {
     color: #c40812;
     text-decoration: underline;
 }
 
-/* Responsive */
+/* Media query para tablets y móviles */
 @media (max-width: 768px) {
+    /* Header en columna en móviles */
     .profile-header {
         flex-direction: column;
         text-align: center;
         padding: 30px 20px;
     }
 
+    /* Avatar más pequeño en móviles */
     .profile-avatar {
         width: 100px;
         height: 100px;
         font-size: 40px;
     }
 
+    /* Título más pequeño en móviles */
     .profile-info h1 {
         font-size: 26px;
     }
 
+    /* Grid de 2 columnas en móviles */
     .profile-stats {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    /* Pestañas más compactas en móviles */
     .tab-button {
         padding: 12px 15px;
         font-size: 14px;
     }
 
+    /* Items de calificación en columna en móviles */
     .rating-item {
         flex-direction: column;
         text-align: center;
     }
 
+    /* Póster más grande en móviles */
     .rating-poster {
         width: 100%;
         max-width: 150px;
@@ -490,30 +592,37 @@
 }
 </style>
 
+{# Script JavaScript para funcionalidad de pestañas #}
 <script>
-// Sistema de pestañas
+// Sistema de pestañas - Se ejecuta cuando el DOM está completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
+    // Obtiene todos los botones de pestañas y contenidos
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
 
+    // Agrega event listener a cada botón de pestaña
     tabButtons.forEach(button => {
         button.addEventListener('click', function() {
+            // Obtiene el ID del contenido objetivo desde el atributo data-tab
             const targetTab = this.getAttribute('data-tab');
 
-            // Remover active de todos los botones y contenidos
+            // Remueve la clase active de todos los botones y contenidos
             tabButtons.forEach(btn => btn.classList.remove('active'));
             tabContents.forEach(content => content.classList.remove('active'));
 
-            // Agregar active al botón clickeado y su contenido
+            // Agrega la clase active al botón clickeado y su contenido correspondiente
             this.classList.add('active');
             document.getElementById(targetTab).classList.add('active');
         });
     });
 
-    // Soporte para enlaces con hash (ejemplo: #favoritos)
+    // Soporte para enlaces con hash en la URL (ejemplo: #favoritos)
     if (window.location.hash) {
+        // Obtiene el hash sin el símbolo #
         const hash = window.location.hash.substring(1);
+        // Busca el botón que corresponde al hash
         const targetButton = document.querySelector(`[data-tab="${hash}"]`);
+        // Si existe el botón, simula un click para activar esa pestaña
         if (targetButton) {
             targetButton.click();
         }

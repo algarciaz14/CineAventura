@@ -184,13 +184,9 @@
         </div>
     </footer>
 
-    <!-- ====================================
-         SCRIPTS PRINCIPALES
-         ==================================== -->
+    <!-- SCRIPTS PRINCIPALES -->
     <script>
-        // ====================================
         // FUNCIONALIDADES BÁSICAS
-        // ====================================
         
         // Dropdown de géneros
         document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
@@ -229,14 +225,10 @@
         }, 5000);
     </script>
 
-   <!-- ====================================
-     SISTEMA DE NOTIFICACIONES EN TIEMPO REAL
-     ==================================== -->
+   <!--SISTEMA DE NOTIFICACIONES EN TIEMPO REAL-->
 {% if user.is_authenticated %}
 <script>
-    // ====================================
     // POLLING DE MENSAJES NO LEÍDOS
-    // ====================================
     
     let ultimosMensajesIds = new Set();
     
@@ -384,13 +376,9 @@
 </script>
 {% endif %}
 
-    <!-- ====================================
-         ESTILOS INTEGRADOS
-         ==================================== -->
+    <!-- ESTILOS INTEGRADOS -->
     <style>
-        /* ====================================
-           ESTILOS DEL MENÚ DE USUARIO
-           ==================================== */
+        /* ESTILOS DEL MENÚ DE USUARIO */
         
         .user-dropdown {
             position: relative;
@@ -491,9 +479,7 @@
             background: #fee;
         }
 
-        /* ====================================
-           ALERTAS Y MENSAJES
-           ==================================== */
+        /* ALERTAS Y MENSAJES */
         
         .messages-container {
             position: fixed;
@@ -590,9 +576,7 @@
             }
         }
 
-        /* ====================================
-           ICONOS DE NOTIFICACIÓN
-           ==================================== */
+        /* ICONOS DE NOTIFICACIÓN */
         
         .notification-icons {
             display: flex;
@@ -650,9 +634,7 @@
             }
         }
 
-        /* ====================================
-           RESPONSIVE
-           ==================================== */
+        /* RESPONSIVE */
         
         @media (max-width: 768px) {
             .user-name-display {

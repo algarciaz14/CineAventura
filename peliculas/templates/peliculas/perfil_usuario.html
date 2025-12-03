@@ -1,15 +1,20 @@
+{# Template de perfil de usuario - Extiende la plantilla base de la aplicación #}
 {% extends 'peliculas/base.html' %}
 
+{# Define el título dinámico de la página con el nombre del usuario #}
 {% block title %}{{ usuario_perfil.get_full_name|default:usuario_perfil.username }} - AKA Films{% endblock %}
 
+{# Bloque de CSS adicional específico para esta página #}
 {% block extra_css %}
 <style>
+    /* Contenedor principal del perfil con ancho máximo centrado */
     .profile-container {
         max-width: 1200px;
         margin: 40px auto;
         padding: 20px;
     }
     
+    /* Banner superior del perfil con gradiente rojo característico */
     .profile-banner {
         background: linear-gradient(135deg, #e50914, #c40812);
         padding: 60px 40px;
@@ -21,6 +26,7 @@
         overflow: hidden;
     }
     
+    /* Patrón de fondo decorativo con emoji de cine */
     .profile-banner::before {
         content: '';
         position: absolute;
@@ -32,11 +38,13 @@
         opacity: 0.1;
     }
     
+    /* Contenido del banner con z-index para estar sobre el patrón de fondo */
     .profile-banner-content {
         position: relative;
         z-index: 1;
     }
     
+    /* Avatar circular grande con inicial del usuario */
     .profile-avatar-large {
         width: 150px;
         height: 150px;
@@ -52,24 +60,28 @@
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     }
     
+    /* Nombre completo del usuario */
     .profile-name {
         font-size: 36px;
         font-weight: 700;
         margin-bottom: 10px;
     }
     
+    /* Nombre de usuario con @ */
     .profile-username-tag {
         font-size: 18px;
         opacity: 0.9;
         margin-bottom: 25px;
     }
     
+    /* Contenedor de botones de acción del perfil */
     .profile-actions {
         display: flex;
         gap: 15px;
         justify-content: center;
     }
     
+    /* Estilos base para botones de acción */
     .btn-action {
         padding: 12px 30px;
         border-radius: 25px;
@@ -82,26 +94,31 @@
         gap: 8px;
     }
     
+    /* Botón de enviar mensaje - Estilo primario blanco */
     .btn-enviar-mensaje {
         background: white;
         color: #e50914;
     }
     
+    /* Efecto hover del botón de mensaje */
     .btn-enviar-mensaje:hover {
         transform: translateY(-2px);
         box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
     }
     
+    /* Botón de volver - Estilo secundario transparente */
     .btn-volver {
         background: rgba(255, 255, 255, 0.2);
         color: white;
         border: 2px solid rgba(255, 255, 255, 0.3);
     }
     
+    /* Efecto hover del botón de volver */
     .btn-volver:hover {
         background: rgba(255, 255, 255, 0.3);
     }
     
+    /* Grid de estadísticas del usuario (calificaciones, reseñas, favoritos) */
     .profile-stats {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -109,6 +126,7 @@
         margin-bottom: 50px;
     }
     
+    /* Caja individual de estadística */
     .stat-box {
         background: rgba(255, 255, 255, 0.05);
         padding: 30px;
@@ -118,11 +136,13 @@
         transition: all 0.3s;
     }
     
+    /* Efecto hover de la caja de estadística */
     .stat-box:hover {
         border-color: #e50914;
         transform: translateY(-5px);
     }
     
+    /* Número grande de la estadística */
     .stat-number {
         font-size: 42px;
         font-weight: bold;
@@ -130,15 +150,18 @@
         margin-bottom: 10px;
     }
     
+    /* Etiqueta descriptiva de la estadística */
     .stat-label {
         color: rgba(255, 255, 255, 0.7);
         font-size: 16px;
     }
     
+    /* Contenedor de sección (favoritos, calificaciones) */
     .section {
         margin-bottom: 50px;
     }
     
+    /* Título de cada sección con borde inferior rojo */
     .section-title {
         font-size: 28px;
         color: #fff;
@@ -148,12 +171,14 @@
         display: inline-block;
     }
     
+    /* Grid responsivo de tarjetas de películas */
     .movies-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         gap: 20px;
     }
     
+    /* Tarjeta individual de película */
     .movie-card {
         background: rgba(255, 255, 255, 0.05);
         border-radius: 10px;
@@ -161,17 +186,20 @@
         transition: all 0.3s;
     }
     
+    /* Efecto hover de la tarjeta de película */
     .movie-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
     }
     
+    /* Contenedor del póster con aspect ratio 2:3 */
     .movie-poster {
         position: relative;
         padding-top: 150%;
         background: #1a1a1a;
     }
     
+    /* Imagen del póster con object-fit cover */
     .movie-poster img {
         position: absolute;
         top: 0;
@@ -181,10 +209,12 @@
         object-fit: cover;
     }
     
+    /* Información textual de la película */
     .movie-info {
         padding: 15px;
     }
     
+    /* Título de la película en la tarjeta */
     .movie-title {
         font-size: 16px;
         color: #fff;
@@ -192,17 +222,20 @@
         font-weight: 600;
     }
     
+    /* Año de la película */
     .movie-year {
         font-size: 14px;
         color: rgba(255, 255, 255, 0.6);
     }
     
+    /* Lista de calificaciones recientes */
     .ratings-list {
         display: flex;
         flex-direction: column;
         gap: 15px;
     }
     
+    /* Item individual de calificación */
     .rating-item {
         background: rgba(255, 255, 255, 0.05);
         padding: 20px;
@@ -213,31 +246,37 @@
         transition: all 0.3s;
     }
     
+    /* Efecto hover del item de calificación */
     .rating-item:hover {
         background: rgba(255, 255, 255, 0.08);
     }
     
+    /* Información de la película calificada */
     .rating-movie {
         flex: 1;
     }
     
+    /* Título de la película en calificación */
     .rating-movie h4 {
         color: #fff;
         font-size: 18px;
         margin-bottom: 5px;
     }
     
+    /* Fecha de la calificación */
     .rating-movie p {
         color: rgba(255, 255, 255, 0.6);
         font-size: 14px;
     }
     
+    /* Puntuación grande de la calificación */
     .rating-score {
         font-size: 36px;
         font-weight: bold;
         color: #e50914;
     }
     
+    /* Mensaje cuando el perfil está vacío */
     .empty-message {
         text-align: center;
         padding: 60px 20px;
@@ -245,25 +284,31 @@
         font-size: 16px;
     }
     
+    /* Media query para tablets y móviles */
     @media (max-width: 768px) {
+        /* Reduce padding del banner en móviles */
         .profile-banner {
             padding: 40px 20px;
         }
         
+        /* Avatar más pequeño en móviles */
         .profile-avatar-large {
             width: 120px;
             height: 120px;
             font-size: 48px;
         }
         
+        /* Nombre más pequeño en móviles */
         .profile-name {
             font-size: 28px;
         }
         
+        /* Botones en columna en móviles */
         .profile-actions {
             flex-direction: column;
         }
         
+        /* Grid de películas más pequeño en móviles */
         .movies-grid {
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         }
@@ -271,26 +316,36 @@
 </style>
 {% endblock %}
 
+{# Bloque principal de contenido de la página #}
 {% block content %}
 <div class="profile-container">
+    {# Banner superior del perfil con información del usuario #}
     <div class="profile-banner">
         <div class="profile-banner-content">
+            {# Avatar con inicial del nombre o username #}
             <div class="profile-avatar-large">
                 {{ usuario_perfil.first_name.0|default:usuario_perfil.username.0|upper }}
             </div>
+            {# Nombre completo del usuario o username como fallback #}
             <h1 class="profile-name">{{ usuario_perfil.get_full_name|default:usuario_perfil.username }}</h1>
+            {# Username con @ #}
             <p class="profile-username-tag">@{{ usuario_perfil.username }}</p>
             
+            {# Botones de acción - Mensajería y navegación #}
             <div class="profile-actions">
+                {# Botón de mensaje - Varía si ya existe una conversación #}
                 {% if conversacion_existente %}
+                    {# Si ya hay conversación, enlaza directamente a ella #}
                     <a href="{% url 'peliculas:conversacion' conversacion_existente.id %}" class="btn-action btn-enviar-mensaje">
                         💬 Continuar conversación
                     </a>
                 {% else %}
+                    {# Si no hay conversación, crea una nueva #}
                     <a href="{% url 'peliculas:nueva_conversacion' usuario_perfil.id %}" class="btn-action btn-enviar-mensaje">
                         💬 Enviar mensaje
                     </a>
                 {% endif %}
+                {# Botón para volver al Social Hub #}
                 <a href="{% url 'peliculas:social_hub' %}" class="btn-action btn-volver">
                     ← Volver al Social Hub
                 </a>
@@ -298,33 +353,43 @@
         </div>
     </div>
     
+    {# Sección de estadísticas del usuario #}
     <div class="profile-stats">
+        {# Estadística: Total de calificaciones #}
         <div class="stat-box">
             <div class="stat-number">{{ calificaciones.count }}</div>
             <div class="stat-label">Calificaciones</div>
         </div>
+        {# Estadística: Total de reseñas escritas #}
         <div class="stat-box">
             <div class="stat-number">{{ resenas.count }}</div>
             <div class="stat-label">Reseñas</div>
         </div>
+        {# Estadística: Total de películas favoritas #}
         <div class="stat-box">
             <div class="stat-number">{{ favoritos.count }}</div>
             <div class="stat-label">Películas Favoritas</div>
         </div>
     </div>
     
+    {# Sección de Películas Favoritas - Solo se muestra si el usuario tiene favoritos #}
     {% if favoritos %}
     <div class="section">
         <h2 class="section-title">❤️ Películas Favoritas</h2>
+        {# Grid de tarjetas de películas favoritas #}
         <div class="movies-grid">
+            {# Itera sobre cada película favorita #}
             {% for pelicula in favoritos %}
             <div class="movie-card">
+                {# Enlace a la página de detalle de la película #}
                 <a href="{% url 'peliculas:detalle' pelicula.id %}" style="text-decoration: none; color: inherit;">
+                    {# Póster de la película #}
                     <div class="movie-poster">
                         {% if pelicula.poster %}
                         <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
                         {% endif %}
                     </div>
+                    {# Información de la película #}
                     <div class="movie-info">
                         <h3 class="movie-title">{{ pelicula.titulo }}</h3>
                         <p class="movie-year">{{ pelicula.año }}</p>
@@ -336,16 +401,22 @@
     </div>
     {% endif %}
     
+    {# Sección de Calificaciones Recientes - Solo se muestra si el usuario tiene calificaciones #}
     {% if calificaciones %}
     <div class="section">
         <h2 class="section-title">⭐ Calificaciones Recientes</h2>
+        {# Lista de calificaciones - Muestra solo las 5 más recientes #}
         <div class="ratings-list">
             {% for calificacion in calificaciones|slice:":5" %}
             <div class="rating-item">
+                {# Información de la película calificada #}
                 <div class="rating-movie">
+                    {# Título enlazado a la página de detalle #}
                     <h4><a href="{% url 'peliculas:detalle' calificacion.pelicula.id %}" style="color: #fff; text-decoration: none;">{{ calificacion.pelicula.titulo }}</a></h4>
+                    {# Fecha de la calificación #}
                     <p>{{ calificacion.fecha|date:"d/m/Y" }}</p>
                 </div>
+                {# Puntuación numérica grande #}
                 <div class="rating-score">{{ calificacion.puntuacion }}/10</div>
             </div>
             {% endfor %}
@@ -353,6 +424,7 @@
     </div>
     {% endif %}
     
+    {# Mensaje de perfil vacío - Se muestra solo si no hay actividad del usuario #}
     {% if not favoritos and not calificaciones and not resenas %}
     <div class="empty-message">
         <p>Este usuario aún no ha compartido su actividad en la plataforma.</p>

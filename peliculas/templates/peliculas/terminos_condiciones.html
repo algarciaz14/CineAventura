@@ -1,18 +1,26 @@
+{# Carga archivos estáticos de Django (CSS, JS, imágenes) #}
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    {# Configuración responsive para dispositivos móviles #}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Términos y Condiciones - AKA Films</title>
+    
+    {# Importa la fuente Poppins desde Google Fonts #}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    {# Estilos CSS embebidos para la página de términos y condiciones #}
     <style>
+        /* Reset global de márgenes y paddings */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
+        /* Estilos del body - Fondo gris claro con padding */
         body {
             font-family: 'Poppins', sans-serif;
             background: #f5f5f5;
@@ -20,6 +28,7 @@
             line-height: 1.6;
         }
         
+        /* Contenedor principal del documento con ancho máximo centrado */
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -29,30 +38,36 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
         
+        /* Sección del logo centrada */
         .logo {
             text-align: center;
             margin-bottom: 30px;
         }
         
+        /* Título del logo principal */
         .logo h1 {
             font-size: 36px;
             font-weight: bold;
         }
         
+        /* Parte "AKA" del logo en rojo característico */
         .logo-aka {
             color: #e50914;
         }
         
+        /* Parte "FILMS" del logo en negro */
         .logo-films {
             color: #333;
         }
         
+        /* Título principal del documento */
         h1 {
             color: #333;
             margin-bottom: 20px;
             font-size: 32px;
         }
         
+        /* Subtítulos de secciones principales */
         h2 {
             color: #e50914;
             margin-top: 30px;
@@ -60,6 +75,7 @@
             font-size: 24px;
         }
         
+        /* Subtítulos de subsecciones */
         h3 {
             color: #666;
             margin-top: 20px;
@@ -67,22 +83,26 @@
             font-size: 18px;
         }
         
+        /* Párrafos de texto con texto justificado */
         p {
             color: #555;
             margin-bottom: 15px;
             text-align: justify;
         }
         
+        /* Listas ordenadas y desordenadas */
         ul, ol {
             margin-left: 30px;
             margin-bottom: 15px;
             color: #555;
         }
         
+        /* Items de lista con espaciado */
         li {
             margin-bottom: 8px;
         }
         
+        /* Caja destacada para información de licencia */
         .license-box {
             background: #f9f9f9;
             border-left: 4px solid #e50914;
@@ -91,15 +111,18 @@
             border-radius: 5px;
         }
         
+        /* Sección del icono de licencia centrado */
         .license-icon {
             text-align: center;
             margin: 20px 0;
         }
         
+        /* Imagen del icono de licencia */
         .license-icon img {
             height: 60px;
         }
         
+        /* Caja de advertencia o información importante */
         .highlight {
             background: #fff3cd;
             padding: 15px;
@@ -108,11 +131,13 @@
             border-left: 4px solid #ffc107;
         }
         
+        /* Contenedor del botón centrado */
         .btn-container {
             text-align: center;
             margin-top: 40px;
         }
         
+        /* Botón de volver al inicio */
         .btn-back {
             display: inline-block;
             background: #e50914;
@@ -124,12 +149,14 @@
             transition: all 0.3s;
         }
         
+        /* Efecto hover del botón de volver */
         .btn-back:hover {
             background: #c40812;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
         }
         
+        /* Fecha de última actualización alineada a la derecha */
         .date {
             text-align: right;
             color: #999;
@@ -137,15 +164,19 @@
             margin-bottom: 30px;
         }
 
+        /* Media query para tablets y móviles */
         @media (max-width: 768px) {
+            /* Reduce padding del contenedor en móviles */
             .container {
                 padding: 30px 20px;
             }
             
+            /* Reduce tamaño del título principal en móviles */
             h1 {
                 font-size: 26px;
             }
             
+            /* Reduce tamaño de subtítulos en móviles */
             h2 {
                 font-size: 20px;
             }
@@ -153,34 +184,46 @@
     </style>
 </head>
 <body>
+    {# Contenedor principal del documento legal #}
     <div class="container">
+        {# Logo de la aplicación AKA FILMS #}
         <div class="logo">
             <h1><span class="logo-aka">AKA</span><span class="logo-films">FILMS</span></h1>
         </div>
         
+        {# Título principal del documento #}
         <h1>Términos y Condiciones de Uso</h1>
+        {# Fecha de última actualización y versión del documento #}
         <p class="date">Última actualización: Noviembre 2024 | Versión 1.0</p>
         
+        {# Párrafo introductorio de bienvenida #}
         <p>Bienvenido a <strong>AKA Films</strong>. Al utilizar nuestra plataforma, aceptas los siguientes términos y condiciones, así como nuestra licencia de uso de contenido.</p>
         
+        {# Sección 1: Aceptación de términos #}
         <h2>1. Aceptación de los Términos</h2>
         <p>Al registrarte y usar AKA Films, confirmas que has leído, entendido y aceptado estos términos y condiciones en su totalidad. Si no estás de acuerdo con alguna parte de estos términos, no debes usar nuestros servicios.</p>
         
+        {# Sección 2: Licencia Creative Commons - Información legal importante #}
         <h2>2. Licencia de Uso - Creative Commons</h2>
         
+        {# Caja destacada con información de la licencia CC BY-NC-SA 4.0 #}
         <div class="license-box">
+            {# Icono/título de la licencia #}
             <div class="license-icon">
                 <p><strong>📄 Licencia CC BY-NC-SA 4.0</strong></p>
             </div>
             
+            {# Descripción de la licencia Creative Commons #}
             <p><strong>Todo el contenido generado en AKA Films está licenciado bajo Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0).</strong></p>
             
+            {# Derechos otorgados por la licencia #}
             <h3>Esto significa que tienes derecho a:</h3>
             <ul>
                 <li><strong>Compartir:</strong> Copiar y redistribuir el material en cualquier medio o formato.</li>
                 <li><strong>Adaptar:</strong> Remezclar, transformar y crear a partir del material.</li>
             </ul>
             
+            {# Condiciones de la licencia #}
             <h3>Bajo las siguientes condiciones:</h3>
             <ol>
                 <li><strong>Atribución (BY):</strong> Debes dar crédito apropiado, proporcionar un enlace a la licencia e indicar si se realizaron cambios.</li>
@@ -189,12 +232,15 @@
             </ol>
         </div>
         
+        {# Advertencia importante sobre el alcance de la licencia #}
         <div class="highlight">
             <strong>⚠️ Importante:</strong> Esta licencia aplica a reseñas, calificaciones, listas y cualquier contenido que tú y otros usuarios generen en la plataforma. No aplica al contenido de terceros (posters, trailers, etc.) que mantienen sus respectivos derechos de autor.
         </div>
         
+        {# Sección 3: Reglas de uso de la plataforma #}
         <h2>3. Uso de la Plataforma</h2>
         
+        {# Subsección: Cuenta de usuario #}
         <h3>3.1 Cuenta de Usuario</h3>
         <ul>
             <li>Debes proporcionar información precisa y actualizada al registrarte.</li>
@@ -203,6 +249,7 @@
             <li>Debes notificarnos inmediatamente sobre cualquier uso no autorizado de tu cuenta.</li>
         </ul>
         
+        {# Subsección: Contenido generado por usuarios #}
         <h3>3.2 Contenido del Usuario</h3>
         <ul>
             <li>Eres responsable del contenido que publicas (reseñas, calificaciones, mensajes).</li>
@@ -211,6 +258,7 @@
             <li>Nos reservamos el derecho de eliminar contenido inapropiado sin previo aviso.</li>
         </ul>
         
+        {# Subsección: Conductas prohibidas #}
         <h3>3.3 Conducta Prohibida</h3>
         <p>No está permitido:</p>
         <ul>
@@ -221,8 +269,10 @@
             <li>Usar bots o sistemas automatizados sin autorización.</li>
         </ul>
         
+        {# Sección 4: Funcionalidades sociales de la plataforma #}
         <h2>4. Funcionalidades Sociales</h2>
         
+        {# Subsección: Sistema de mensajería #}
         <h3>4.1 Mensajería</h3>
         <p>AKA Films ofrece un sistema de mensajería entre usuarios. Al usar esta función:</p>
         <ul>
@@ -231,6 +281,7 @@
             <li>Los mensajes entre usuarios son privados, pero nos reservamos el derecho de revisarlos en caso de reportes de abuso.</li>
         </ul>
         
+        {# Subsección: Watch Parties #}
         <h3>4.2 Watch Parties</h3>
         <p>Las Watch Parties permiten ver películas de forma sincronizada con otros usuarios:</p>
         <ul>
@@ -239,6 +290,7 @@
             <li>Debes respetar las leyes de derechos de autor de tu país.</li>
         </ul>
         
+        {# Sección 5: Privacidad y manejo de datos personales #}
         <h2>5. Privacidad y Datos</h2>
         <p>Recopilamos y procesamos tus datos personales de acuerdo con nuestra Política de Privacidad:</p>
         <ul>
@@ -247,8 +299,10 @@
             <li>Interacciones sociales (mensajes, calificaciones, reseñas)</li>
         </ul>
         
+        {# Compromiso de privacidad #}
         <p><strong>Tus datos NO serán vendidos a terceros.</strong> Los usamos únicamente para mejorar tu experiencia en la plataforma y proporcionar recomendaciones personalizadas.</p>
         
+        {# Sección 6: Sistema de recomendaciones #}
         <h2>6. Recomendaciones Personalizadas</h2>
         <p>Utilizamos algoritmos para ofrecerte recomendaciones basadas en:</p>
         <ul>
@@ -257,6 +311,7 @@
             <li>Comportamiento de usuarios con gustos similares</li>
         </ul>
         
+        {# Sección 7: Derechos de propiedad intelectual #}
         <h2>7. Propiedad Intelectual</h2>
         <ul>
             <li>AKA Films y su logotipo son marcas registradas.</li>
@@ -265,6 +320,7 @@
             <li>El contenido generado por usuarios (reseñas, listas) está bajo licencia CC BY-NC-SA 4.0.</li>
         </ul>
         
+        {# Sección 8: Limitaciones legales de responsabilidad #}
         <h2>8. Limitación de Responsabilidad</h2>
         <p>AKA Films se proporciona "tal cual" sin garantías de ningún tipo. No somos responsables de:</p>
         <ul>
@@ -274,9 +330,11 @@
             <li>Conflictos entre usuarios.</li>
         </ul>
         
+        {# Sección 9: Derecho a modificar términos #}
         <h2>9. Modificaciones</h2>
         <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios significativos serán notificados a través de la plataforma. El uso continuado después de las modificaciones constituye tu aceptación de los nuevos términos.</p>
         
+        {# Sección 10: Terminación de cuenta #}
         <h2>10. Terminación</h2>
         <p>Podemos suspender o terminar tu cuenta si:</p>
         <ul>
@@ -285,20 +343,25 @@
             <li>Lo solicitamos por razones legales o regulatorias.</li>
         </ul>
         
+        {# Sección 11: Jurisdicción legal #}
         <h2>11. Ley Aplicable</h2>
         <p>Estos términos se rigen por las leyes de México. Cualquier disputa se resolverá en los tribunales competentes de México.</p>
         
+        {# Sección 12: Información de contacto #}
         <h2>12. Contacto</h2>
         <p>Si tienes preguntas sobre estos términos, contáctanos en:</p>
         <p><strong>Email:</strong> terminos@akafilms.com<br>
         <strong>Sitio web:</strong> www.akafilms.com</p>
         
+        {# Caja de resumen de la licencia con enlace externo #}
         <div class="license-box">
             <p><strong>📜 Resumen de la Licencia CC BY-NC-SA 4.0:</strong></p>
             <p>Puedes compartir y adaptar el contenido siempre que des crédito, no lo uses comercialmente y compartas bajo la misma licencia.</p>
+            {# Enlace a la licencia oficial en Creative Commons (se abre en nueva pestaña) #}
             <p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" style="color: #e50914;">Ver licencia completa →</a></p>
         </div>
         
+        {# Botón para volver a la página principal #}
         <div class="btn-container">
             <a href="{% url 'peliculas:index' %}" class="btn-back">Volver al Inicio</a>
         </div>

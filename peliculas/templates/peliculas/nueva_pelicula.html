@@ -1,17 +1,24 @@
+{# Template para agregar nueva película - Extiende la plantilla base de la aplicación #}
 {% extends 'peliculas/base.html' %}
+{# Carga archivos estáticos de Django (CSS, JS, imágenes) #}
 {% load static %}
 
+{# Define el título de la página que aparecerá en la pestaña del navegador #}
 {% block title %}
     Agregar Película
 {% endblock %}
 
+{# Bloque principal de contenido de la página #}
 {% block content %}
+    {# Estilos CSS embebidos para los campos del formulario #}
     <style>
+        /* Contenedor de grupo de input flotante con margen inferior */
         .floating-input-group {
             position: relative;
             margin-bottom: 25px;
         }
 
+        /* Estilos base para todos los controles del formulario */
         .floating-input-group .form-control {
             width: 100%;
             padding: 16px;
@@ -23,20 +30,24 @@
             transition: all 0.3s ease;
         }
 
+        /* Efecto focus en los inputs - Cambia borde y fondo */
         .floating-input-group .form-control:focus {
             border-color: var(--primary-color);
             background: var(--secondary-color);
         }
 
+        /* Estilos específicos para textarea con altura mínima y redimensionable */
         .floating-input-group textarea.form-control {
             min-height: 120px;
             resize: vertical;
         }
 
+        /* Ajuste de padding para inputs de tipo fecha */
         .floating-input-group input[type="date"].form-control {
             padding: 15px 16px;
         }
 
+        /* Estilos para mensajes de error de validación */
         .text-danger {
             color: var(--primary-color);
             font-size: 14px;
@@ -45,18 +56,23 @@
         }
     </style>
 
+    {# Sección Hero - Banner con título de la página #}
     <section class="hero">
+        {# Overlay oscuro sobre la imagen de fondo #}
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <h1 class="hero-title">Agregar Nueva Película</h1>
         </div>
     </section>
 
+    {# Sección principal con el formulario #}
     <section class="section">
         <div class="container">
+            {# Contenedor de mensajes del sistema (success, error, info, warning) #}
             {% if messages %}
             <div class="messages-container">
                 {% for message in messages %}
+                {# Mensaje con clase dinámica según el tipo de mensaje #}
                 <div class="alert alert-{{ message.tags }}">
                     {{ message }}
                 </div>
@@ -64,16 +80,21 @@
             </div>
             {% endif %}
 
+            {# Contenedor principal del formulario de película #}
             <div class="movie-container">
                 <form method="post" class="review-form-container">
+                    {# Token CSRF requerido por Django para seguridad #}
                     {% csrf_token %}
                     
+                    {# Sección 1: Información Básica #}
                     <div class="content-section">
                         <h3 class="content-title">
                             Información Básica
                         </h3>
                         
+                        {# Grid con 2 columnas para campos de información básica #}
                         <div class="info-grid" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+                            {# Campo: Título de la película (obligatorio) #}
                             <div class="info-item">
                                 <label for="{{ form.titulo.id_for_label }}" class="info-label">
                                     Título *
@@ -81,6 +102,7 @@
                                 <div class="floating-input-group">
                                     {{ form.titulo }}
                                 </div>
+                                {# Muestra errores de validación si existen #}
                                 {% if form.titulo.errors %}
                                     <div class="text-danger">
                                         {{ form.titulo.errors }}
@@ -88,6 +110,7 @@
                                 {% endif %}
                             </div>
 
+                            {# Campo: Título original de la película (opcional) #}
                             <div class="info-item">
                                 <label for="{{ form.titulo_original.id_for_label }}" class="info-label">
                                     Título Original
@@ -97,6 +120,7 @@
                                 </div>
                             </div>
 
+                            {# Campo: Sinopsis - Ocupa ambas columnas del grid (obligatorio) #}
                             <div class="info-item" style="grid-column: span 2;">
                                 <label for="{{ form.sinopsis.id_for_label }}" class="info-label">
                                     Sinopsis *
@@ -104,6 +128,7 @@
                                 <div class="floating-input-group">
                                     {{ form.sinopsis }}
                                 </div>
+                                {# Muestra errores de validación si existen #}
                                 {% if form.sinopsis.errors %}
                                     <div class="text-danger">
                                         {{ form.sinopsis.errors }}
@@ -113,12 +138,15 @@
                         </div>
                     </div>
 
+                    {# Sección 2: Detalles Técnicos #}
                     <div class="content-section">
                         <h3 class="content-title">
                             Detalles Técnicos
                         </h3>
                         
+                        {# Grid automático para campos técnicos #}
                         <div class="info-grid">
+                            {# Campo: Año de estreno (obligatorio) #}
                             <div class="info-item">
                                 <label for="{{ form.anio.id_for_label }}" class="info-label">
                                     Año de Estreno *
@@ -126,6 +154,7 @@
                                 <div class="floating-input-group">
                                     {{ form.anio }}
                                 </div>
+                                {# Muestra errores de validación si existen #}
                                 {% if form.anio.errors %}
                                     <div class="text-danger">
                                         {{ form.anio.errors }}
@@ -133,6 +162,7 @@
                                 {% endif %}
                             </div>
 
+                            {# Campo: Fecha exacta de estreno (obligatorio) #}
                             <div class="info-item">
                                 <label for="{{ form.fecha_estreno.id_for_label }}" class="info-label">
                                     Fecha de Estreno *
@@ -140,6 +170,7 @@
                                 <div class="floating-input-group">
                                     {{ form.fecha_estreno }}
                                 </div>
+                                {# Muestra errores de validación si existen #}
                                 {% if form.fecha_estreno.errors %}
                                     <div class="text-danger">
                                         {{ form.fecha_estreno.errors }}
@@ -147,6 +178,7 @@
                                 {% endif %}
                             </div>
 
+                            {# Campo: Duración en minutos (obligatorio) #}
                             <div class="info-item">
                                 <label for="{{ form.duracion.id_for_label }}" class="info-label">
                                     Duración (min) *
@@ -154,6 +186,7 @@
                                 <div class="floating-input-group">
                                     {{ form.duracion }}
                                 </div>
+                                {# Muestra errores de validación si existen #}
                                 {% if form.duracion.errors %}
                                     <div class="text-danger">
                                         {{ form.duracion.errors }}
@@ -161,6 +194,7 @@
                                 {% endif %}
                             </div>
 
+                            {# Campo: País de origen (obligatorio) #}
                             <div class="info-item">
                                 <label for="{{ form.pais.id_for_label }}" class="info-label">
                                     País de Origen *
@@ -170,6 +204,7 @@
                                 </div>
                             </div>
 
+                            {# Campo: Idioma original (obligatorio) #}
                             <div class="info-item">
                                 <label for="{{ form.idioma.id_for_label }}" class="info-label">
                                     Idioma Original *
@@ -179,6 +214,7 @@
                                 </div>
                             </div>
 
+                            {# Campo: Clasificación por edad (obligatorio) #}
                             <div class="info-item">
                                 <label for="{{ form.clasificacion.id_for_label }}" class="info-label">
                                     Clasificación *
@@ -186,6 +222,7 @@
                                 <div class="floating-input-group">
                                     {{ form.clasificacion }}
                                 </div>
+                                {# Muestra errores de validación si existen #}
                                 {% if form.clasificacion.errors %}
                                     <div class="text-danger">
                                         {{ form.clasificacion.errors }}
@@ -195,17 +232,21 @@
                         </div>
                     </div>
 
+                    {# Sección 3: Géneros y Elenco #}
                     <div class="content-section">
                         <h3 class="content-title">
                             <i class="fas fa-theater-masks"></i> Géneros y Elenco
                         </h3>
                         
                         <div class="info-grid">
+                            {# Campo: Géneros - Checkboxes múltiples con scroll (obligatorio) #}
                             <div class="info-item">
                                 <label class="info-label">
                                     Géneros *
                                 </label>
+                                {# Contenedor con scroll para múltiples checkboxes #}
                                 <div style="max-height: 200px; overflow-y: auto; padding: 15px; background: var(--secondary-color); border-radius: 8px;">
+                                    {# Itera sobre cada checkbox de género #}
                                     {% for checkbox in form.generos %}
                                     <div style="margin-bottom: 10px;">
                                         {{ checkbox.tag }}
@@ -215,6 +256,7 @@
                                     </div>
                                     {% endfor %}
                                 </div>
+                                {# Muestra errores de validación si existen #}
                                 {% if form.generos.errors %}
                                     <div class="text-danger">
                                         {{ form.generos.errors }}
@@ -222,11 +264,14 @@
                                 {% endif %}
                             </div>
 
+                            {# Campo: Actores - Checkboxes múltiples con scroll (opcional) #}
                             <div class="info-item">
                                 <label class="info-label">
                                     Actores
                                 </label>
+                                {# Contenedor con scroll para múltiples checkboxes #}
                                 <div style="max-height: 200px; overflow-y: auto; padding: 15px; background: var(--secondary-color); border-radius: 8px;">
+                                    {# Itera sobre cada checkbox de actor #}
                                     {% for checkbox in form.actores %}
                                     <div style="margin-bottom: 10px;">
                                         {{ checkbox.tag }}
@@ -238,6 +283,7 @@
                                 </div>
                             </div>
 
+                            {# Campo: Director - Select dropdown (opcional) #}
                             <div class="info-item">
                                 <label for="{{ form.director.id_for_label }}" class="info-label">
                                     Director
@@ -249,12 +295,14 @@
                         </div>
                     </div>
 
+                    {# Sección 4: Multimedia #}
                     <div class="content-section">
                         <h3 class="content-title">
                             Multimedia
                         </h3>
                         
                         <div class="info-grid">
+                            {# Campo: URL del póster (opcional) #}
                             <div class="info-item">
                                 <label for="{{ form.poster.id_for_label }}" class="info-label">
                                     URL del Poster
@@ -262,6 +310,7 @@
                                 <div class="floating-input-group">
                                     {{ form.poster }}
                                 </div>
+                                {# Muestra errores de validación si existen #}
                                 {% if form.poster.errors %}
                                     <div class="text-danger">
                                         {{ form.poster.errors }}
@@ -269,6 +318,7 @@
                                 {% endif %}
                             </div>
 
+                            {# Campo: URL del trailer (opcional) #}
                             <div class="info-item">
                                 <label for="{{ form.trailer.id_for_label }}" class="info-label">
                                     URL del Trailer
@@ -276,6 +326,7 @@
                                 <div class="floating-input-group">
                                     {{ form.trailer }}
                                 </div>
+                                {# Muestra errores de validación si existen #}
                                 {% if form.trailer.errors %}
                                     <div class="text-danger">
                                         {{ form.trailer.errors }}
@@ -285,12 +336,14 @@
                         </div>
                     </div>
 
+                    {# Sección 5: Información Financiera #}
                     <div class="content-section">
                         <h3 class="content-title">
                             Información Financiera
                         </h3>
                         
                         <div class="info-grid">
+                            {# Campo: Presupuesto en USD (opcional) #}
                             <div class="info-item">
                                 <label for="{{ form.presupuesto.id_for_label }}" class="info-label">
                                     Presupuesto (USD)
@@ -298,6 +351,7 @@
                                 <div class="floating-input-group">
                                     {{ form.presupuesto }}
                                 </div>
+                                {# Muestra errores de validación si existen #}
                                 {% if form.presupuesto.errors %}
                                     <div class="text-danger">
                                         {{ form.presupuesto.errors }}
@@ -305,6 +359,7 @@
                                 {% endif %}
                             </div>
 
+                            {# Campo: Recaudación en USD (opcional) #}
                             <div class="info-item">
                                 <label for="{{ form.recaudacion.id_for_label }}" class="info-label">
                                     Recaudación (USD)
@@ -312,6 +367,7 @@
                                 <div class="floating-input-group">
                                     {{ form.recaudacion }}
                                 </div>
+                                {# Muestra errores de validación si existen #}
                                 {% if form.recaudacion.errors %}
                                     <div class="text-danger">
                                         {{ form.recaudacion.errors }}
@@ -321,10 +377,13 @@
                         </div>
                     </div>
 
+                    {# Sección de botones de acción - Guardar y Cancelar #}
                     <div class="content-section" style="text-align: center; padding-top: 30px;">
+                        {# Botón de envío del formulario #}
                         <button type="submit" class="btn-trailer" style="margin-right: 15px;">
                             Guardar Película
                         </button>
+                        {# Botón de cancelar que redirige al inicio #}
                         <a href="{% url 'peliculas:index' %}" class="btn-secondary" style="display: inline-block; padding: 15px 30px;">
                             Cancelar
                         </a>

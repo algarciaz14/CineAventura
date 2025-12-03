@@ -1,20 +1,26 @@
+{# Template del Social Hub - Centro social para conectar con otros usuarios #}
 {% extends 'peliculas/base.html' %}
 
+{# Define el título de la página que aparecerá en la pestaña del navegador #}
 {% block title %}Social Hub - AKA Films{% endblock %}
 
+{# Bloque de CSS adicional específico para esta página #}
 {% block extra_css %}
 <style>
+    /* Contenedor principal del Social Hub con ancho máximo centrado */
     .social-hub-container {
         max-width: 1400px;
         margin: 40px auto;
         padding: 20px;
     }
     
+    /* Encabezado del Social Hub */
     .social-header {
         text-align: center;
         margin-bottom: 50px;
     }
     
+    /* Título con gradiente de color */
     .social-header h1 {
         font-size: 48px;
         background: linear-gradient(135deg, #e50914, #ff6b6b);
@@ -24,21 +30,25 @@
         margin-bottom: 15px;
     }
     
+    /* Subtítulo descriptivo */
     .social-header p {
         font-size: 18px;
         color: rgba(255, 255, 255, 0.7);
     }
     
+    /* Sección del buscador de usuarios */
     .search-section {
         max-width: 600px;
         margin: 0 auto 40px;
     }
     
+    /* Contenedor del campo de búsqueda con botón integrado */
     .search-box {
         position: relative;
         width: 100%;
     }
     
+    /* Input de búsqueda con bordes redondeados */
     .search-box input {
         width: 100%;
         padding: 15px 50px 15px 20px;
@@ -50,12 +60,14 @@
         transition: all 0.3s;
     }
     
+    /* Efecto focus del input de búsqueda */
     .search-box input:focus {
         outline: none;
         border-color: #e50914;
         background: rgba(255, 255, 255, 0.1);
     }
     
+    /* Botón de búsqueda posicionado dentro del input */
     .search-box button {
         position: absolute;
         right: 5px;
@@ -71,10 +83,12 @@
         transition: all 0.3s;
     }
     
+    /* Efecto hover del botón de búsqueda */
     .search-box button:hover {
         transform: translateY(-50%) scale(1.05);
     }
     
+    /* Barra de estadísticas con información de resultados */
     .stats-bar {
         background: rgba(255, 255, 255, 0.05);
         padding: 15px 30px;
@@ -85,6 +99,7 @@
         font-size: 16px;
     }
     
+    /* Grid responsivo de tarjetas de usuarios */
     .usuarios-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -92,6 +107,7 @@
         margin-bottom: 40px;
     }
     
+    /* Tarjeta individual de usuario con efecto glass */
     .usuario-card {
         background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
         border-radius: 15px;
@@ -103,6 +119,7 @@
         overflow: hidden;
     }
     
+    /* Barra superior decorativa que aparece en hover */
     .usuario-card::before {
         content: '';
         position: absolute;
@@ -115,16 +132,19 @@
         transition: transform 0.3s;
     }
     
+    /* Efecto hover de la tarjeta de usuario - Elevación y borde */
     .usuario-card:hover {
         transform: translateY(-5px);
         border-color: rgba(229, 9, 20, 0.3);
         box-shadow: 0 10px 30px rgba(229, 9, 20, 0.2);
     }
     
+    /* Muestra la barra superior en hover */
     .usuario-card:hover::before {
         transform: scaleX(1);
     }
     
+    /* Avatar circular grande con inicial del usuario */
     .usuario-avatar-big {
         width: 100px;
         height: 100px;
@@ -140,6 +160,7 @@
         box-shadow: 0 5px 20px rgba(229, 9, 20, 0.3);
     }
     
+    /* Nombre completo del usuario */
     .usuario-nombre {
         font-size: 22px;
         font-weight: 600;
@@ -147,12 +168,14 @@
         margin-bottom: 5px;
     }
     
+    /* Nombre de usuario con @ */
     .usuario-username {
         font-size: 14px;
         color: rgba(255, 255, 255, 0.6);
         margin-bottom: 20px;
     }
     
+    /* Sección de estadísticas del usuario (calificaciones, reseñas, favoritos) */
     .usuario-stats {
         display: flex;
         justify-content: space-around;
@@ -162,10 +185,12 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
     
+    /* Contenedor individual de estadística */
     .stat {
         text-align: center;
     }
     
+    /* Valor numérico de la estadística */
     .stat-value {
         font-size: 24px;
         font-weight: bold;
@@ -173,18 +198,21 @@
         display: block;
     }
     
+    /* Etiqueta descriptiva de la estadística */
     .stat-label {
         font-size: 12px;
         color: rgba(255, 255, 255, 0.6);
         margin-top: 3px;
     }
     
+    /* Contenedor de botones de acción (ver perfil, enviar mensaje) */
     .usuario-actions {
         display: flex;
         gap: 10px;
         margin-top: 20px;
     }
     
+    /* Estilos base para botones de acción */
     .btn-ver-perfil, .btn-mensaje {
         flex: 1;
         padding: 10px 15px;
@@ -197,28 +225,33 @@
         text-align: center;
     }
     
+    /* Botón de ver perfil - Estilo outline */
     .btn-ver-perfil {
         background: rgba(255, 255, 255, 0.1);
         color: #fff;
         border: 2px solid rgba(255, 255, 255, 0.2);
     }
     
+    /* Efecto hover del botón ver perfil */
     .btn-ver-perfil:hover {
         background: rgba(255, 255, 255, 0.2);
         border-color: rgba(255, 255, 255, 0.4);
     }
     
+    /* Botón de mensaje - Estilo filled con gradiente */
     .btn-mensaje {
         background: linear-gradient(135deg, #e50914, #c40812);
         color: white;
         border: none;
     }
     
+    /* Efecto hover del botón mensaje */
     .btn-mensaje:hover {
         transform: scale(1.05);
         box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
     }
     
+    /* Contenedor de paginación */
     .pagination {
         display: flex;
         justify-content: center;
@@ -226,6 +259,7 @@
         margin-top: 40px;
     }
     
+    /* Estilos para enlaces y texto de paginación */
     .pagination a, .pagination span {
         padding: 10px 15px;
         background: rgba(255, 255, 255, 0.1);
@@ -235,36 +269,44 @@
         transition: all 0.3s;
     }
     
+    /* Efecto hover de enlaces de paginación */
     .pagination a:hover {
         background: #e50914;
     }
     
+    /* Indicador de página actual */
     .pagination .current {
         background: #e50914;
         font-weight: bold;
     }
     
+    /* Estado vacío cuando no hay resultados */
     .empty-state {
         text-align: center;
         padding: 80px 20px;
         color: rgba(255, 255, 255, 0.6);
     }
     
+    /* Icono grande del estado vacío */
     .empty-state-icon {
         font-size: 80px;
         margin-bottom: 20px;
     }
     
+    /* Media query para tablets y móviles */
     @media (max-width: 768px) {
+        /* Reduce tamaño del título en móviles */
         .social-header h1 {
             font-size: 32px;
         }
         
+        /* Grid más compacto en móviles */
         .usuarios-grid {
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
         }
         
+        /* Avatar más pequeño en móviles */
         .usuario-avatar-big {
             width: 80px;
             height: 80px;
@@ -274,87 +316,117 @@
 </style>
 {% endblock %}
 
+{# Bloque principal de contenido de la página #}
 {% block content %}
 <div class="social-hub-container">
+    {# Encabezado del Social Hub con título y descripción #}
     <div class="social-header">
         <h1>👥 Social Hub</h1>
         <p>Conecta con otros cinéfilos, comparte tus gustos y descubre nuevas perspectivas</p>
     </div>
     
+    {# Sección de búsqueda de usuarios #}
     <div class="search-section">
         <form method="get" class="search-box">
+            {# Input de búsqueda con valor preservado #}
             <input type="text" name="q" placeholder="Buscar usuarios por nombre o username..." value="{{ query }}">
+            {# Botón de envío con emoji de lupa #}
             <button type="submit">🔍</button>
         </form>
     </div>
     
+    {# Barra de estadísticas - Muestra diferentes mensajes según si hay búsqueda activa #}
     {% if query %}
+    {# Mensaje cuando hay una búsqueda activa con contador de resultados #}
     <div class="stats-bar">
         Mostrando {{ usuarios|length }} resultado{{ usuarios|length|pluralize }} para "{{ query }}"
     </div>
     {% else %}
+    {# Mensaje por defecto con total de usuarios en la comunidad #}
     <div class="stats-bar">
         🌟 {{ total_usuarios }} miembro{{ total_usuarios|pluralize }} en nuestra comunidad
     </div>
     {% endif %}
     
+    {# Sección principal - Solo se muestra si hay usuarios #}
     {% if usuarios %}
+    {# Grid de tarjetas de usuarios #}
     <div class="usuarios-grid">
+        {# Itera sobre cada usuario encontrado #}
         {% for usuario in usuarios %}
         <div class="usuario-card">
+            {# Avatar circular con inicial del nombre o username #}
             <div class="usuario-avatar-big">
                 {{ usuario.first_name.0|default:usuario.username.0|upper }}
             </div>
             
+            {# Nombre completo del usuario o username como fallback #}
             <div class="usuario-nombre">
                 {{ usuario.get_full_name|default:usuario.username }}
             </div>
+            {# Nombre de usuario con @ #}
             <div class="usuario-username">@{{ usuario.username }}</div>
             
+            {# Sección de estadísticas del usuario #}
             <div class="usuario-stats">
+                {# Estadística: Total de calificaciones #}
                 <div class="stat">
                     <span class="stat-value">{{ usuario.total_calificaciones }}</span>
                     <span class="stat-label">Calificaciones</span>
                 </div>
+                {# Estadística: Total de reseñas escritas #}
                 <div class="stat">
                     <span class="stat-value">{{ usuario.total_resenas }}</span>
                     <span class="stat-label">Reseñas</span>
                 </div>
+                {# Estadística: Total de películas favoritas #}
                 <div class="stat">
                     <span class="stat-value">{{ usuario.peliculas_favoritas_count }}</span>
                     <span class="stat-label">Favoritos</span>
                 </div>
             </div>
             
+            {# Botones de acción para interactuar con el usuario #}
             <div class="usuario-actions">
+                {# Botón para ver el perfil completo del usuario #}
                 <a href="{% url 'peliculas:perfil_usuario' usuario.id %}" class="btn-ver-perfil">Ver Perfil</a>
+                {# Botón para iniciar una conversación privada #}
                 <a href="{% url 'peliculas:nueva_conversacion' usuario.id %}" class="btn-mensaje">💬 Mensaje</a>
             </div>
         </div>
         {% endfor %}
     </div>
     
-    <!-- Paginación -->
+    {# Sistema de paginación - Solo se muestra si hay múltiples páginas #}
     {% if usuarios.has_other_pages %}
     <div class="pagination">
+        {# Enlaces de navegación hacia páginas anteriores #}
         {% if usuarios.has_previous %}
+            {# Enlace a la primera página #}
             <a href="?page=1{% if query %}&q={{ query }}{% endif %}">« Primera</a>
+            {# Enlace a la página anterior #}
             <a href="?page={{ usuarios.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">‹ Anterior</a>
         {% endif %}
         
+        {# Indicador de página actual y total de páginas #}
         <span class="current">
             Página {{ usuarios.number }} de {{ usuarios.paginator.num_pages }}
         </span>
         
+        {# Enlaces de navegación hacia páginas siguientes #}
         {% if usuarios.has_next %}
+            {# Enlace a la página siguiente #}
             <a href="?page={{ usuarios.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Siguiente ›</a>
+            {# Enlace a la última página #}
             <a href="?page={{ usuarios.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}">Última »</a>
         {% endif %}
     </div>
     {% endif %}
     
+    {# Estado vacío cuando no se encuentran usuarios #}
     {% else %}
     <div class="empty-state">
+        {# Icono decorativo de búsqueda #}
         <div class="empty-state-icon">🔍</div>
         <h3>No se encontraron usuarios</h3>
         <p>Intenta con otro término de búsqueda</p>

@@ -1,26 +1,36 @@
+{# Template de detalle de película - Extiende la plantilla base de la aplicación #}
 {% extends 'peliculas/base.html' %}
 
+{# Define el título dinámico de la página con el nombre de la película #}
 {% block title %}{{ pelicula.titulo }} - AKA Films{% endblock %}
 
+{# Bloque principal de contenido de la página #}
 {% block content %}
 <div class="movie-detail">
-    <!-- Hero de la película -->
+    {# Sección Hero - Banner principal con imagen de fondo y información destacada #}
     <div class="movie-hero" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('{{ pelicula.poster }}') center/cover;">
         <div class="container">
             <div class="movie-hero-content">
+                {# Póster grande de la película #}
                 <div class="movie-poster-large">
                     {% if pelicula.poster %}
                     <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
                     {% else %}
+                    {# Placeholder si no hay póster disponible #}
                     <div class="poster-placeholder-large">🎬</div>
                     {% endif %}
                 </div>
+                
+                {# Información principal de la película en el hero #}
                 <div class="movie-hero-info">
                     <h1 class="movie-title-large">{{ pelicula.titulo }}</h1>
+                    
+                    {# Muestra el título original solo si existe y es diferente al título principal #}
                     {% if pelicula.titulo_original and pelicula.titulo_original != pelicula.titulo %}
                     <p class="movie-original-title">{{ pelicula.titulo_original }}</p>
                     {% endif %}
                     
+                    {# Metadatos básicos: año, duración y clasificación #}
                     <div class="movie-meta">
                         <span class="meta-item">{{ pelicula.año }}</span>
                         <span class="meta-separator">•</span>
@@ -29,32 +39,40 @@
                         <span class="meta-item">{{ pelicula.clasificacion }}</span>
                     </div>
                     
+                    {# Listado de géneros de la película #}
                     <div class="movie-genres-large">
                         {% for genero in pelicula.generos.all %}
                         <span class="genre-tag-large">{{ genero.nombre }}</span>
                         {% endfor %}
                     </div>
                     
+                    {# Sección de calificación promedio con diseño destacado #}
                     <div class="movie-rating-large">
                         <div class="rating-score">
+                            {# Muestra la calificación con un decimal #}
                             <span class="rating-number">{{ pelicula.calificacion_promedio|floatformat:1 }}</span>
                             <span class="rating-max">/10</span>
                         </div>
                         <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        {# Contador de calificaciones totales #}
                         <p class="rating-count">{{ pelicula.calificaciones.count }} calificaciones</p>
                     </div>
                     
+                    {# Botón para ver el trailer si está disponible #}
                     {% if pelicula.trailer %}
                     <a href="{{ pelicula.trailer }}" target="_blank" class="btn-trailer">
                         ▶️ Ver Trailer
                     </a>
                     {% endif %}
-                    <!--Botones de acción para usuarios autenticados -->
+                    
+                    {# Botones de acción exclusivos para usuarios autenticados #}
                     {% if user.is_authenticated %}
                     <div class="action-buttons" style="display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
-                        <!-- Favoritos -->
+                        
+                        {# Botón de Favoritos - Cambia de estado según si ya está en favoritos #}
                         <form method="post" action="{% url 'peliculas:agregar_favoritos' pelicula.id %}" style="margin: 0;">
                             {% csrf_token %}
+                            {# El estilo cambia dinámicamente si la película ya está en favoritos #}
                             <button type="submit" class="btn-action" style="background: {% if pelicula in user.peliculas_favoritas.all %}#e50914{% else %}rgba(255,255,255,0.2){% endif %}; border: 2px solid #e50914; color: white; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
                                 {% if pelicula in user.peliculas_favoritas.all %}
                                 ❤️ En Favoritos
@@ -64,148 +82,170 @@
                             </button>
                         </form>
 
-                        <!-- Ver Después -->
+                        {# Botón de Ver Después - Cambia de estado según si ya está en la lista #}
                         <form method="post" action="{% url 'peliculas:agregar_ver_despues' pelicula.id %}" style="margin: 0;">
                             {% csrf_token %}
+                            {# El estilo cambia dinámicamente si la película ya está en ver después #}
                             <button type="submit" class="btn-action" style="background: {% if pelicula in user.peliculas_ver_despues.all %}#ffc107{% else %}rgba(255,255,255,0.2){% endif %}; border: 2px solid #ffc107; color: white; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
                                 {% if pelicula in user.peliculas_ver_despues.all %}
                                 🕒 En mi lista
-                            {% else %}
-                            ➕ Ver Después
-                            {% endif %}
-                        </button>
-                    </form>
+                                {% else %}
+                                ➕ Ver Después
+                                {% endif %}
+                            </button>
+                        </form>
 
-                    <!-- Crear Watch Party -->
-                    <a href="{% url 'peliculas:crear_watch_party' pelicula.id %}" class="btn-action" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block; transition: all 0.3s;">
-                        🎉 Crear Watch Party
-                    </a>
-                </div>
-                {% endif %}
+                        {# Botón para crear un Watch Party de esta película #}
+                        <a href="{% url 'peliculas:crear_watch_party' pelicula.id %}" class="btn-action" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block; transition: all 0.3s;">
+                            🎉 Crear Watch Party
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Contenido principal -->
+    {# Contenido principal de la página - Información detallada #}
     <div class="container">
         <div class="movie-content">
-            <!-- Sinopsis -->
+            {# Sección de Sinopsis #}
             <section class="content-section">
                 <h2 class="content-title">Sinopsis</h2>
                 <p class="movie-synopsis">{{ pelicula.sinopsis }}</p>
             </section>
 
-            <!-- Watch Parties Próximas -->
-{% if watch_parties_proximas %}
-<section class="content-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 30px; margin: 30px 0;">
-    <h2 class="content-title" style="color: white; margin-bottom: 20px;">
-        🎉 Watch Parties Próximas
-    </h2>
-    <p style="color: rgba(255,255,255,0.9); margin-bottom: 25px; font-size: 16px;">
-        Únete a una sesión grupal para ver esta película con otros fanáticos
-    </p>
-    
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
-        {% for party in watch_parties_proximas %}
-        <div style="background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-            <h3 style="color: #e50914; font-size: 18px; margin-bottom: 12px;">
-                {{ party.nombre }}
-            </h3>
-            
-            <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; color: #666; font-size: 14px;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span>👤</span>
-                    <strong>Anfitrión:</strong>
-                    {% if party.anfitrion == user %}
-                        <span style="color: #e50914; font-weight: 600;">Tú</span>
-                    {% else %}
-                        <a href="{% url 'peliculas:perfil_usuario' party.anfitrion.id %}" style="color: #e50914; text-decoration: none; font-weight: 600;">
-                            {{ party.anfitrion.get_full_name|default:party.anfitrion.username }}
-                        </a>
-                    {% endif %}
+            {# Sección de Watch Parties Próximas - Solo se muestra si existen eventos programados #}
+            {% if watch_parties_proximas %}
+            <section class="content-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 30px; margin: 30px 0;">
+                <h2 class="content-title" style="color: white; margin-bottom: 20px;">
+                    🎉 Watch Parties Próximas
+                </h2>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: 25px; font-size: 16px;">
+                    Únete a una sesión grupal para ver esta película con otros fanáticos
+                </p>
+                
+                {# Grid de tarjetas de Watch Parties #}
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                    {# Itera sobre cada watch party próximo #}
+                    {% for party in watch_parties_proximas %}
+                    <div style="background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        {# Nombre del watch party #}
+                        <h3 style="color: #e50914; font-size: 18px; margin-bottom: 12px;">
+                            {{ party.nombre }}
+                        </h3>
+                        
+                        {# Información del watch party: anfitrión, fecha y participantes #}
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; color: #666; font-size: 14px;">
+                            {# Información del anfitrión con enlace a su perfil #}
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span>👤</span>
+                                <strong>Anfitrión:</strong>
+                                {% if party.anfitrion == user %}
+                                    {# Destaca si el usuario actual es el anfitrión #}
+                                    <span style="color: #e50914; font-weight: 600;">Tú</span>
+                                {% else %}
+                                    {# Enlace al perfil del anfitrión #}
+                                    <a href="{% url 'peliculas:perfil_usuario' party.anfitrion.id %}" style="color: #e50914; text-decoration: none; font-weight: 600;">
+                                        {{ party.anfitrion.get_full_name|default:party.anfitrion.username }}
+                                    </a>
+                                {% endif %}
+                            </div>
+                            
+                            {# Fecha y hora programada #}
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span>📅</span>
+                                <strong>Fecha:</strong>
+                                <span>{{ party.fecha_programada|date:"d/m/Y H:i" }}</span>
+                            </div>
+                            
+                            {# Contador de participantes actual vs máximo #}
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span>👥</span>
+                                <strong>Participantes:</strong>
+                                <span>{{ party.total_participantes }}/{{ party.max_participantes }}</span>
+                            </div>
+                            
+                            {# Badge de evento público #}
+                            {% if party.publico %}
+                            <div style="display: flex; align-items: center; gap: 8px; color: #28a745;">
+                                <span>🌍</span>
+                                <strong>Público</strong>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        {# Descripción truncada del watch party si existe #}
+                        {% if party.descripcion %}
+                        <p style="color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 15px; border-left: 3px solid #e50914; padding-left: 10px;">
+                            {{ party.descripcion|truncatewords:15 }}
+                        </p>
+                        {% endif %}
+                        
+                        {# Botones de acción para el watch party #}
+                        <div style="display: flex; gap: 10px;">
+                            {# Botón para ver detalles completos #}
+                            <a href="{% url 'peliculas:detalle_watch_party' party.id %}" 
+                               style="flex: 1; text-align: center; padding: 10px; background: #e50914; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s;">
+                                Ver Detalles
+                            </a>
+                            
+                            {# Botón de unirse - Solo si no es el anfitrión, aún puede unirse y no está ya participando #}
+                            {% if party.anfitrion != user and party.puede_unirse %}
+                                {% if user not in party.participantes.all %}
+                                <a href="{% url 'peliculas:unirse_watch_party' party.id %}" 
+                                   style="flex: 1; text-align: center; padding: 10px; background: #28a745; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s;">
+                                    Unirse
+                                </a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
                 
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span>📅</span>
-                    <strong>Fecha:</strong>
-                    <span>{{ party.fecha_programada|date:"d/m/Y H:i" }}</span>
+                {# Enlace para ver todos los watch parties disponibles #}
+                <div style="text-align: center; margin-top: 25px;">
+                    <a href="{% url 'peliculas:lista_watch_parties' %}" 
+                       style="display: inline-block; padding: 12px 30px; background: white; color: #764ba2; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                        Ver Todos los Watch Parties →
+                    </a>
                 </div>
-                
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span>👥</span>
-                    <strong>Participantes:</strong>
-                    <span>{{ party.total_participantes }}/{{ party.max_participantes }}</span>
-                </div>
-                
-                {% if party.publico %}
-                <div style="display: flex; align-items: center; gap: 8px; color: #28a745;">
-                    <span>🌍</span>
-                    <strong>Público</strong>
-                </div>
-                {% endif %}
-            </div>
-            
-            {% if party.descripcion %}
-            <p style="color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 15px; border-left: 3px solid #e50914; padding-left: 10px;">
-                {{ party.descripcion|truncatewords:15 }}
-            </p>
+            </section>
             {% endif %}
             
-            <div style="display: flex; gap: 10px;">
-                <a href="{% url 'peliculas:detalle_watch_party' party.id %}" 
-                   style="flex: 1; text-align: center; padding: 10px; background: #e50914; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s;">
-                    Ver Detalles
-                </a>
-                
-                {% if party.anfitrion != user and party.puede_unirse %}
-                    {% if user not in party.participantes.all %}
-                    <a href="{% url 'peliculas:unirse_watch_party' party.id %}" 
-                       style="flex: 1; text-align: center; padding: 10px; background: #28a745; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s;">
-                        Unirse
-                    </a>
-                    {% endif %}
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    
-    <div style="text-align: center; margin-top: 25px;">
-        <a href="{% url 'peliculas:lista_watch_parties' %}" 
-           style="display: inline-block; padding: 12px 30px; background: white; color: #764ba2; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-            Ver Todos los Watch Parties →
-        </a>
-    </div>
-</section>
-{% endif %}
-            
-            <!-- Información adicional -->
+            {# Sección de Información Adicional de la película #}
             <section class="content-section">
                 <h2 class="content-title">Información</h2>
                 <div class="info-grid">
+                    {# Director #}
                     <div class="info-item">
                         <span class="info-label">Director:</span>
                         <span class="info-value">{{ pelicula.director.nombre }}</span>
                     </div>
+                    {# País de origen #}
                     <div class="info-item">
                         <span class="info-label">País:</span>
                         <span class="info-value">{{ pelicula.pais }}</span>
                     </div>
+                    {# Idioma original #}
                     <div class="info-item">
                         <span class="info-label">Idioma:</span>
                         <span class="info-value">{{ pelicula.idioma }}</span>
                     </div>
+                    {# Fecha de estreno formateada #}
                     <div class="info-item">
                         <span class="info-label">Fecha de Estreno:</span>
                         <span class="info-value">{{ pelicula.fecha_estreno|date:"d/m/Y" }}</span>
                     </div>
+                    {# Presupuesto - Solo se muestra si existe #}
                     {% if pelicula.presupuesto %}
                     <div class="info-item">
                         <span class="info-label">Presupuesto:</span>
                         <span class="info-value">${{ pelicula.presupuesto|floatformat:0 }}</span>
                     </div>
                     {% endif %}
+                    {# Recaudación - Solo se muestra si existe #}
                     {% if pelicula.recaudacion %}
                     <div class="info-item">
                         <span class="info-label">Recaudación:</span>
@@ -215,10 +255,11 @@
                 </div>
             </section>
             
-            <!-- Reparto -->
+            {# Sección de Reparto - Solo se muestra si hay actores registrados #}
             {% if pelicula.actores.all %}
             <section class="content-section">
                 <h2 class="content-title">Reparto</h2>
+                {# Muestra solo los primeros 6 actores #}
                 <div class="cast-list">
                     {% for actor in pelicula.actores.all|slice:":6" %}
                     <span class="cast-member">{{ actor.nombre }}</span>
@@ -227,15 +268,17 @@
             </section>
             {% endif %}
             
-            <!-- Calificar película -->
+            {# Sección para calificar la película - Solo usuarios autenticados #}
             {% if user.is_authenticated %}
             <section class="content-section">
                 <h2 class="content-title">Tu Calificación</h2>
                 <form method="post" action="{% url 'peliculas:agregar_calificacion' pelicula.id %}" class="rating-form">
                     {% csrf_token %}
+                    {# Sistema de radio buttons para calificación del 1 al 10 #}
                     <div class="rating-input">
                         {% for i in range_10 %}
                         <input type="radio" name="puntuacion" value="{{ i }}" id="rating-{{ i }}"
+                               {# Pre-selecciona si el usuario ya calificó la película #}
                                {% if calificacion_usuario and calificacion_usuario.puntuacion == i %}checked{% endif %}>
                         <label for="rating-{{ i }}">{{ i }}</label>
                         {% endfor %}
@@ -245,48 +288,66 @@
             </section>
             {% endif %}
             
-            <!-- Reseñas -->
+            {# Sección de Reseñas #}
             <section class="content-section">
+                {# Título con contador total de reseñas #}
                 <h2 class="content-title">Reseñas ({{ pelicula.total_resenas }})</h2>
                 
+                {# Formulario para escribir nueva reseña - Solo usuarios autenticados #}
                 {% if user.is_authenticated %}
                 <div class="review-form-container">
                     <h3>Escribe tu reseña</h3>
                     <form method="post" action="{% url 'peliculas:agregar_resena' pelicula.id %}" class="review-form">
                         {% csrf_token %}
+                        {# Campo para título de la reseña #}
                         <input type="text" name="titulo" placeholder="Título de tu reseña" class="form-input" required>
+                        {# Campo para contenido de la reseña #}
                         <textarea name="contenido" placeholder="Escribe tu opinión sobre la película..." class="form-textarea" rows="5" required></textarea>
                         <button type="submit" class="btn-primary">Publicar Reseña</button>
                     </form>
                 </div>
                 {% endif %}
                 
+                {# Lista de reseñas existentes #}
                 <div class="reviews-list">
+                    {# Itera sobre cada reseña #}
                     {% for resena in resenas %}
                     <div class="review-card">
+                        {# Encabezado de la reseña con información del autor #}
                         <div class="review-header">
                             <div class="review-author">
+                                {# Avatar circular con inicial del usuario #}
                                 <div class="author-avatar">
                                     {{ resena.usuario.first_name|slice:":1"|upper|default:resena.usuario.username|slice:":1"|upper }}
                                 </div>
+                                {# Información del autor #}
                                 <div class="author-info">
+                                    {# Nombre completo o username como fallback #}
                                     <span class="author-fullname">
                                         {{ resena.usuario.get_full_name|default:resena.usuario.username }}
                                     </span>
+                                    {# Nombre de usuario con @ #}
                                     <span class="author-username">@{{ resena.usuario.username }}</span>
                                 </div>
                             </div>
+                            {# Fecha de publicación #}
                             <span class="review-date">{{ resena.fecha|date:"d/m/Y" }}</span>
                         </div>
+                        {# Título de la reseña #}
                         <h4 class="review-title">{{ resena.titulo }}</h4>
+                        {# Contenido de la reseña #}
                         <p class="review-content">{{ resena.contenido }}</p>
+                        {# Footer con estadísticas y badges #}
                         <div class="review-footer">
+                            {# Contador de utilidad de la reseña #}
                             <span class="review-helpful">👍 {{ resena.util_count }} personas encontraron esto útil</span>
+                            {# Badge de editada si la fecha de actualización es diferente a la de creación #}
                             {% if resena.actualizada != resena.fecha %}
                             <span class="review-edited">✏️ Editada</span>
                             {% endif %}
                         </div>
                     </div>
+                    {# Mensaje cuando no hay reseñas #}
                     {% empty %}
                     <p class="no-reviews">Aún no hay reseñas. ¡Sé el primero en escribir una!</p>
                     {% endfor %}
@@ -296,8 +357,9 @@
     </div>
 </div>
 
+{# Estilos CSS embebidos para las reseñas y botones de acción #}
 <style>
-/* Estilos mejorados para las reseñas */
+/* Estilos mejorados para las tarjetas de reseñas */
 .review-card {
     background: white;
     border-radius: 12px;
@@ -307,11 +369,13 @@
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
+/* Efecto hover para las tarjetas de reseñas */
 .review-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 5px 20px rgba(0,0,0,0.12);
 }
 
+/* Encabezado de la reseña con layout flexbox */
 .review-header {
     display: flex;
     justify-content: space-between;
@@ -319,12 +383,14 @@
     margin-bottom: 15px;
 }
 
+/* Contenedor del autor con avatar e información */
 .review-author {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
+/* Avatar circular con inicial del usuario */
 .author-avatar {
     width: 50px;
     height: 50px;
@@ -339,28 +405,33 @@
     flex-shrink: 0;
 }
 
+/* Información del autor en columna */
 .author-info {
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
 
+/* Nombre completo del autor */
 .author-fullname {
     font-size: 16px;
     font-weight: 600;
     color: #222;
 }
 
+/* Nombre de usuario del autor */
 .author-username {
     font-size: 14px;
     color: #666;
 }
 
+/* Fecha de publicación */
 .review-date {
     font-size: 13px;
     color: #999;
 }
 
+/* Título de la reseña */
 .review-title {
     font-size: 18px;
     font-weight: 600;
@@ -368,6 +439,7 @@
     margin: 15px 0 10px;
 }
 
+/* Contenido de la reseña */
 .review-content {
     font-size: 15px;
     line-height: 1.7;
@@ -375,6 +447,7 @@
     margin-bottom: 15px;
 }
 
+/* Footer de la reseña con estadísticas */
 .review-footer {
     display: flex;
     justify-content: space-between;
@@ -383,29 +456,35 @@
     border-top: 1px solid #eee;
 }
 
+/* Contador de utilidad */
 .review-helpful {
     font-size: 14px;
     color: #666;
 }
 
+/* Badge de reseña editada */
 .review-edited {
     font-size: 13px;
     color: #999;
     font-style: italic;
 }
 
+/* Responsive para tablets y móviles */
 @media (max-width: 768px) {
+    /* Header en columna en móviles */
     .review-header {
         flex-direction: column;
         gap: 10px;
     }
     
+    /* Avatar más pequeño en móviles */
     .author-avatar {
         width: 40px;
         height: 40px;
         font-size: 18px;
     }
     
+    /* Footer en columna en móviles */
     .review-footer {
         flex-direction: column;
         gap: 10px;
@@ -419,17 +498,20 @@
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
+/* Efecto hover para todos los botones de acción */
 .action-buttons button:hover,
 .action-buttons a:hover {
     opacity: 0.9;
 }
 
-/* Responsive para botones de acción */
+/* Responsive para botones de acción en móviles */
 @media (max-width: 768px) {
+    /* Botones en columna en móviles */
     .action-buttons {
         flex-direction: column;
     }
     
+    /* Botones a ancho completo en móviles */
     .action-buttons button,
     .action-buttons a {
         width: 100%;

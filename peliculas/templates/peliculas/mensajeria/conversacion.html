@@ -1,28 +1,58 @@
+{# 
+    Este template muestra la conversación completa entre dos usuarios,
+    permitiendo visualizar el historial de mensajes y enviar nuevos.
+    
+    Contexto requerido desde la vista:
+        - otro_usuario: Usuario con quien se está conversando (User object)
+        - mensajes: QuerySet de mensajes ordenados por fecha (Mensaje objects)
+        - user: Usuario actual (inyectado automáticamente por Django)
+    
+    Funcionalidades:
+        - Visualización de historial de mensajes
+        - Diferenciación visual entre mensajes propios y recibidos
+        - Indicadores de estado de lectura (✓ enviado, ✓✓ leído)
+        - Scroll automático al último mensaje
+        - Auto-actualización cada 3 segundos para recibir nuevos mensajes
+        - Formulario para enviar nuevos mensajes
+    
+    Vista asociada: conversacion(request, username)
+    URL: /conversacion/<username>/
+#}
+
+
 {% extends 'peliculas/base.html' %}
 
 {% block title %}Conversación con {{ otro_usuario.get_full_name|default:otro_usuario.username }} - AKA Films{% endblock %}
 
 {% block extra_css %}
 <style>
+    /*CONTENEDOR PRINCIPAL DE LA CONVERSACIÓN*/
+
     .conversacion-container {
         max-width: 1000px;
         margin: 40px auto;
         padding: 20px;
+         /* Altura ajustada para ocupar viewport menos header/footer */
         height: calc(100vh - 200px);
+        /* Flexbox para organizar header, mensajes y formulario */
         display: flex;
         flex-direction: column;
     }
     
+
+    /*HEADER DE LA CONVERSACIÓN Muestra información del usuario con quien se conversa*/
     .conversacion-header {
         background: rgba(255, 255, 255, 0.05);
         padding: 20px;
-        border-radius: 15px 15px 0 0;
+        border-radius: 15px 15px 0 0; /* Solo esquinas superiores redondeadas */
         display: flex;
         align-items: center;
         gap: 15px;
-        border-bottom: 2px solid #e50914;
+        border-bottom: 2px solid #e50914; /* Línea divisoria roja característica */
     }
     
+
+    /* Avatar circular en el header con inicial del usuario */
     .header-avatar {
         width: 50px;
         height: 50px;
@@ -36,21 +66,25 @@
         color: white;
     }
     
+     /* Contenedor de información del usuario (nombre y username) */
     .header-info {
-        flex: 1;
+        flex: 1;  /* Ocupa espacio disponible entre avatar y botón */
     }
     
+    /* Nombre completo o username del usuario */
     .header-nombre {
         font-size: 20px;
         font-weight: 600;
         color: #fff;
     }
     
+    /* Username con @ precedido, estilo secundario */
     .header-username {
         font-size: 14px;
         color: rgba(255, 255, 255, 0.6);
     }
     
+    /* Botón para volver a la lista de conversaciones */
     .btn-volver {
         padding: 8px 20px;
         background: rgba(255, 255, 255, 0.1);
@@ -64,27 +98,36 @@
         background: rgba(255, 255, 255, 0.2);
     }
     
+
+    /*ÁREA DE MENSAJES Contenedor scrollable con todos los mensajes de la conversación */
     .mensajes-area {
-        flex: 1;
+        flex: 1; /* Ocupa todo el espacio disponible entre header y form */
         background: rgba(255, 255, 255, 0.03);
         padding: 20px;
-        overflow-y: auto;
+        overflow-y: auto; /* Scroll vertical si hay muchos mensajes */
         display: flex;
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: column; /* Mensajes apilados verticalmente */
+        gap: 15px; /* Espacio entre mensajes */
     }
     
+
+    /*ESTILOS DE MENSAJES INDIVIDUALES*/
+
+
+    /* Contenedor base de cada mensaje */
     .mensaje {
         display: flex;
         gap: 10px;
-        max-width: 70%;
+        max-width: 70%; /* Los mensajes no ocupan todo el ancho */
     }
     
+    /* Mensajes propios (del usuario actual) alineados a la derecha */
     .mensaje.propio {
-        align-self: flex-end;
-        flex-direction: row-reverse;
+        align-self: flex-end; /* Alineación a la derecha */
+        flex-direction: row-reverse; /* Avatar a la derecha del mensaje */
     }
     
+    /* Avatar del remitente en cada mensaje */
     .mensaje-avatar {
         width: 40px;
         height: 40px;
@@ -96,13 +139,16 @@
         font-size: 16px;
         font-weight: bold;
         color: white;
-        flex-shrink: 0;
+        flex-shrink: 0; /* No se comprime con el contenido */
     }
     
+
+    /* Avatar de mensajes propios con color diferente (gris) */
     .mensaje.propio .mensaje-avatar {
         background: linear-gradient(135deg, #555, #777);
     }
     
+    /* Burbuja con el contenido del mensaje */
     .mensaje-contenido {
         background: rgba(255, 255, 255, 0.08);
         padding: 12px 16px;
@@ -110,67 +156,78 @@
         color: #fff;
     }
     
+    /* Mensajes propios con fondo rojo distintivo */
     .mensaje.propio .mensaje-contenido {
         background: linear-gradient(135deg, #e50914, #c40812);
     }
     
+    /* FOOTER DEL MENSAJE Contiene fecha y estado de lectura*/
     .mensaje-footer {
         display: flex;
         align-items: center;
         gap: 8px;
         margin-top: 5px;
-        justify-content: flex-start;
+        justify-content: flex-start; /* Por defecto a la izquierda */
     }
     
+    /* Footer de mensajes propios alineado a la derecha */
     .mensaje.propio .mensaje-footer {
         justify-content: flex-end;
     }
     
+    /* Fecha de envío del mensaje */
     .mensaje-fecha {
         font-size: 11px;
         color: rgba(255, 255, 255, 0.5);
     }
     
+
+    /* Indicadores de estado de lectura (✓ y ✓✓) */
     .mensaje-estado {
         font-size: 14px;
         display: inline-flex;
         align-items: center;
     }
     
-    /* Estilos para los estados de lectura */
+    /* Estado: Enviado (✓) - color gris */
     .mensaje-estado.enviado {
         color: rgba(255, 255, 255, 0.4);
     }
     
+    /* Estado: Leído (✓✓) - color verde */
     .mensaje-estado.leido {
         color: #4CAF50; /* Verde para indicar que fue leído */
     }
     
+    /*FORMULARIO PARA ENVIAR MENSAJES*/
     .mensaje-form {
         background: rgba(255, 255, 255, 0.05);
         padding: 20px;
-        border-radius: 0 0 15px 15px;
+        border-radius: 0 0 15px 15px; /* Solo esquinas inferiores redondeadas */
         display: flex;
         gap: 10px;
     }
     
+    /* Textarea para escribir el mensaje */
     .mensaje-form textarea {
-        flex: 1;
+        flex: 1; /* Ocupa todo el espacio disponible */
         padding: 12px;
         border: 2px solid rgba(255, 255, 255, 0.1);
         border-radius: 10px;
         background: rgba(255, 255, 255, 0.05);
         color: #fff;
-        resize: none;
+        resize: none; /* No permitir redimensionar */
         font-family: inherit;
         font-size: 14px;
     }
     
+    /* Estado focus del textarea */
     .mensaje-form textarea:focus {
         outline: none;
-        border-color: #e50914;
+        border-color: #e50914; /* Borde rojo al hacer focus */
     }
     
+    /* Botón de envío */
     .mensaje-form button {
         padding: 12px 30px;
         background: linear-gradient(135deg, #e50914, #c40812);
@@ -182,25 +239,28 @@
         transition: all 0.3s;
     }
     
+    /* Efecto hover en el botón de envío */
     .mensaje-form button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
+        transform: translateY(-2px); /* Elevación sutil */
+        box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4); /* Sombra roja */
     }
     
+    /* ESTADO VACÍO Mensaje cuando no hay conversación iniciada*/
     .empty-conversation {
         text-align: center;
         padding: 60px 20px;
         color: rgba(255, 255, 255, 0.5);
     }
     
+    /*RESPONSIVE DESIGN Adaptación para dispositivos móviles */
     @media (max-width: 768px) {
         .conversacion-container {
-            height: calc(100vh - 150px);
+            height: calc(100vh - 150px); /* Altura ajustada para móviles */
             padding: 10px;
         }
         
         .mensaje {
-            max-width: 85%;
+            max-width: 85%;  /* Mensajes más anchos en móviles */
         }
     }
 </style>
@@ -208,17 +268,23 @@
 
 {% block content %}
 <div class="conversacion-container">
+    {#HEADER: Información del usuario con quien se conversa#}
     <div class="conversacion-header">
+        {# Avatar con la inicial del usuario #}
         <div class="header-avatar">
             {% if otro_usuario %}
+            {# Muestra primera letra del nombre o del username #}
                 {{ otro_usuario.first_name.0|default:otro_usuario.username.0|upper }}
             {% else %}
                 ?
             {% endif %}
         </div>
+
+        {# Información del usuario: nombre completo y username #}
         <div class="header-info">
             <div class="header-nombre">
                 {% if otro_usuario %}
+                {# Nombre completo o username como fallback #}
                     {{ otro_usuario.get_full_name|default:otro_usuario.username }}
                 {% else %}
                     Usuario desconocido
@@ -228,21 +294,29 @@
             <div class="header-username">@{{ otro_usuario.username }}</div>
             {% endif %}
         </div>
+        {# Botón para volver a la lista de conversaciones #}
         <a href="{% url 'peliculas:lista_conversaciones' %}" class="btn-volver">← Volver</a>
     </div>
     
+    {# ÁREA DE MENSAJES: Historial completo de la conversación #}
     <div class="mensajes-area" id="mensajes-area">
         {% if mensajes %}
+        {# Iterar sobre todos los mensajes de la conversación #}
             {% for mensaje in mensajes %}
             <div class="mensaje {% if mensaje.remitente == user %}propio{% endif %}">
+                {# Avatar del remitente #}
                 <div class="mensaje-avatar">
                     {{ mensaje.remitente.first_name.0|default:mensaje.remitente.username.0|upper }}
                 </div>
                 <div>
+                    {# Contenido del mensaje #}
                     <div class="mensaje-contenido">
                         {{ mensaje.contenido }}
                     </div>
+
+                    {# Footer: fecha y estado de lectura #}
                     <div class="mensaje-footer">
+                        {# Fecha de envío formateada #}
                         <span class="mensaje-fecha">
                             {{ mensaje.fecha_envio|date:"d/m/Y H:i" }}
                         </span>
@@ -254,6 +328,7 @@
                                     ✓✓
                                 </span>
                             {% else %}
+                            {# ✓ = Enviado pero no leído (gris) #}
                                 <span class="mensaje-estado enviado" title="Enviado">
                                     ✓
                                 </span>
@@ -264,12 +339,14 @@
             </div>
             {% endfor %}
         {% else %}
+        {# Estado vacío: no hay mensajes en la conversación #}
             <div class="empty-conversation">
                 <p>No hay mensajes todavía. ¡Envía el primero!</p>
             </div>
         {% endif %}
     </div>
     
+    {# FORMULARIO: Enviar nuevo mensaje#}
     <form method="post" class="mensaje-form">
         {% csrf_token %}
         <textarea name="contenido" placeholder="Escribe tu mensaje..." rows="2" required></textarea>
@@ -277,6 +354,8 @@
     </form>
 </div>
 
+
+{# JAVASCRIPT: Funcionalidades del cliente #}
 <script>
     // Scroll automático al último mensaje
     const mensajesArea = document.getElementById('mensajes-area');

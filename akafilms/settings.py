@@ -1,34 +1,50 @@
 """
-Django settings for akafilms project.
+Django settings para el proyecto AkaFilms.
+
+Este archivo contiene la configuración principal de nuestro proyecto AkaFilms.
+
+Variables de entorno requeridas (.env):
+    SECRET_KEY: Clave secreta de Django (str)
+    DEBUG: Modo de depuración (bool, default=False)
+    ALLOWED_HOSTS: Hosts permitidos separados por coma (str)
 """
 
 from pathlib import Path
 import os
 from decouple import config, Csv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# CONFIGURACIÓN DE RUTAS
+
+# Directorio base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# Clave secreta para firmas criptográficas. que esta configurada en .env
 SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# Modo debug. Desactivar en producción (DEBUG=False en .env)
 DEBUG = config("DEBUG", default=False, cast=bool)
 
+# Hosts/dominios permitidos para servir la aplicación
+# definido en .env en ALLOWED_HOSTS=127.0.0.1,localhost
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+
+
+# DEFINICIÓN DE APLICACIONES
 
 # Application definition
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.admin', # Panel de administración
+    'django.contrib.auth', # Sistema de autenticación
+    'django.contrib.contenttypes', # Framework de tipos de contenido
+    'django.contrib.sessions', # Manejo de sesiones
+    'django.contrib.messages', # Framework de mensajes
+    'django.contrib.staticfiles', # Manejo de archivos estáticos
     'peliculas',  # Nuestra aplicación
 ]
 
-# ACTUALIZACIÓN DE SETTINGS.PY
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -38,17 +54,20 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'peliculas.middleware.LoginRedirectMiddleware',  # Ya existía
-    'peliculas.middleware.TerminosMiddleware',       # NUEVO - Verificación de términos
+    # Middlewares personalizados
+    'peliculas.middleware.LoginRedirectMiddleware',  # Redirección automática de usuarios autenticados
+    'peliculas.middleware.TerminosMiddleware',       # Verificación de aceptación de términos y condiciones
 ]
 
 ROOT_URLCONF = 'akafilms.urls'
+
+# CONFIGURACIÓN DE TEMPLATES
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
-        'APP_DIRS': True,
+        'APP_DIRS': True, # Buscar templates en carpeta 'templates' de cada app
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -62,7 +81,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'akafilms.wsgi.application'
 
-# Database
+# CONFIGURACIÓN DE BASE DE DATOS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -70,43 +89,50 @@ DATABASES = {
     }
 }
 
-# Password validation
+# VALIDACIÓN DE CONTRASEÑAS
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    {   # Evita contraseñas similares a atributos del usuario
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', 
     },
-    {
+    {   # Requiere longitud mínima (default: 8 caracteres)
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
-    {
+    {   # Rechaza contraseñas comunes
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
-    {
+    {   # Evita contraseñas completamente numéricas
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
-# Internationalization
-LANGUAGE_CODE = 'es-mx'
-TIME_ZONE = 'America/Mexico_City'
-USE_I18N = True
-USE_TZ = True
+# CONFIGURACIÓN INTERNACIONAL Y DE ZONA HORARIA
+LANGUAGE_CODE = 'es-mx' # Idioma por defecto: Español de México
+TIME_ZONE = 'America/Mexico_City' # Zona horaria: Ciudad de México (UTC-6/-5)
+USE_I18N = True # Habilitar internacionalización
+USE_TZ = True # Usar fechas con zona horaria
 
-# Static files (CSS, JavaScript, Images)
+
+# ARCHIVOS ESTÁTICOS Y MEDIA (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Media files (User uploads)
+# Archivos subidos por usuarios (imágenes de perfil, pósters, etc.)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Default primary key field type
+
+# CONFIGURACIÓN DE MODELOS
+
+# Tipo de campo por defecto para claves primarias
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Security settings
+# CONFIGURACIÓN DE SEGURIDAD ADICIONAL
+
+# Habilita filtro XSS del navegador
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
+
 
 # Configuración de redirección después del login
 LOGIN_URL = 'login'

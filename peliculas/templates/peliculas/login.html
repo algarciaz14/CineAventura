@@ -1,18 +1,26 @@
+{# Carga archivos estáticos de Django (CSS, JS, imágenes) #}
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    {# Configuración responsive para dispositivos móviles #}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - AKA Films</title>
+    
+    {# Importa la fuente Poppins desde Google Fonts #}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    {# Estilos CSS embebidos para la página de login #}
     <style>
+        /* Reset global de márgenes y paddings */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
+        /* Estilos del body - Pantalla completa con gradiente oscuro */
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
@@ -23,6 +31,7 @@
             padding: 20px;
         }
         
+        /* Contenedor principal del formulario de login */
         .login-container {
             background: #fff;
             border-radius: 15px;
@@ -32,44 +41,53 @@
             padding: 50px 40px;
         }
         
+        /* Sección del logo de la aplicación */
         .logo {
             text-align: center;
             margin-bottom: 30px;
         }
         
+        /* Título del logo principal */
         .logo h1 {
             font-size: 36px;
             font-weight: bold;
         }
         
+        /* Parte "AKA" del logo en rojo característico */
         .logo-aka {
             color: #e50914;
         }
         
+        /* Parte "FILMS" del logo en negro */
         .logo-films {
             color: #333;
         }
         
+        /* Encabezado con mensaje de bienvenida */
         .login-header {
             text-align: center;
             margin-bottom: 30px;
         }
         
+        /* Título principal del encabezado */
         .login-header h2 {
             color: #333;
             font-size: 28px;
             margin-bottom: 10px;
         }
         
+        /* Subtítulo del encabezado */
         .login-header p {
             color: #666;
             font-size: 15px;
         }
         
+        /* Grupo de formulario para cada campo */
         .form-group {
             margin-bottom: 20px;
         }
         
+        /* Etiquetas de los campos del formulario */
         label {
             display: block;
             color: #333;
@@ -78,6 +96,7 @@
             font-size: 14px;
         }
         
+        /* Estilos para inputs de texto y contraseña */
         .form-input {
             width: 100%;
             padding: 14px 16px;
@@ -88,12 +107,14 @@
             transition: all 0.3s;
         }
         
+        /* Efecto de focus en los inputs - Borde rojo con sombra */
         .form-input:focus {
             outline: none;
             border-color: #e50914;
             box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
         }
         
+        /* Botón principal de inicio de sesión */
         .btn-login {
             width: 100%;
             background: #e50914;
@@ -108,16 +129,19 @@
             font-family: 'Poppins', sans-serif;
         }
         
+        /* Efecto hover del botón de login - Color más oscuro y elevación */
         .btn-login:hover {
             background: #c40812;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
         }
         
+        /* Efecto active del botón - Vuelve a posición original */
         .btn-login:active {
             transform: translateY(0);
         }
         
+        /* Caja de mensaje de error para credenciales inválidas */
         .error-message {
             background: #fee;
             color: #c33;
@@ -131,15 +155,18 @@
             gap: 10px;
         }
         
+        /* Icono del mensaje de error */
         .error-icon {
             font-size: 20px;
         }
         
+        /* Sección de enlaces auxiliares (volver al inicio) */
         .links-section {
             text-align: center;
             margin-top: 25px;
         }
         
+        /* Estilo de los enlaces auxiliares */
         .links-section a {
             color: #666;
             text-decoration: none;
@@ -149,10 +176,12 @@
             margin: 0 10px;
         }
         
+        /* Efecto hover de los enlaces - Cambia a color rojo */
         .links-section a:hover {
             color: #e50914;
         }
         
+        /* Sección de invitación a registrarse */
         .register-prompt {
             text-align: center;
             margin-top: 25px;
@@ -160,11 +189,13 @@
             border-top: 1px solid #eee;
         }
         
+        /* Texto de la invitación a registrarse */
         .register-prompt p {
             color: #666;
             margin-bottom: 15px;
         }
         
+        /* Botón de registro con borde (outline style) */
         .btn-register {
             display: inline-block;
             padding: 12px 30px;
@@ -177,6 +208,7 @@
             transition: all 0.3s;
         }
         
+        /* Efecto hover del botón de registro - Se rellena con color rojo */
         .btn-register:hover {
             background: #e50914;
             color: white;
@@ -184,11 +216,12 @@
             box-shadow: 0 5px 15px rgba(229, 9, 20, 0.2);
         }
 
+        /* Efecto active del botón de registro */
         .btn-register:active {
             transform: translateY(0);
         }
 
-        /* Animación de entrada */
+        /* Animación de entrada para el contenedor de login */
         @keyframes slideIn {
             from {
                 opacity: 0;
@@ -200,20 +233,24 @@
             }
         }
 
+        /* Aplica la animación slideIn al contenedor */
         .login-container {
             animation: slideIn 0.5s ease-out;
         }
 
-        /* Responsive */
+        /* Media query para dispositivos móviles pequeños */
         @media (max-width: 500px) {
+            /* Reduce padding en móviles */
             .login-container {
                 padding: 40px 25px;
             }
 
+            /* Reduce tamaño del logo en móviles */
             .logo h1 {
                 font-size: 32px;
             }
 
+            /* Reduce tamaño del título en móviles */
             .login-header h2 {
                 font-size: 24px;
             }
@@ -221,16 +258,20 @@
     </style>
 </head>
 <body>
+    {# Contenedor principal del formulario de login #}
     <div class="login-container">
+        {# Logo de la aplicación AKA FILMS #}
         <div class="logo">
             <h1><span class="logo-aka">AKA</span><span class="logo-films">FILMS</span></h1>
         </div>
         
+        {# Encabezado con mensaje de bienvenida #}
         <div class="login-header">
             <h2>Bienvenido de nuevo</h2>
             <p>Inicia sesión para continuar</p>
         </div>
         
+        {# Mensaje de error si las credenciales son incorrectas #}
         {% if form.errors %}
         <div class="error-message">
             <span class="error-icon">⚠️</span>
@@ -238,9 +279,12 @@
         </div>
         {% endif %}
         
+        {# Formulario de inicio de sesión #}
         <form method="post" action="{% url 'login' %}">
+            {# Token CSRF requerido por Django para seguridad #}
             {% csrf_token %}
             
+            {# Campo de nombre de usuario #}
             <div class="form-group">
                 <label for="id_username">Usuario:</label>
                 <input type="text" 
@@ -252,6 +296,7 @@
                        autofocus>
             </div>
             
+            {# Campo de contraseña #}
             <div class="form-group">
                 <label for="id_password">Contraseña:</label>
                 <input type="password" 
@@ -262,15 +307,19 @@
                        required>
             </div>
             
+            {# Botón de envío del formulario #}
             <button type="submit" class="btn-login">Iniciar Sesión</button>
             
+            {# Campo oculto para redirección después del login #}
             <input type="hidden" name="next" value="{{ next }}">
         </form>
         
+        {# Enlace para volver a la página principal #}
         <div class="links-section">
             <a href="{% url 'peliculas:index' %}">← Volver al inicio</a>
         </div>
         
+        {# Sección de invitación a crear cuenta nueva #}
         <div class="register-prompt">
             <p>¿No tienes una cuenta?</p>
             <a href="{% url 'peliculas:registro' %}" class="btn-register">Crear cuenta gratis</a>
