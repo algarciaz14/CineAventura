@@ -1,28 +1,9 @@
-{# 
-    Este template muestra la conversación completa entre dos usuarios,
-    permitiendo visualizar el historial de mensajes y enviar nuevos.
-    
-    Contexto requerido desde la vista:
-        - otro_usuario: Usuario con quien se está conversando (User object)
-        - mensajes: QuerySet de mensajes ordenados por fecha (Mensaje objects)
-        - user: Usuario actual (inyectado automáticamente por Django)
-    
-    Funcionalidades:
-        - Visualización de historial de mensajes
-        - Diferenciación visual entre mensajes propios y recibidos
-        - Indicadores de estado de lectura (✓ enviado, ✓✓ leído)
-        - Scroll automático al último mensaje
-        - Auto-actualización cada 3 segundos para recibir nuevos mensajes
-        - Formulario para enviar nuevos mensajes
-    
-    Vista asociada: conversacion(request, username)
-    URL: /conversacion/<username>/
-#}
+{# Este template muestra la conversación completa entre dos usuarios, permitiendo visualizar el historial de mensajes y enviar nuevos.#}
 
 
 {% extends 'peliculas/base.html' %}
 
-{% block title %}Conversación con {{ otro_usuario.get_full_name|default:otro_usuario.username }} - AKA Films{% endblock %}
+{% block title %}Conversación con {{ otro_usuario.get_full_name|default:otro_usuario.username }} - Cine Aventura{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -42,13 +23,13 @@
 
     /*HEADER DE LA CONVERSACIÓN Muestra información del usuario con quien se conversa*/
     .conversacion-header {
-        background: rgba(255, 255, 255, 0.05);
+        background: #f8f9fa;
         padding: 20px;
         border-radius: 15px 15px 0 0; /* Solo esquinas superiores redondeadas */
         display: flex;
         align-items: center;
         gap: 15px;
-        border-bottom: 2px solid #e50914; /* Línea divisoria roja característica */
+        border-bottom: 2px solid #2ecc71; /* Línea divisoria verde */
     }
     
 
@@ -57,7 +38,7 @@
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #e50914, #ff6b6b);
+        background: linear-gradient(135deg, #2ecc71, #46d369);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -75,19 +56,19 @@
     .header-nombre {
         font-size: 20px;
         font-weight: 600;
-        color: #fff;
+        color: #212529;
     }
     
     /* Username con @ precedido, estilo secundario */
     .header-username {
         font-size: 14px;
-        color: rgba(255, 255, 255, 0.6);
+        color: #6c757d; 
     }
     
     /* Botón para volver a la lista de conversaciones */
     .btn-volver {
         padding: 8px 20px;
-        background: rgba(255, 255, 255, 0.1);
+        background: #2ecc71;
         color: white;
         text-decoration: none;
         border-radius: 8px;
@@ -95,14 +76,14 @@
     }
     
     .btn-volver:hover {
-        background: rgba(255, 255, 255, 0.2);
+        background: #27ae60;
     }
     
 
     /*ÁREA DE MENSAJES Contenedor scrollable con todos los mensajes de la conversación */
     .mensajes-area {
         flex: 1; /* Ocupa todo el espacio disponible entre header y form */
-        background: rgba(255, 255, 255, 0.03);
+        background: white;
         padding: 20px;
         overflow-y: auto; /* Scroll vertical si hay muchos mensajes */
         display: flex;
@@ -132,7 +113,7 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #e50914, #ff6b6b);
+        background: linear-gradient(135deg, #2ecc71, #46d369);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -150,15 +131,15 @@
     
     /* Burbuja con el contenido del mensaje */
     .mensaje-contenido {
-        background: rgba(255, 255, 255, 0.08);
+        background: #f8f9fa;
         padding: 12px 16px;
         border-radius: 15px;
-        color: #fff;
+        color: #212529;
     }
     
     /* Mensajes propios con fondo rojo distintivo */
     .mensaje.propio .mensaje-contenido {
-        background: linear-gradient(135deg, #e50914, #c40812);
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
     }
     
     /* FOOTER DEL MENSAJE Contiene fecha y estado de lectura*/
@@ -178,7 +159,7 @@
     /* Fecha de envío del mensaje */
     .mensaje-fecha {
         font-size: 11px;
-        color: rgba(255, 255, 255, 0.5);
+        color: #6c757d;
     }
     
 
@@ -201,7 +182,7 @@
     
     /*FORMULARIO PARA ENVIAR MENSAJES*/
     .mensaje-form {
-        background: rgba(255, 255, 255, 0.05);
+        background: #f8f9fa;
         padding: 20px;
         border-radius: 0 0 15px 15px; /* Solo esquinas inferiores redondeadas */
         display: flex;
@@ -212,10 +193,10 @@
     .mensaje-form textarea {
         flex: 1; /* Ocupa todo el espacio disponible */
         padding: 12px;
-        border: 2px solid rgba(255, 255, 255, 0.1);
+        border: 2px solid #dee2e6;
         border-radius: 10px;
-        background: rgba(255, 255, 255, 0.05);
-        color: #fff;
+        background: white;
+        color: #212529;
         resize: none; /* No permitir redimensionar */
         font-family: inherit;
         font-size: 14px;
@@ -224,13 +205,13 @@
     /* Estado focus del textarea */
     .mensaje-form textarea:focus {
         outline: none;
-        border-color: #e50914; /* Borde rojo al hacer focus */
+        border-color: #2ecc71;
     }
     
     /* Botón de envío */
     .mensaje-form button {
         padding: 12px 30px;
-        background: linear-gradient(135deg, #e50914, #c40812);
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
         color: white;
         border: none;
         border-radius: 10px;
@@ -242,14 +223,14 @@
     /* Efecto hover en el botón de envío */
     .mensaje-form button:hover {
         transform: translateY(-2px); /* Elevación sutil */
-        box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4); /* Sombra roja */
+        box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
     }
     
     /* ESTADO VACÍO Mensaje cuando no hay conversación iniciada*/
     .empty-conversation {
         text-align: center;
         padding: 60px 20px;
-        color: rgba(255, 255, 255, 0.5);
+        color: #6c757d;
     }
     
     /*RESPONSIVE DESIGN Adaptación para dispositivos móviles */

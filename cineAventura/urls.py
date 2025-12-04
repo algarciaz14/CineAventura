@@ -1,5 +1,5 @@
 """
-Configuración de URLs para el proyecto AkaFilms.
+Configuración de URLs para el proyecto CineAventura.
 
 Este módulo define el enrutamiento principal de URLs del proyecto, incluyendo:
 - Panel de administración de Django

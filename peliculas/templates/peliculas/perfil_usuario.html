@@ -2,7 +2,7 @@
 {% extends 'peliculas/base.html' %}
 
 {# Define el título dinámico de la página con el nombre del usuario #}
-{% block title %}{{ usuario_perfil.get_full_name|default:usuario_perfil.username }} - AKA Films{% endblock %}
+{% block title %}{{ usuario_perfil.get_full_name|default:usuario_perfil.username }} - Cine Aventura{% endblock %}
 
 {# Bloque de CSS adicional específico para esta página #}
 {% block extra_css %}

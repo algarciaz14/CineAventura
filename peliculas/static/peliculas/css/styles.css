@@ -62,7 +62,7 @@ body {
     gap: 5px;
 }
 
-.logo-aka {
+.logo-cineAventura {
     color: var(--primary-color);
 }
 
@@ -148,11 +148,15 @@ body {
 .search-input {
     flex: 1;
     padding: 10px 15px;
-    background: var(--bg-card);
+    background: white;
     border: 1px solid var(--border-color);
     border-radius: 25px;
-    color: var(--text-primary);
+    color: #212529;
     font-size: 14px;
+}
+
+.search-input::placeholder {
+    color: #6c757d;  /* Placeholder gris */
 }
 
 .search-input:focus {
@@ -320,8 +324,8 @@ body {
     font-size: 16px;
     border: none;
     border-radius: 50px;
-    background: rgba(255,255,255,0.95);
-    color: var(--bg-dark);
+    background: white;
+    color: #212529;
 }
 
 .hero-search-btn {
@@ -367,6 +371,9 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 30px;
+}
+.hero-search-input::placeholder {
+    color: #6c757d;
 }
 
 .movie-card {

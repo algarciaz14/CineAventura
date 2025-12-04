@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     {# Configuración responsive para dispositivos móviles #}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - AKA Films</title>
+    <title>Registro - CineAventura</title>
     
     {# Importa la fuente Poppins desde Google Fonts #}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -53,9 +53,10 @@
             font-weight: bold;
         }
         
-        /* Parte "AKA" del logo en rojo característico */
+        /* Parte "Cine Aventura" del logo en verde característico */
         .logo-aka {
-            color: #e50914;
+            color: #2ecc71;
+
         }
         
         /* Parte "FILMS" del logo en negro */
@@ -115,11 +116,12 @@
         }
         
         /* Efecto de focus en los inputs - Borde rojo con sombra */
-        .form-input:focus {
-            outline: none;
-            border-color: #e50914;
-            box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
-        }
+        
+        .form-input:focus { 
+        outline: none;
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+}
         
         /* Texto de ayuda debajo de los campos */
         .form-help {
@@ -132,24 +134,23 @@
         /* Mensaje de error específico de cada campo */
         .field-error {
             display: block;
-            color: #c33;
+            color: #2ecc71;
             font-size: 13px;
             margin-top: 5px;
             padding: 8px 12px;
-            background: #fee;
+            background: #e8f8f0;
             border-radius: 5px;
-            border-left: 3px solid #c33;
+            border-left: 3px solid #2ecc71;
         }
-        
-        /* Caja de errores generales del formulario */
+
         .form-errors {
-            background: #fee;
-            color: #c33;
+            background: #e8f8f0;
+            color: #2ecc71;
             padding: 14px;
             border-radius: 8px;
             margin-bottom: 20px;
             font-size: 14px;
-            border-left: 4px solid #c33;
+            border-left: 4px solid #2ecc71;
         }
         
         /* Contenedor destacado para términos y condiciones */
@@ -186,7 +187,7 @@
         
         /* Enlaces dentro del texto de términos */
         .terminos-text a {
-            color: #e50914;
+            color: #2ecc71;
             text-decoration: none;
             font-weight: 600;
         }
@@ -199,7 +200,7 @@
         /* Badge de licencia Creative Commons */
         .license-badge {
             display: inline-block;
-            background: #e50914;
+            background: #2ecc71;
             color: white;
             padding: 4px 8px;
             border-radius: 4px;
@@ -211,7 +212,7 @@
         /* Botón principal de registro */
         .btn-register {
             width: 100%;
-            background: #e50914;
+            background: #2ecc71;
             color: white;
             padding: 16px;
             border: none;
@@ -226,9 +227,9 @@
         
         /* Efecto hover del botón de registro */
         .btn-register:hover {
-            background: #c40812;
+            background: #27ae60;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3); 
         }
 
         /* Efecto active del botón de registro */
@@ -260,7 +261,7 @@
         
         /* Enlaces de la invitación a login */
         .login-prompt a {
-            color: #e50914;
+            color: #2ecc71;
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s;
@@ -268,7 +269,7 @@
         
         /* Efecto hover del enlace de login */
         .login-prompt a:hover {
-            color: #c40812;
+            color: #27ae60;
             text-decoration: underline;
         }
         
@@ -288,7 +289,7 @@
         
         /* Efecto hover del enlace de volver */
         .back-link a:hover {
-            color: #e50914;
+            color: #2ecc71;
         }
 
         /* Animación de entrada para el contenedor de registro */
@@ -335,15 +336,15 @@
 <body>
     {# Contenedor principal del formulario de registro #}
     <div class="register-container">
-        {# Logo de la aplicación AKA FILMS #}
+        {# Logo de la aplicación Cine Aventura #}
         <div class="logo">
-            <h1><span class="logo-aka">AKA</span><span class="logo-films">FILMS</span></h1>
+            <h1><span class="logo-aka">CINE</span><span class="logo-films">AVENTURA</span></h1>
         </div>
         
         {# Encabezado con mensaje de bienvenida #}
         <div class="register-header">
             <h2>Crear Cuenta</h2>
-            <p>Únete a la comunidad de AKA Films</p>
+            <p>Únete a la comunidad de Cine Aventura</p>
         </div>
 
         {# Formulario de registro #}

@@ -29,7 +29,7 @@
 #}
 {# ============================================================================ #}
 
-{% block title %}Mensajes - AKA Films{% endblock %}
+{% block title %}Mensajes - Cine Aventura{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -50,7 +50,7 @@
     /* Título principal de la página */
     .mensajes-header h1 {
         font-size: 36px;
-        color: #fff;
+        color: #000000ff;
         margin-bottom: 10px;
     }
     
@@ -92,7 +92,7 @@
         width: 60px;
         height: 60px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #e50914, #ff6b6b);
+        background: linear-gradient(135deg, #2ecc71, #46d369);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -115,14 +115,14 @@
     .conversacion-nombre {
         font-size: 18px;
         font-weight: 600;
-        color: #fff;
+        color: #212529;
         margin-bottom: 5px;
     }
     
     /* Preview del último mensaje (truncado con ...) */
     .conversacion-preview {
         font-size: 14px;
-        color: rgba(255, 255, 255, 0.6);
+        color: #6c757d;
         white-space: nowrap; /* No permitir saltos de línea */
         overflow: hidden; /* Ocultar texto que se desborda */
         text-overflow: ellipsis; /* Mostrar ... al final */
@@ -141,12 +141,12 @@
     /* Fecha del último mensaje */
     .conversacion-fecha {
         font-size: 12px;
-        color: rgba(255, 255, 255, 0.5);
+        color: #6c757d;
     }
     
     /* Badge circular con contador de mensajes no leídos */
     .conversacion-badge {
-        background: #e50914; /* Color rojo característico de AKA Films */
+        background: #2ecc71;
         color: white;
         font-size: 12px;
         font-weight: bold;
@@ -161,7 +161,7 @@
     .empty-state {
         text-align: center;
         padding: 80px 20px;
-        color: rgba(255, 255, 255, 0.6);
+        color: #6c757d; 
     }
     
     /* Ícono grande de mensajes (emoji) */
@@ -200,7 +200,7 @@
         <h1>💬 Mensajes</h1>
         {# Mostrar total de mensajes no leídos si hay alguno #}
         {% if total_no_leidos > 0 %}
-        <p style="color: rgba(255, 255, 255, 0.7);">
+        <p style="color: #6c757d;">
             {# pluralize agrega 's' si total_no_leidos != 1 #}
             Tienes {{ total_no_leidos }} mensaje{{ total_no_leidos|pluralize }} sin leer
         </p>
@@ -284,7 +284,7 @@
         <h3>No tienes conversaciones</h3>
         
         {# Call-to-action: dirigir al usuario al Social Hub #}
-        <p>Ve al <a href="{% url 'peliculas:social_hub' %}" style="color: #e50914;">Social Hub</a> para conectar con otros usuarios</p>
+        <p>Ve al <a href="{% url 'peliculas:social_hub' %}" style="color: #2ecc71;">Social Hub</a> para conectar con otros usuarios</p>
     </div>
     {% endif %}
 </div>

@@ -26,7 +26,8 @@ class TMDBService:
             'query': query,
             'language': 'es-MX',
             'page': page,
-            'include_adult': False
+            'include_adult': False,
+            'with_genres': 12 
         }
         
         try:
@@ -63,22 +64,22 @@ class TMDBService:
             return None
     
     def obtener_peliculas_populares(self, page=1):
-        """
-        Obtiene películas populares
+        """Obtiene películas populares de AVENTURA
+    Args:
+        page (int): Número de página
         
-        Args:
-            page (int): Número de página
-            
-        Returns:
-            dict: Lista de películas populares
+    Returns:
+        dict: Lista de películas populares de aventura
         """
-        url = f"{self.base_url}/movie/popular"
+        url = f"{self.base_url}/discover/movie"  # Cambiado a discover
         params = {
             'api_key': self.api_key,
             'language': 'es-MX',
-            'page': page
+            'page': page,
+            'with_genres': 12,  # ID del género Aventura en TMDB
+            'sort_by': 'popularity.desc'
         }
-        
+    
         try:
             response = requests.get(url, params=params)
             response.raise_for_status()
@@ -208,7 +209,7 @@ class TMDBService:
             'presupuesto': detalles.get('budget', 0),
             'recaudacion': detalles.get('revenue', 0),
             'generos_ids': [g['id'] for g in detalles.get('genres', [])],
-            'generos_nombres': [g['name'] for g in detalles.get('generos', [])],
+            'generos_nombres': [g['name'] for g in detalles.get('genres', [])],
             'director_nombre': director_nombre,
             'actores_nombres': actores,
             'tmdb_id': movie_data['id'],

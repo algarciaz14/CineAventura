@@ -46,7 +46,8 @@ def index(request):
     peliculas_recientes = peliculas_aventura.order_by('-fecha_agregada')[:6]
     
     # Obtener todos los géneros para el menú (aunque solo mostramos aventura)
-    generos = Genero.objects.all()
+    # Solo mostrar el género Aventura
+    generos = Genero.objects.filter(nombre__iexact='aventura')
     
     # Recomendaciones personalizadas si esta autenticado - SOLO AVENTURA
     recomendaciones = []
@@ -184,6 +185,11 @@ def peliculas_por_genero(request, genero_id):
     
     # Obtiene el género o retorna 404
     genero = get_object_or_404(Genero, pk=genero_id)
+    
+    # AGREGAR ESTA VALIDACIÓN:
+    if genero.nombre.lower() != 'aventura':
+        messages.error(request, 'Solo mostramos películas de aventura.')
+        return redirect('peliculas:index')
     # Filtra películas por género y calcula promedio de calificaciones
     peliculas_list = Pelicula.objects.filter(generos=genero).annotate(
         promedio=Avg('calificaciones__puntuacion')
@@ -228,6 +234,9 @@ def buscar(request):
             Q(generos__nombre__icontains=query) |
             Q(director__nombre__icontains=query)
         ).distinct() # Elimina duplicados de relaciones many-to-many
+        genero_aventura = Genero.objects.filter(nombre__iexact='aventura').first()
+        if genero_aventura:
+            peliculas = peliculas.filter(generos=genero_aventura)
     
     context = {
         'query': query,

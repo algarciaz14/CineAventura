@@ -1,7 +1,7 @@
 """
-Django settings para el proyecto AkaFilms.
+Django settings para el proyecto Cine Aventura.
 
-Este archivo contiene la configuración principal de nuestro proyecto AkaFilms.
+Este archivo contiene la configuración principal de nuestro proyecto Cine Aventura.
 
 Variables de entorno requeridas (.env):
     SECRET_KEY: Clave secreta de Django (str)

@@ -1,5 +1,5 @@
 """
-ASGI config for akafilms project.
+ASGI config for Cine Aventura project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

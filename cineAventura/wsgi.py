@@ -1,5 +1,5 @@
 """
-Configuración WSGI para el proyecto AkaFilms.
+Configuración WSGI para el proyecto Cine Aventura.
 
 WSGI (Web Server Gateway Interface) es el estándar de Python para la comunicación
 entre servidores web y aplicaciones web. Este archivo expone la aplicación WSGI
@@ -25,7 +25,7 @@ from django.core.wsgi import get_wsgi_application
 # Establece la variable de entorno DJANGO_SETTINGS_MODULE si no está definida
 # Esta variable le indica a Django qué archivo de configuración usar
 #
-# Por defecto apunta a: akafilms.settings
+# Por defecto apunta a: cineAventura.settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cineAventura.settings')
 
 # Obtiene la aplicación WSGI de Django
