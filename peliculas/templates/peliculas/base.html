@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}AKA Films - Tu Portal de Cine{% endblock %}</title>
+    <title>{% block title %}Cine Aventura - Tu Portal de Películas de Aventura{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'peliculas/css/styles.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     {% block extra_css %}{% endblock %}
+    <link rel="icon" type="image/jpeg" href="{% static 'peliculas/img/logo-aventura.jpg' %}">
+    <link rel="shortcut icon" type="image/jpeg" href="{% static 'peliculas/img/logo-aventura.jpg' %}">
+
 </head>
 <body>
     <!-- Header -->
@@ -16,24 +19,17 @@
             <div class="container">
                 <div class="nav-wrapper">
                     <a href="{% url 'peliculas:index' %}" class="logo">
-                        <span class="logo-aka">AKA</span>
-                        <span class="logo-films">FILMS</span>
+                    {% load static %}
+                    <img src="{% static 'peliculas/img/logo-aventura.jpg' %}" class="logo-img" alt="Cine Aventura">
+
+                        <span class="logo-aka">CINE</span>
+                        <span class="logo-films">AVENTURA</span>
                     </a>
                     
                     <div class="nav-links">
                         <a href="{% url 'peliculas:index' %}" class="nav-link">Inicio</a>
                         
-                        <!-- Dropdown de Géneros -->
-                        <div class="dropdown">
-                            <button class="nav-link dropdown-toggle">Géneros</button>
-                            <div class="dropdown-menu">
-                                {% for genero in generos %}
-                                <a href="{% url 'peliculas:por_genero' genero.id %}" class="dropdown-item">
-                                    {{ genero.nombre }}
-                                </a>
-                                {% endfor %}
-                            </div>
-                        </div>
+        
                         
                         <!-- Enlaces de funcionalidades sociales -->
                         {% if user.is_authenticated %}
@@ -93,6 +89,7 @@
                                     <a href="{% url 'admin:index' %}" class="user-menu-item">
                                         ⚙️ Panel Admin
                                     </a>
+                                    <a href="{% url 'peliculas:buscar_tmdb' %}" class="nav-link">🎬 Importar Películas</a>
                                     {% endif %}
                                     <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
                                     <form action="{% url 'logout' %}" method="post" style="margin: 0;">
@@ -137,25 +134,18 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>AKA FILMS</h3>
-                    <p>Tu portal definitivo para descubrir, explorar y compartir tu pasión por el cine.</p>
+                    <h3>CINE AVENTURA</h3>
+                    <p>Tu portal especializado en películas de aventura. Explora mundos emocionantes y vive grandes aventuras.</p>
                     <p style="margin-top: 15px; font-size: 12px; opacity: 0.7;">
                         📄 Contenido bajo licencia 
                         <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" 
-                           target="_blank" 
-                           style="color: #e50914; text-decoration: none;">
-                           CC BY-NC-SA 4.0
+                        target="_blank" 
+                        style="color: #0de684ff; text-decoration: none;">
+                        CC BY-NC-SA 4.0
                         </a>
                     </p>
                 </div>
-                <div class="footer-section">
-                    <h4>Géneros</h4>
-                    <ul>
-                        {% for genero in generos|slice:":4" %}
-                        <li><a href="{% url 'peliculas:por_genero' genero.id %}">{{ genero.nombre }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
+        
                 <div class="footer-section">
                     <h4>Acerca de</h4>
                     <ul>
@@ -179,7 +169,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 AKA Films. Todos los derechos reservados. Materia Riesgo Tecnológico</p>
+                <p>&copy; 2025 Cine Aventura. Todos los derechos reservados. Materia Ingienieria de Software</p>
             </div>
         </div>
     </footer>
@@ -347,7 +337,7 @@
 
     function solicitarPermisoNotificaciones() {
         if ('Notification' in window && Notification.permission === 'default') {
-            console.log('AKA Films puede enviarte notificaciones de mensajes nuevos');
+            console.log('CINE AVENTURA puede enviarte notificaciones de mensajes nuevos');
         }
     }
 
@@ -405,7 +395,7 @@
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background: #e50914;
+            background: #2ecc71;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -472,7 +462,7 @@
         }
 
         .user-menu-item.logout {
-            color: #e50914;
+            color: #2ecc71;
         }
 
         .user-menu-item.logout:hover {
@@ -611,7 +601,7 @@
             position: absolute;
             top: -5px;
             right: -5px;
-            background: #e50914;
+            background: #2ecc71;
             color: white;
             font-size: 11px;
             font-weight: bold;

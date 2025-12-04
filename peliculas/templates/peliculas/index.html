@@ -1,46 +1,126 @@
-{# Template de la página principal (Home) - Extiende la plantilla base de la aplicación #}
 {% extends 'peliculas/base.html' %}
 
-{# Bloque principal de contenido de la página de inicio #}
 {% block content %}
 
-{# Sección Hero - Banner principal con buscador destacado #}
-<section class="hero">
-    {# Overlay oscuro sobre la imagen de fondo para mejorar legibilidad #}
-    <div class="hero-overlay"></div>
+{# Sección Hero #}
+{# Hero Carousel #}
+<section class="hero-carousel">
+    {# Botón cerrar (opcional) #}
+    <button class="carousel-close" onclick="document.querySelector('.hero-carousel').style.display='none'">×</button>
     
-    {# Contenido principal del hero #}
-    <div class="hero-content">
-        <h1 class="hero-title">Descubre el Mundo del Cine</h1>
-        <p class="hero-subtitle">Miles de películas, reseñas y recomendaciones personalizadas</p>
+    {# Flechas de navegación #}
+    <button class="carousel-arrow carousel-arrow-prev" onclick="cambiarSlide(-1)">‹</button>
+    <button class="carousel-arrow carousel-arrow-next" onclick="cambiarSlide(1)">›</button>
+    
+    {# Slides del carrusel #}
+    {% for pelicula in peliculas_destacadas|slice:":5" %}
+    <div class="carousel-slide {% if forloop.first %}active{% endif %}">
+        {# Fondo con poster de la película #}
+        <div class="carousel-background" style="background-image: url('{{ pelicula.poster }}');"></div>
         
-        {# Buscador principal de películas en el hero #}
-        <form action="{% url 'peliculas:buscar' %}" method="get" class="hero-search">
-            {# Campo de texto para la búsqueda #}
-            <input type="text" name="q" placeholder="¿Qué película quieres ver hoy?" class="hero-search-input">
-            {# Botón de envío del formulario de búsqueda #}
-            <button type="submit" class="hero-search-btn">Buscar</button>
-        </form>
+        {# Contenido del slide #}
+        <div class="carousel-content">
+            <div class="container">
+                <div class="carousel-info">
+                    <span class="carousel-badge">Película Destacada</span>
+                    <h1 class="carousel-title">{{ pelicula.titulo }}</h1>
+                    <p class="carousel-description">
+                        {{ pelicula.sinopsis|truncatewords:30 }}
+                    </p>
+                    
+                    <div class="carousel-buttons">
+                        {% if pelicula.trailer %}
+                        <a href="{{ pelicula.trailer }}" target="_blank" class="carousel-btn carousel-btn-primary">
+                            ▶ Ver Ahora
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'peliculas:detalle' pelicula.id %}" class="carousel-btn carousel-btn-secondary">
+                            ℹ Más Información
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+    {# Indicadores (dots) #}
+    <div class="carousel-controls">
+        {% for pelicula in peliculas_destacadas|slice:":5" %}
+        <span class="carousel-dot {% if forloop.first %}active{% endif %}" onclick="irASlide({{ forloop.counter0 }})"></span>
+        {% endfor %}
     </div>
 </section>
 
-{# Sección de Películas Destacadas - Muestra películas con mejor calificación o destacadas #}
+{# JavaScript del Carrusel #}
+<script>
+let slideActual = 0;
+const slides = document.querySelectorAll('.carousel-slide');
+const dots = document.querySelectorAll('.carousel-dot');
+const totalSlides = slides.length;
+
+function mostrarSlide(n) {
+    // Ocultar todos los slides
+    slides.forEach(slide => slide.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+    
+    // Asegurar que n esté en rango
+    if (n >= totalSlides) { slideActual = 0; }
+    if (n < 0) { slideActual = totalSlides - 1; }
+    
+    // Mostrar slide actual
+    slides[slideActual].classList.add('active');
+    dots[slideActual].classList.add('active');
+}
+
+function cambiarSlide(direccion) {
+    slideActual += direccion;
+    mostrarSlide(slideActual);
+}
+
+function irASlide(n) {
+    slideActual = n;
+    mostrarSlide(slideActual);
+}
+
+// Auto-play: cambiar slide cada 5 segundos
+let autoplay = setInterval(() => {
+    cambiarSlide(1);
+}, 5000);
+
+// Pausar autoplay al pasar el mouse
+document.querySelector('.hero-carousel').addEventListener('mouseenter', () => {
+    clearInterval(autoplay);
+});
+
+// Reanudar autoplay al quitar el mouse
+document.querySelector('.hero-carousel').addEventListener('mouseleave', () => {
+    autoplay = setInterval(() => {
+        cambiarSlide(1);
+    }, 5000);
+});
+
+// Controles con teclado
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') cambiarSlide(-1);
+    if (e.key === 'ArrowRight') cambiarSlide(1);
+});
+</script>
+
+{# Sección de Películas Destacadas #}
 <section class="section">
     <div class="container">
-        {# Título de la sección con emoji decorativo #}
-        <h2 class="section-title">🌟 Películas Destacadas</h2>
+        <h2 class="section-title">Películas <span class="highlight">Destacadas</span></h2>
         
-        {# Grid responsivo de tarjetas de películas #}
         <div class="movies-grid">
-            {# Itera sobre cada película destacada #}
             {% for pelicula in peliculas_destacadas %}
             <div class="movie-card">
-                {# Enlace a la página de detalle de la película #}
                 <a href="{% url 'peliculas:detalle' pelicula.id %}" class="movie-link">
                     
-                    {# Sección del póster de la película #}
                     <div class="movie-poster">
-                        {# Muestra el póster si existe, sino muestra un placeholder #}
+                        {# Badge verde "Destacada" #}
+                        <span class="badge-destacada">Destacada</span>
+                        
                         {% if pelicula.poster %}
                         <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
                         {% else %}
@@ -49,25 +129,22 @@
                         </div>
                         {% endif %}
                         
-                        {# Badge flotante con la calificación promedio (formato: 7.5) #}
                         <div class="movie-rating">
                             ⭐ {{ pelicula.calificacion_promedio|floatformat:1 }}
                         </div>
                     </div>
                     
-                    {# Información textual de la película #}
                     <div class="movie-info">
-                        {# Título de la película #}
                         <h3 class="movie-title">{{ pelicula.titulo }}</h3>
-                        {# Año de estreno #}
-                        <p class="movie-year">{{ pelicula.año }}</p>
                         
-                        {# Géneros de la película - Muestra solo los primeros 2 #}
-                        <div class="movie-genres">
-                            {% for genero in pelicula.generos.all|slice:":2" %}
-                            <span class="genre-tag">{{ genero.nombre }}</span>
-                            {% endfor %}
+                        {# Metadatos: Año, Duración, Calificación #}
+                        <div class="movie-meta-info">
+                            <span>📅 {{ pelicula.año }}</span>
+                            <span>⏱️ {{ pelicula.duracion }} min</span>
                         </div>
+                        
+                        {# Sinopsis corta (primeras 3 líneas) #}
+                        <p class="movie-synopsis-short">{{ pelicula.sinopsis|truncatewords:20 }}</p>
                     </div>
                 </a>
             </div>
@@ -76,23 +153,17 @@
     </div>
 </section>
 
-{# Sección de Películas Recientes - Muestra las últimas películas agregadas al catálogo #}
+{# Sección de Películas Recientes #}
 <section class="section section-alt">
     <div class="container">
-        {# Título de la sección con emoji decorativo #}
-        <h2 class="section-title">🆕 Agregadas Recientemente</h2>
+        <h2 class="section-title">🆕 Agregadas <span class="highlight">Recientemente</span></h2>
         
-        {# Grid responsivo de tarjetas de películas #}
         <div class="movies-grid">
-            {# Itera sobre cada película reciente #}
             {% for pelicula in peliculas_recientes %}
             <div class="movie-card">
-                {# Enlace a la página de detalle de la película #}
                 <a href="{% url 'peliculas:detalle' pelicula.id %}" class="movie-link">
                     
-                    {# Sección del póster de la película #}
                     <div class="movie-poster">
-                        {# Muestra el póster si existe, sino muestra un placeholder #}
                         {% if pelicula.poster %}
                         <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
                         {% else %}
@@ -101,25 +172,22 @@
                         </div>
                         {% endif %}
                         
-                        {# Badge flotante con la calificación promedio (formato: 7.5) #}
                         <div class="movie-rating">
                             ⭐ {{ pelicula.calificacion_promedio|floatformat:1 }}
                         </div>
                     </div>
                     
-                    {# Información textual de la película #}
                     <div class="movie-info">
-                        {# Título de la película #}
                         <h3 class="movie-title">{{ pelicula.titulo }}</h3>
-                        {# Año de estreno #}
-                        <p class="movie-year">{{ pelicula.año }}</p>
                         
-                        {# Géneros de la película - Muestra solo los primeros 2 #}
-                        <div class="movie-genres">
-                            {% for genero in pelicula.generos.all|slice:":2" %}
-                            <span class="genre-tag">{{ genero.nombre }}</span>
-                            {% endfor %}
+                        {# Metadatos: Año, Duración #}
+                        <div class="movie-meta-info">
+                            <span>📅 {{ pelicula.año }}</span>
+                            <span>⏱️ {{ pelicula.duracion }} min</span>
                         </div>
+                        
+                        {# Sinopsis corta #}
+                        <p class="movie-synopsis-short">{{ pelicula.sinopsis|truncatewords:20 }}</p>
                     </div>
                 </a>
             </div>
@@ -127,27 +195,16 @@
         </div>
     </div>
 </section>
-
-{# Sección de Géneros - Navegación por categorías de películas #}
+{# Sección de Catálogo Completo #}
 <section class="section">
-    <div class="container">
-        {# Título de la sección con emoji decorativo #}
-        <h2 class="section-title">🎭 Explora por Género</h2>
-        
-        {# Grid de tarjetas de géneros #}
-        <div class="genres-grid">
-            {# Itera sobre cada género disponible #}
-            {% for genero in generos %}
-            {# Enlace a la página de películas filtradas por este género #}
-            <a href="{% url 'peliculas:por_genero' genero.id %}" class="genre-card">
-                {# Nombre del género #}
-                <h3>{{ genero.nombre }}</h3>
-                {# Contador de películas en este género #}
-                <p>{{ genero.peliculas.count }} películas</p>
-            </a>
-            {% endfor %}
-        </div>
+    <div class="container" style="text-align: center;">
+        <h2 class="section-title">Catálogo <span class="highlight">Completo</span></h2>
+        <p style="color: #6c757d; font-size: 18px; margin-bottom: 30px;">
+            Explora nuestra colección completa de películas de aventura
+        </p>
+        <a href="{% url 'peliculas:catalogo' %}" class="btn-primary" style="display: inline-block; padding: 15px 40px; font-size: 18px;">
+            Ver Catálogo Completo →
+        </a>
     </div>
 </section>
-
 {% endblock %}

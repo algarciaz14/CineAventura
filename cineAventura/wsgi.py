@@ -26,7 +26,7 @@ from django.core.wsgi import get_wsgi_application
 # Esta variable le indica a Django qué archivo de configuración usar
 #
 # Por defecto apunta a: akafilms.settings
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'akafilms.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cineAventura.settings')
 
 # Obtiene la aplicación WSGI de Django
 # Esta es la interfaz entre el servidor web y tu aplicación Django

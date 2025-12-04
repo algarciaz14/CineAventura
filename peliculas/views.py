@@ -27,33 +27,96 @@ def index(request):
     """
     Vista principal - Página de inicio.
     
-    Muestra películas destacadas, recientes y recomendaciones personalizadas.
+    Muestra películas de AVENTURA destacadas, recientes y recomendaciones personalizadas.
     Las recomendaciones solo aparecen para usuarios autenticados.
     """
     
-    # Películas con mejor calificación promedio (top 6)
-    peliculas_destacadas = Pelicula.objects.annotate(
-        promedio=Avg('calificaciones__puntuacion')
-    ).order_by('-promedio')[:6]
+    # Obtener el género Aventura
+    genero_aventura = Genero.objects.filter(nombre__iexact='aventura').first()
     
-    # Películas agregadas más recientemente (top 6)
-    peliculas_recientes = Pelicula.objects.order_by('-fecha_agregada')[:6]
-    # Obtener todos los géneros para el menú
+    # Filtrar solo películas de aventura
+    peliculas_aventura = Pelicula.objects.filter(generos=genero_aventura) if genero_aventura else Pelicula.objects.none()
+    
+    # Películas con mejor calificación promedio (top 6) - SOLO AVENTURA
+    peliculas_destacadas = peliculas_aventura.annotate(
+        promedio=Avg('calificaciones__puntuacion')
+    ).order_by('-promedio')[:5]
+    
+    # Películas agregadas más recientemente (top 6) - SOLO AVENTURA
+    peliculas_recientes = peliculas_aventura.order_by('-fecha_agregada')[:6]
+    
+    # Obtener todos los géneros para el menú (aunque solo mostramos aventura)
     generos = Genero.objects.all()
     
-    # Recomendaciones personalizadas si esta autenticado
+    # Recomendaciones personalizadas si esta autenticado - SOLO AVENTURA
     recomendaciones = []
     if request.user.is_authenticated:
-        recomendaciones = obtener_recomendaciones(request.user)[:6]
+        recomendaciones = obtener_recomendaciones_aventura(request.user)[:6]
     
     context = {
         'peliculas_destacadas': peliculas_destacadas,
         'peliculas_recientes': peliculas_recientes,
         'recomendaciones': recomendaciones,
         'generos': generos,
+        'genero_aventura': genero_aventura,
     }
     return render(request, 'peliculas/index.html', context)
 
+def catalogo_completo(request):
+    """
+    Vista del catálogo completo de películas con búsqueda y ordenamiento.
+    """
+    # Obtener el género Aventura
+    genero_aventura = Genero.objects.filter(nombre__iexact='aventura').first()
+    
+    # Filtrar solo películas de aventura
+    peliculas_list = Pelicula.objects.filter(generos=genero_aventura) if genero_aventura else Pelicula.objects.all()
+    
+    # Anotar con calificación promedio
+    peliculas_list = peliculas_list.annotate(
+        promedio=Avg('calificaciones__puntuacion')
+    )
+    
+    # Búsqueda
+    query = request.GET.get('q', '').strip()
+    if query:
+        peliculas_list = peliculas_list.filter(
+            Q(titulo__icontains=query) |
+            Q(titulo_original__icontains=query) |
+            Q(sinopsis__icontains=query)
+        )
+    
+    # Ordenamiento
+    orden = request.GET.get('orden', 'az')
+    
+    if orden == 'az':
+        peliculas_list = peliculas_list.order_by('titulo')
+    elif orden == 'za':
+        peliculas_list = peliculas_list.order_by('-titulo')
+    elif orden == 'reciente':
+        peliculas_list = peliculas_list.order_by('-año', '-fecha_agregada')
+    elif orden == 'antiguo':
+        peliculas_list = peliculas_list.order_by('año', 'fecha_agregada')
+    elif orden == 'mejor':
+        peliculas_list = peliculas_list.order_by('-promedio', '-año')
+    elif orden == 'peor':
+        peliculas_list = peliculas_list.order_by('promedio', 'año')
+    
+    # Paginación: 12 películas por página
+    paginator = Paginator(peliculas_list, 12)
+    page_number = request.GET.get('page')
+    peliculas = paginator.get_page(page_number)
+    
+    generos = Genero.objects.all()
+    
+    context = {
+        'peliculas': peliculas,
+        'query': query,
+        'orden': orden,
+        'total_peliculas': peliculas_list.count(),
+        'generos': generos,
+    }
+    return render(request, 'peliculas/catalogo.html', context)
 
 def detalle_pelicula(request, pelicula_id):
     """
@@ -358,7 +421,8 @@ def mi_perfil(request):
     mis_resenas = Resena.objects.filter(usuario=request.user).select_related('pelicula')
     
     # Recomendaciones personalizadas
-    recomendaciones = obtener_recomendaciones(request.user)[:12]
+    # Recomendaciones personalizadas - SOLO AVENTURA
+    recomendaciones = obtener_recomendaciones_aventura(request.user)[:12]
     
     generos = Genero.objects.all()
     
@@ -691,25 +755,29 @@ def mensajes_no_leidos_json(request):
 # ALGORITMO DE RECOMENDACIONES
 # ========================================
 
-def obtener_recomendaciones(usuario, limite=12):
-    """Algoritmo de recomendacion personalizado"""
-    # Obtener peli­culas ya vistas
+def obtener_recomendaciones_aventura(usuario, limite=12):
+    """Algoritmo de recomendacion personalizado - SOLO PELICULAS DE AVENTURA"""
+    
+    # Obtener género aventura
+    genero_aventura = Genero.objects.filter(nombre__iexact='aventura').first()
+    if not genero_aventura:
+        return Pelicula.objects.none()
+    
+    # Obtener películas ya vistas
     peliculas_vistas = set()
     peliculas_vistas.update(usuario.peliculas_favoritas.values_list('id', flat=True))
     peliculas_vistas.update(usuario.calificaciones.values_list('pelicula_id', flat=True))
     peliculas_vistas.update(usuario.historial.values_list('pelicula_id', flat=True))
     
-    # Obtener generos favoritos
-    calificaciones_altas = usuario.calificaciones.filter(puntuacion__gte=7)
-    generos_favoritos = Genero.objects.filter(
-        peliculas__calificaciones__in=calificaciones_altas
-    ).annotate(
-        conteo=Count('id')
-    ).order_by('-conteo')[:3]
+    # Obtener calificaciones altas del usuario en películas de aventura
+    calificaciones_altas = usuario.calificaciones.filter(
+        puntuacion__gte=7,
+        pelicula__generos=genero_aventura
+    )
     
-    # Peli­culas similares por genero
+    # Películas de aventura recomendadas por calificación
     recomendaciones_genero = Pelicula.objects.filter(
-        generos__in=generos_favoritos
+        generos=genero_aventura
     ).exclude(
         id__in=peliculas_vistas
     ).annotate(
@@ -719,9 +787,9 @@ def obtener_recomendaciones(usuario, limite=12):
         total_calificaciones__gte=1
     ).order_by('-promedio', '-total_calificaciones')[:limite//2]
     
-    # Filtrado colaborativo
+    # Filtrado colaborativo - solo aventura
     usuarios_similares = User.objects.filter(
-        calificaciones__pelicula__in=usuario.peliculas_favoritas.all()
+        calificaciones__pelicula__in=usuario.peliculas_favoritas.filter(generos=genero_aventura)
     ).exclude(
         id=usuario.id
     ).annotate(
@@ -729,6 +797,7 @@ def obtener_recomendaciones(usuario, limite=12):
     ).order_by('-coincidencias')[:5]
     
     recomendaciones_colaborativas = Pelicula.objects.filter(
+        generos=genero_aventura,
         calificaciones__usuario__in=usuarios_similares,
         calificaciones__puntuacion__gte=7
     ).exclude(
@@ -753,8 +822,8 @@ def obtener_recomendaciones(usuario, limite=12):
 
 @login_required
 def recomendaciones_view(request):
-    """Vista dedicada a recomendaciones personalizadas"""
-    recomendaciones = obtener_recomendaciones(request.user, limite=24)
+    """Vista dedicada a recomendaciones personalizadas - SOLO AVENTURA"""
+    recomendaciones = obtener_recomendaciones_aventura(request.user, limite=24)
     generos = Genero.objects.all()
     
     context = {
@@ -915,3 +984,107 @@ def enviar_mensaje_watch_party(request, party_id):
     
     return JsonResponse({'error': 'Metodo no permitido'}, status=405)
 
+from .tmdb_service import TMDBService, GENRE_MAPPING
+
+@login_required
+def buscar_tmdb(request):
+    """Vista para buscar películas en TMDB"""
+    if not request.user.is_staff:
+        messages.error(request, 'No tienes permiso para acceder a esta página.')
+        return redirect('peliculas:index')
+    
+    tmdb = TMDBService()
+    resultados = []
+    query = request.GET.get('q', '').strip()
+    
+    if query:
+        data = tmdb.buscar_peliculas(query)
+        if data and 'results' in data:
+            resultados = data['results'][:20]  # Limitar a 20 resultados
+    
+    generos = Genero.objects.all()
+    
+    context = {
+        'resultados': resultados,
+        'query': query,
+        'generos': generos,
+    }
+    return render(request, 'peliculas/tmdb_buscar.html', context)
+
+
+@login_required
+def importar_pelicula_tmdb(request, tmdb_id):
+    """Importa una película desde TMDB a la base de datos local"""
+    if not request.user.is_staff:
+        messages.error(request, 'No tienes permiso para realizar esta acción.')
+        return redirect('peliculas:index')
+    
+    tmdb = TMDBService()
+    
+    # Obtener datos de TMDB
+    movie_data = tmdb.obtener_detalles_pelicula(tmdb_id)
+    
+    if not movie_data:
+        messages.error(request, 'No se pudo obtener la información de la película.')
+        return redirect('peliculas:buscar_tmdb')
+    
+    # Formatear datos
+    datos_formateados = tmdb.formatear_pelicula_para_db(movie_data)
+    
+    if not datos_formateados:
+        messages.error(request, 'Error al procesar los datos de la película.')
+        return redirect('peliculas:buscar_tmdb')
+    
+    try:
+        # Verificar si ya existe
+        if Pelicula.objects.filter(titulo=datos_formateados['titulo'], año=datos_formateados['año']).exists():
+            messages.warning(request, f'La película "{datos_formateados["titulo"]}" ya existe en la base de datos.')
+            return redirect('peliculas:buscar_tmdb')
+        
+        # Crear o obtener director
+        director = None
+        if datos_formateados['director_nombre']:
+            director, _ = Director.objects.get_or_create(
+                nombre=datos_formateados['director_nombre'],
+                defaults={'nacionalidad': datos_formateados['pais']}
+            )
+        
+        # Crear película
+        pelicula = Pelicula.objects.create(
+            titulo=datos_formateados['titulo'],
+            titulo_original=datos_formateados['titulo_original'],
+            sinopsis=datos_formateados['sinopsis'],
+            año=datos_formateados['año'],
+            duracion=datos_formateados['duracion'],
+            director=director,
+            pais=datos_formateados['pais'],
+            idioma=datos_formateados['idioma'],
+            poster=datos_formateados['poster'],
+            trailer=datos_formateados['trailer'],
+            fecha_estreno=datos_formateados['fecha_estreno'],
+            presupuesto=datos_formateados['presupuesto'],
+            recaudacion=datos_formateados['recaudacion'],
+            clasificacion='PG-13'  # Valor por defecto
+        )
+        
+        # Asignar géneros
+        for genre_name in datos_formateados['generos_nombres']:
+            genero, _ = Genero.objects.get_or_create(nombre=genre_name)
+            pelicula.generos.add(genero)
+        
+        # Crear actores
+        for actor_nombre in datos_formateados['actores_nombres']:
+            actor, _ = Actor.objects.get_or_create(
+                nombre=actor_nombre,
+                defaults={'nacionalidad': datos_formateados['pais']}
+            )
+            pelicula.actores.add(actor)
+        
+        pelicula.save()
+        
+        messages.success(request, f'¡Película "{pelicula.titulo}" importada exitosamente!')
+        return redirect('peliculas:detalle', pelicula_id=pelicula.id)
+        
+    except Exception as e:
+        messages.error(request, f'Error al importar la película: {str(e)}')
+        return redirect('peliculas:buscar_tmdb')

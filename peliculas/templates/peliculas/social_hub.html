@@ -2,7 +2,7 @@
 {% extends 'peliculas/base.html' %}
 
 {# Define el título de la página que aparecerá en la pestaña del navegador #}
-{% block title %}Social Hub - AKA Films{% endblock %}
+{% block title %}Social Hub - Cine Aventura{% endblock %}
 
 {# Bloque de CSS adicional específico para esta página #}
 {% block extra_css %}
@@ -23,7 +23,7 @@
     /* Título con gradiente de color */
     .social-header h1 {
         font-size: 48px;
-        background: linear-gradient(135deg, #e50914, #ff6b6b);
+        background: linear-gradient(135deg, #2ecc71, #46d369);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -33,7 +33,7 @@
     /* Subtítulo descriptivo */
     .social-header p {
         font-size: 18px;
-        color: rgba(255, 255, 255, 0.7);
+        color: #212529; /* Texto negro para fondo blanco */
     }
     
     /* Sección del buscador de usuarios */
@@ -55,15 +55,19 @@
         border: 2px solid rgba(255, 255, 255, 0.2);
         border-radius: 30px;
         background: rgba(255, 255, 255, 0.05);
-        color: #fff;
+        color: #212529;
         font-size: 16px;
         transition: all 0.3s;
     }
     
+    .search-box input::placeholder {
+    color: #6c757d;  /* Gris para que se vea el placeholder */
+    }
+
     /* Efecto focus del input de búsqueda */
     .search-box input:focus {
         outline: none;
-        border-color: #e50914;
+        border-color: #2ecc71;
         background: rgba(255, 255, 255, 0.1);
     }
     
@@ -73,7 +77,7 @@
         right: 5px;
         top: 50%;
         transform: translateY(-50%);
-        background: linear-gradient(135deg, #e50914, #c40812);
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
         border: none;
         padding: 10px 20px;
         border-radius: 25px;
@@ -95,8 +99,9 @@
         border-radius: 10px;
         margin-bottom: 30px;
         text-align: center;
-        color: rgba(255, 255, 255, 0.8);
+        color: #212529; 
         font-size: 16px;
+        border: 1px solid #dee2e6;
     }
     
     /* Grid responsivo de tarjetas de usuarios */
@@ -127,7 +132,7 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #e50914, #ff6b6b);
+        background: linear-gradient(90deg, #2ecc71, #46d369);
         transform: scaleX(0);
         transition: transform 0.3s;
     }
@@ -135,8 +140,8 @@
     /* Efecto hover de la tarjeta de usuario - Elevación y borde */
     .usuario-card:hover {
         transform: translateY(-5px);
-        border-color: rgba(229, 9, 20, 0.3);
-        box-shadow: 0 10px 30px rgba(229, 9, 20, 0.2);
+        border-color: rgba(46, 204, 113, 0.3);
+        box-shadow: 0 10px 30px rgba(46, 204, 113, 0.2);
     }
     
     /* Muestra la barra superior en hover */
@@ -149,7 +154,7 @@
         width: 100px;
         height: 100px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #e50914, #ff6b6b);
+        background: linear-gradient(135deg, #2ecc71, #46d369);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -157,21 +162,21 @@
         font-weight: bold;
         color: white;
         margin: 0 auto 20px;
-        box-shadow: 0 5px 20px rgba(229, 9, 20, 0.3);
+        box-shadow: 0 5px 20px rgba(46, 204, 113, 0.3);
     }
     
     /* Nombre completo del usuario */
     .usuario-nombre {
         font-size: 22px;
         font-weight: 600;
-        color: #fff;
+        color: #212529;
         margin-bottom: 5px;
     }
     
     /* Nombre de usuario con @ */
     .usuario-username {
         font-size: 14px;
-        color: rgba(255, 255, 255, 0.6);
+        color: #6c757d;
         margin-bottom: 20px;
     }
     
@@ -181,8 +186,8 @@
         justify-content: space-around;
         margin: 20px 0;
         padding: 15px 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid #dee2e6;
+        border-bottom: 1px solid #dee2e6;
     }
     
     /* Contenedor individual de estadística */
@@ -194,14 +199,14 @@
     .stat-value {
         font-size: 24px;
         font-weight: bold;
-        color: #e50914;
+        color: #2ecc71;
         display: block;
     }
     
     /* Etiqueta descriptiva de la estadística */
     .stat-label {
         font-size: 12px;
-        color: rgba(255, 255, 255, 0.6);
+        color: #6c757d;
         margin-top: 3px;
     }
     
@@ -227,20 +232,20 @@
     
     /* Botón de ver perfil - Estilo outline */
     .btn-ver-perfil {
-        background: rgba(255, 255, 255, 0.1);
-        color: #fff;
-        border: 2px solid rgba(255, 255, 255, 0.2);
+        background: rgba(46, 204, 113, 0.1);
+        color: #2ecc71;
+        border: 2px solid #2ecc71;
     }
     
     /* Efecto hover del botón ver perfil */
     .btn-ver-perfil:hover {
-        background: rgba(255, 255, 255, 0.2);
-        border-color: rgba(255, 255, 255, 0.4);
+        background: rgba(46, 204, 113, 0.2);
+        border-color: #27ae60;
     }
     
     /* Botón de mensaje - Estilo filled con gradiente */
     .btn-mensaje {
-        background: linear-gradient(135deg, #e50914, #c40812);
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
         color: white;
         border: none;
     }
@@ -248,7 +253,7 @@
     /* Efecto hover del botón mensaje */
     .btn-mensaje:hover {
         transform: scale(1.05);
-        box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
+        box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
     }
     
     /* Contenedor de paginación */
@@ -262,8 +267,8 @@
     /* Estilos para enlaces y texto de paginación */
     .pagination a, .pagination span {
         padding: 10px 15px;
-        background: rgba(255, 255, 255, 0.1);
-        color: #fff;
+        background: rgba(46, 204, 113, 0.1);
+        color: #212529;
         text-decoration: none;
         border-radius: 5px;
         transition: all 0.3s;
@@ -271,12 +276,13 @@
     
     /* Efecto hover de enlaces de paginación */
     .pagination a:hover {
-        background: #e50914;
+        background: #2ecc71;
     }
     
     /* Indicador de página actual */
     .pagination .current {
-        background: #e50914;
+        background: #2ecc71;
+        color: white;
         font-weight: bold;
     }
     
@@ -284,7 +290,11 @@
     .empty-state {
         text-align: center;
         padding: 80px 20px;
-        color: rgba(255, 255, 255, 0.6);
+        color: #6c757d;
+    }
+    
+    .empty-state h3 {
+    color: #212529;  /* Título en negro */
     }
     
     /* Icono grande del estado vacío */

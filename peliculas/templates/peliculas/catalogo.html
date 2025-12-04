@@ -1,0 +1,111 @@
+{% extends 'peliculas/base.html' %}
+
+{% block content %}
+
+{# Header del Catálogo #}
+<section class="catalogo-header">
+    <div class="container">
+        <h1 class="catalogo-title">Catálogo <span class="highlight">Completo</span></h1>
+        <p class="catalogo-subtitle">Explora nuestra colección de películas de aventura</p>
+        
+        {# Controles de búsqueda y filtros #}
+        <div class="catalogo-controls">
+            {# Buscador #}
+            <form action="{% url 'peliculas:catalogo' %}" method="get" class="catalogo-search">
+                <input 
+                    type="text" 
+                    name="q" 
+                    value="{{ query }}"
+                    placeholder="Buscar películas..." 
+                    class="catalogo-search-input"
+                >
+                <input type="hidden" name="orden" value="{{ orden }}">
+                <button type="submit" class="catalogo-search-btn">🔍</button>
+            </form>
+            
+            {# Selector de ordenamiento #}
+            <form action="{% url 'peliculas:catalogo' %}" method="get" class="catalogo-sort">
+                <select name="orden" class="catalogo-select" onchange="this.form.submit()">
+                    <option value="az" {% if orden == 'az' %}selected{% endif %}>Alfabético (A-Z)</option>
+                    <option value="za" {% if orden == 'za' %}selected{% endif %}>Alfabético (Z-A)</option>
+                    <option value="reciente" {% if orden == 'reciente' %}selected{% endif %}>Año (Más reciente)</option>
+                    <option value="antiguo" {% if orden == 'antiguo' %}selected{% endif %}>Año (Más antiguo)</option>
+                    <option value="mejor" {% if orden == 'mejor' %}selected{% endif %}>Mejor calificadas</option>
+                    <option value="peor" {% if orden == 'peor' %}selected{% endif %}>Menor calificadas</option>
+                </select>
+                {% if query %}
+                <input type="hidden" name="q" value="{{ query }}">
+                {% endif %}
+            </form>
+        </div>
+        
+        {# Contador de resultados #}
+        <p class="catalogo-count">{{ total_peliculas }} película{{ total_peliculas|pluralize }} encontrada{{ total_peliculas|pluralize }}</p>
+    </div>
+</section>
+
+{# Grid de películas #}
+<section class="section">
+    <div class="container">
+        {% if peliculas %}
+        <div class="movies-grid">
+            {% for pelicula in peliculas %}
+            <div class="movie-card">
+                <a href="{% url 'peliculas:detalle' pelicula.id %}" class="movie-link">
+                    
+                    <div class="movie-poster">
+                        {% if pelicula.poster %}
+                        <img src="{{ pelicula.poster }}" alt="{{ pelicula.titulo }}">
+                        {% else %}
+                        <div class="movie-poster-placeholder">
+                            <span>🎬</span>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="movie-rating">
+                            ⭐ {{ pelicula.calificacion_promedio|floatformat:1 }}
+                        </div>
+                    </div>
+                    
+                    <div class="movie-info">
+                        <h3 class="movie-title">{{ pelicula.titulo }}</h3>
+                        
+                        <div class="movie-meta-info">
+                            <span>📅 {{ pelicula.año }}</span>
+                            <span>⏱️ {{ pelicula.duracion }} min</span>
+                        </div>
+                        
+                        <p class="movie-synopsis-short">{{ pelicula.sinopsis|truncatewords:20 }}</p>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {# Paginación #}
+        {% if peliculas.has_other_pages %}
+        <div class="pagination">
+            {% if peliculas.has_previous %}
+            <a href="?page={{ peliculas.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if orden %}&orden={{ orden }}{% endif %}" class="pagination-link">← Anterior</a>
+            {% endif %}
+            
+            <span class="pagination-info">
+                Página {{ peliculas.number }} de {{ peliculas.paginator.num_pages }}
+            </span>
+            
+            {% if peliculas.has_next %}
+            <a href="?page={{ peliculas.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if orden %}&orden={{ orden }}{% endif %}" class="pagination-link">Siguiente →</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <div class="no-results-container">
+            <p class="no-results">No se encontraron películas</p>
+            <p class="no-results-hint">Intenta con otros términos de búsqueda</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'peliculas/base.html' %}
+
+{% block title %}Buscar Películas en TMDB - Cine Aventura{% endblock %}
+
+{% block content %}
+
+<section class="catalogo-header">
+    <div class="container">
+        <h1 class="catalogo-title">Buscar en <span class="highlight">TMDB</span></h1>
+        <p class="catalogo-subtitle">Importa películas desde The Movie Database</p>
+        
+        <form action="{% url 'peliculas:buscar_tmdb' %}" method="get" class="catalogo-search" style="max-width: 600px; margin: 20px auto;">
+            <input 
+                type="text" 
+                name="q" 
+                value="{{ query }}"
+                placeholder="Buscar película por título..." 
+                class="catalogo-search-input"
+                required
+            >
+            <button type="submit" class="catalogo-search-btn">🔍 Buscar</button>
+        </form>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        {% if query %}
+            {% if resultados %}
+            <div class="movies-grid">
+                {% for movie in resultados %}
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        {% if movie.poster_path %}
+                        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+                        {% else %}
+                        <div class="movie-poster-placeholder">
+                            <span>🎬</span>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="movie-rating">
+                            ⭐ {{ movie.vote_average|floatformat:1 }}
+                        </div>
+                    </div>
+                    
+                    <div class="movie-info">
+                        <h3 class="movie-title">{{ movie.title }}</h3>
+                        
+                        <div class="movie-meta-info">
+                            <span>📅 {{ movie.release_date|slice:":4" }}</span>
+                        </div>
+                        
+                        <p class="movie-synopsis-short">{{ movie.overview|truncatewords:15 }}</p>
+                        
+                        <a href="{% url 'peliculas:importar_tmdb' movie.id %}" 
+                           class="btn-primary" 
+                           style="display: block; text-align: center; margin-top: 10px; padding: 10px; font-size: 14px;">
+                            ➕ Importar
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="no-results-container">
+                <p class="no-results">No se encontraron resultados para "{{ query }}"</p>
+                <p class="no-results-hint">Intenta con otro término de búsqueda</p>
+            </div>
+            {% endif %}
+        {% else %}
+        <div class="no-results-container">
+            <p class="no-results">Realiza una búsqueda para comenzar</p>
+            <p class="no-results-hint">Busca películas por título en The Movie Database</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

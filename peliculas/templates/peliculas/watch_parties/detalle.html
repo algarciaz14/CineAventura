@@ -1,7 +1,8 @@
 {% extends 'peliculas/base.html' %}
 {% load static %}
 
-{% block title %}{{ watch_party.nombre }} - Watch Party - AKA Films{% endblock %}
+{% block title %}{{ watch_party.nombre }} - Watch Party - Cine Aventura{% endblock %}
+
 
 {% block content %}
 <div class="container" style="padding: 40px 20px; max-width: 1200px; margin: 0 auto;">
@@ -29,7 +30,7 @@
                         ⏳ Esperando Inicio
                     </span>
                     {% elif watch_party.estado == 'en_curso' %}
-                    <span style="background: #e50914; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; animation: pulse 2s infinite;">
+                    <span style="background: #2ecc71; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; animation: pulse 2s infinite;">
                         ▶️ En Curso
                     </span>
                     {% elif watch_party.estado == 'finalizada' %}
@@ -141,7 +142,7 @@
                     <div style="font-weight: 600; color: #333; margin-bottom: 3px;">
                         {{ participante.get_full_name|default:participante.username }}
                         {% if participante == watch_party.anfitrion %}
-                        <span style="background: #e50914; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 5px;">ANFITRIÓN</span>
+                        <span style="background: #2ecc71; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 5px;">ANFITRIÓN</span>
                         {% endif %}
                         {% if participante == user %}
                         <span style="background: #ffc107; color: #333; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 5px;">TÚ</span>
@@ -151,7 +152,7 @@
                 </div>
                 {% if participante != user %}
                 <a href="{% url 'peliculas:perfil_usuario' participante.id %}" 
-                   style="padding: 6px 12px; background: #e50914; color: white; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 600;">
+                   style="padding: 6px 12px; background: #2ecc71; color: white; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 600;">
                     Ver Perfil
                 </a>
                 {% endif %}
@@ -186,10 +187,10 @@
             {% for mensaje in mensajes_chat %}
             <div style="margin-bottom: 15px; padding: 12px; background: {% if mensaje.usuario == user %}#e3f2fd{% else %}white{% endif %}; border-radius: 8px; border-left: 3px solid {% if mensaje.usuario == user %}#2196f3{% else %}#e0e0e0{% endif %};">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <strong style="color: {% if mensaje.usuario == watch_party.anfitrion %}#e50914{% else %}#333{% endif %};">
+                    <strong style="color: {% if mensaje.usuario == watch_party.anfitrion %}#2ecc71{% else %}#333{% endif %};">
                         {{ mensaje.usuario.get_full_name|default:mensaje.usuario.username }}
                         {% if mensaje.usuario == watch_party.anfitrion %}
-                        <span style="font-size: 11px; background: #e50914; color: white; padding: 2px 6px; border-radius: 10px; margin-left: 5px;">ANFITRIÓN</span>
+                        <span style="font-size: 11px; background: #2ecc71; color: white; padding: 2px 6px; border-radius: 10px; margin-left: 5px;">ANFITRIÓN</span>
                         {% endif %}
                     </strong>
                     <span style="font-size: 12px; color: #999;">{{ mensaje.fecha_envio|date:"H:i" }}</span>

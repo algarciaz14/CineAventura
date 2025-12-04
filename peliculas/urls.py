@@ -48,4 +48,9 @@ urlpatterns = [
     path('watch-parties/<int:party_id>/unirse/', views.unirse_watch_party, name='unirse_watch_party'),
     path('watch-parties/<int:party_id>/salir/', views.salir_watch_party, name='salir_watch_party'),
     path('watch-parties/<int:party_id>/mensaje/', views.enviar_mensaje_watch_party, name='enviar_mensaje_watch_party'),
+    
+    path('catalogo/', views.catalogo_completo, name='catalogo'),
+    # Integración TMDB
+path('tmdb/buscar/', views.buscar_tmdb, name='buscar_tmdb'),
+path('tmdb/importar/<int:tmdb_id>/', views.importar_pelicula_tmdb, name='importar_tmdb'),
 ]

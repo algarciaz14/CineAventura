@@ -59,7 +59,7 @@ MIDDLEWARE = [
     'peliculas.middleware.TerminosMiddleware',       # Verificación de aceptación de términos y condiciones
 ]
 
-ROOT_URLCONF = 'akafilms.urls'
+ROOT_URLCONF = 'cineAventura.urls'
 
 # CONFIGURACIÓN DE TEMPLATES
 
@@ -79,7 +79,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'akafilms.wsgi.application'
+WSGI_APPLICATION = 'cineAventura.wsgi.application'
 
 # CONFIGURACIÓN DE BASE DE DATOS
 DATABASES = {
@@ -146,3 +146,8 @@ def login_redirect(request):
     if request.user.is_staff:
         return '/admin/'  # Admins van al panel de administración
     return '/'  # Usuarios normales van al inicio
+
+# API Configuration
+TMDB_API_KEY = '644c139d5d96c949b4a56febe827abf3'  
+TMDB_BASE_URL = 'https://api.themoviedb.org/3'
+TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500'
